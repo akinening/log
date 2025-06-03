@@ -1,0 +1,18 @@
+name: HTML Validation
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  htmlhint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 20
+      - name: Install htmlhint
+        run: npm install -g htmlhint
+      - name: Validate HTML
+        run: htmlhint index.html
