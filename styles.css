@@ -60,7 +60,7 @@ header h1 {
 h2 {
     font-size: clamp(1.4rem, 1.2rem + 0.8vw, 1.8rem);
     margin-bottom: 1rem;
-    border-bottom: 2px solid #ddd;
+    border-bottom: 1.5px solid #ccc;
     padding-bottom: 0.5rem;
 }
 
@@ -75,8 +75,14 @@ p {
 
 ul {
     list-style: disc;
-    margin-left: 1.75rem;
+    margin-left: 1.2rem;
     line-height: 1.75;
+}
+
+@media (min-width: 768px) {
+    .container {
+        padding: 3rem;
+    }
 }
 
 a {
