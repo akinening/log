@@ -125,14 +125,8 @@ body.is-private .private-only {
     display: block;
 }
 
-.private-mode-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.4);
-    z-index: 10;
-}
-
 .private-mode-modal {
+    border: none;
     position: fixed;
     top: 50%;
     left: 50%;
@@ -145,6 +139,10 @@ body.is-private .private-only {
     box-shadow: 0 10px 24px rgba(0, 0, 0, 0.2);
     display: grid;
     gap: 1rem;
+}
+
+.private-mode-modal::backdrop {
+    background: rgba(0, 0, 0, 0.4);
 }
 
 .private-mode-modal h2 {
