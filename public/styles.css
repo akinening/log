@@ -127,6 +127,7 @@ body.is-private .private-only {
 
 .private-mode-modal {
     border: none;
+    outline: none;
     position: fixed;
     top: 50%;
     left: 50%;
@@ -137,8 +138,12 @@ body.is-private .private-only {
     width: min(420px, 90vw);
     z-index: 11;
     box-shadow: 0 10px 24px rgba(0, 0, 0, 0.2);
-    display: grid;
+    display: none;
     gap: 1rem;
+}
+
+.private-mode-modal[open] {
+    display: grid;
 }
 
 .private-mode-modal::backdrop {
