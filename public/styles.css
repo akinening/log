@@ -104,19 +104,6 @@ a:hover {
     text-decoration: underline;
 }
 
-.private-mode-button {
-    border: none;
-    background: none;
-    padding: 0;
-    color: #0066cc;
-    font: inherit;
-    cursor: pointer;
-}
-
-.private-mode-button:hover {
-    text-decoration: underline;
-}
-
 .private-only {
     display: none;
 }
