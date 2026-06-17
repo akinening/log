@@ -1,29 +1,93 @@
 ---
 const pageTitle = "Akinori OZAWA | デジタルプロダクトデザイナー";
 const pageDescription =
-  "UX/UIデザインおよびフロントエンド開発における8年超の専門性を基盤に、事業成長を牽引するプロダクトデザイナー。自社事業「gogh」はグローバル200万DL／売上20万本を突破。";
+  "UX/UIデザインおよびフロントエンド開発における8年超の専門性を基盤に、事業成長を牽引するプロダクトデザイナー。自社事業「gogh」はグローバル250万DL／売上30万本を突破。";
+
+const canonicalUrl = "https://akinen.com/";
+const personJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "@id": `${canonicalUrl}#person`,
+  name: "Akinori OZAWA",
+  alternateName: ["Akinori Ozawa", "小澤 章徳", "akinen"],
+  url: canonicalUrl,
+  jobTitle: "デジタルプロダクトデザイナー",
+  description: pageDescription,
+  knowsAbout: [
+    "UX/UIデザイン",
+    "プロダクトデザイン",
+    "フロントエンド開発",
+    "XR UI",
+    "Roblox UI",
+    "Figma",
+    "AIとデザイン"
+  ],
+  worksFor: {
+    "@type": "Organization",
+    name: "株式会社ambr"
+  },
+  sameAs: [
+    "https://note.com/012",
+    "https://zenn.dev/012",
+    "https://www.linkedin.com/in/akinen",
+    "https://speakerdeck.com/akinen"
+  ]
+};
+const profilePageJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "ProfilePage",
+  "@id": `${canonicalUrl}#profile`,
+  url: canonicalUrl,
+  name: pageTitle,
+  description: pageDescription,
+  inLanguage: "ja",
+  mainEntity: {
+    "@id": `${canonicalUrl}#person`
+  }
+};
+const webSiteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "@id": `${canonicalUrl}#website`,
+  url: canonicalUrl,
+  name: pageTitle,
+  description: pageDescription,
+  inLanguage: "ja",
+  publisher: {
+    "@id": `${canonicalUrl}#person`
+  }
+};
 ---
 <!DOCTYPE html>
 <html lang="ja">
   <head>
     <meta charset="UTF-8" />
     <meta name="description" content={pageDescription} />
+    <meta name="author" content="Akinori OZAWA" />
     <meta
       name="keywords"
       content="Akinori OZAWA, 履歴書, プロダクトデザイナー, UX, UI, フロントエンド, 経歴, 登壇履歴"
     />
     <meta name="robots" content="index, follow" />
-    <link rel="canonical" href="https://akinen.com/" />
+    <link rel="canonical" href={canonicalUrl} />
+    <meta property="og:site_name" content="Akinori OZAWA" />
     <meta property="og:title" content={pageTitle} />
     <meta
       property="og:description"
-      content="UX/UIデザインおよびフロントエンド開発における8年超の専門性を基盤に、事業成長を牽引するプロダクトデザイナー。"
+      content={pageDescription}
     />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://akinen.com/" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:locale" content="ja_JP" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={pageDescription} />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{pageTitle}</title>
     <link rel="stylesheet" href="/styles.css" />
+    <script type="application/ld+json" set:html={JSON.stringify(personJsonLd)} />
+    <script type="application/ld+json" set:html={JSON.stringify(profilePageJsonLd)} />
+    <script type="application/ld+json" set:html={JSON.stringify(webSiteJsonLd)} />
   </head>
   <body>
     <main class="container">
