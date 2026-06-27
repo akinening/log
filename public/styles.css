@@ -64,6 +64,12 @@ header h1 {
     margin-bottom: 0.5rem;
 }
 
+.profile-subtitle {
+    color: #777;
+    font-size: 16px;
+    margin-bottom: 0;
+}
+
 h2 {
     font-size: clamp(1.4rem, 1.2rem + 0.8vw, 1.8rem);
     margin-bottom: 1rem;
