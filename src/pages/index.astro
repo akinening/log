@@ -1,337 +1,230 @@
 ---
-const pageTitle = "Akinori OZAWA | コンテキストデザイナー";
-const pageDescription =
-  "UX/UIデザインおよびフロントエンド開発における8年超の専門性を基盤に、事業成長を牽引するプロダクトデザイナー。自社事業「gogh」はグローバル250万DL／売上30万本を突破。";
+import { getCollection } from "astro:content";
+import Base from "../layouts/Base.astro";
 
-const canonicalUrl = "https://akinen.com/";
-const personJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Person",
-  "@id": `${canonicalUrl}#person`,
-  name: "Akinori OZAWA",
-  alternateName: ["Akinori Ozawa", "小澤 章徳", "akinen"],
-  url: canonicalUrl,
-  jobTitle: "デジタルプロダクトデザイナー",
-  description: pageDescription,
-  knowsAbout: [
-    "UX/UIデザイン",
-    "プロダクトデザイン",
-    "フロントエンド開発",
-    "XR UI",
-    "Roblox UI",
-    "Figma",
-    "AIとデザイン"
-  ],
-  worksFor: {
-    "@type": "Organization",
-    name: "株式会社ambr"
+const works = (await getCollection("works")).sort(
+  (a, b) => a.data.order - b.data.order
+);
+
+const VISIBLE = 3;
+
+const speaking = [
+  {
+    date: "2025.04",
+    title: "CrossRel「AIとデザインのセカンドステージ」登壇",
+    href: "https://aidesign2ndstage.peatix.com/"
   },
-  sameAs: [
-    "https://note.com/012",
-    "https://zenn.dev/012",
-    "https://www.linkedin.com/in/akinen",
-    "https://speakerdeck.com/akinen"
-  ]
-};
-const profilePageJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "ProfilePage",
-  "@id": `${canonicalUrl}#profile`,
-  url: canonicalUrl,
-  name: pageTitle,
-  description: pageDescription,
-  inLanguage: "ja",
-  mainEntity: {
-    "@id": `${canonicalUrl}#person`
+  {
+    date: "2023.12",
+    title: "Spectrum Tokyo Festival 2023「3D空間を扱うUI表現とユーザビリティ」",
+    href: "https://spectrumfest2023.studio.site/en"
+  },
+  {
+    date: "2023.06",
+    title: "DIST.39「FigmaとBeziではじめるXR UIプロトタイピング」",
+    href: "https://speakerdeck.com/akinen/figmatobezeldehazimeruxruipurototaipingu"
+  },
+  {
+    date: "2022.07",
+    title: "Figma Japan Community Event — Show & Tell 登壇",
+    href: "https://www.facebook.com/ackiena/posts/pfbid0pM9b89XQcdWzgGNqkLrn8L2yoV4djjRLKfSL7knTofNxjEPwhEAY6HkekkNQqq1sl"
+  },
+  {
+    date: "2020–22",
+    title: "八王子IT勉強会「Yuruhachi.it」運営・登壇",
+    href: null
   }
-};
-const webSiteJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  "@id": `${canonicalUrl}#website`,
-  url: canonicalUrl,
-  name: pageTitle,
-  description: pageDescription,
-  inLanguage: "ja",
-  publisher: {
-    "@id": `${canonicalUrl}#person`
+];
+
+const writing = [
+  {
+    date: "2024.11",
+    title: "200万DLを突破した作業集中プロダクト「gogh」のデザイン思想",
+    href: "https://note.com/ambr/n/nbccabde15b46"
+  },
+  {
+    date: "note",
+    title: "デザインと事業のあいだ — 執筆アカウント",
+    href: "https://note.com/012"
+  },
+  {
+    date: "Zenn",
+    title: "フロントエンドとデザインシステムの技術記事",
+    href: "https://zenn.dev/012"
+  },
+  {
+    date: "Deck",
+    title: "登壇スライドアーカイブ（Speaker Deck）",
+    href: "https://speakerdeck.com/akinen"
   }
-};
+];
+
+const sns = [
+  { label: "note", href: "https://note.com/012" },
+  { label: "Zenn", href: "https://zenn.dev/012" },
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/akinen" },
+  { label: "Speaker Deck", href: "https://speakerdeck.com/akinen" }
+];
 ---
-<!DOCTYPE html>
-<html lang="ja">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="description" content={pageDescription} />
-    <meta name="author" content="Akinori OZAWA" />
-    <meta
-      name="keywords"
-      content="Akinori OZAWA, 履歴書, プロダクトデザイナー, UX, UI, フロントエンド, 経歴, 登壇履歴"
-    />
-    <meta name="robots" content="index, follow" />
-    <link rel="canonical" href={canonicalUrl} />
-    <meta property="og:site_name" content="Akinori OZAWA" />
-    <meta property="og:title" content={pageTitle} />
-    <meta
-      property="og:description"
-      content={pageDescription}
-    />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content={canonicalUrl} />
-    <meta property="og:locale" content="ja_JP" />
-    <meta name="twitter:card" content="summary" />
-    <meta name="twitter:title" content={pageTitle} />
-    <meta name="twitter:description" content={pageDescription} />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{pageTitle}</title>
-    <link rel="stylesheet" href="/styles.css" />
-    <script type="application/ld+json" set:html={JSON.stringify(personJsonLd)} />
-    <script type="application/ld+json" set:html={JSON.stringify(profilePageJsonLd)} />
-    <script type="application/ld+json" set:html={JSON.stringify(webSiteJsonLd)} />
-  </head>
-  <body>
-    <main class="container">
-      <header class="page-header">
-        <div class="profile-title">
-          <h1>Akinori OZAWA</h1>
-          <p class="profile-subtitle">長野県出身／一児の父／空手道初段</p>
-        </div>
-        <nav class="language-toggle" aria-label="Language selector">
-          <button type="button" class="language-toggle-button is-active" data-lang-switch="ja" aria-pressed="true">JP</button>
-          <span aria-hidden="true">/</span>
-          <button type="button" class="language-toggle-button" data-lang-switch="en" aria-pressed="false">EN</button>
-        </nav>
-      </header>
-      <section class="overview">
-        <h2><span data-ja="概要" data-en="Overview">概要</span></h2>
-        <p>
-          <span data-ja="UX/UIデザインおよびエンジニアリングにおける8年超の専門性を基盤に、デザイン思考で事業を推進する設計者。<br />
-          立ち上げ期から携わっている自社事業「gogh」は、リリース後1年以内にグローバルで150万DLを達成し、現在は250万DL／売上30万本を突破。<br />
-          toC/toB双方の知見と実装力を武器に、グロースと事業価値の向上にコミットします。" data-en="A context designer who drives business through design thinking, backed by more than eight years of expertise in UX/UI design and engineering.<br />
-          gogh, an in-house product I have supported since its launch phase, reached 1.5 million global downloads within its first year and has now surpassed 2.5 million downloads and 300,000 sales.<br />
-          I combine consumer and B2B perspectives with hands-on implementation skills to commit to growth and higher business value.">UX/UIデザインおよびエンジニアリングにおける8年超の専門性を基盤に、デザイン思考で事業を推進する設計者。<br />
-          立ち上げ期から携わっている自社事業「gogh」は、リリース後1年以内にグローバルで150万DLを達成し、現在は250万DL／売上30万本を突破。<br />
-          toC/toB双方の知見と実装力を武器に、グロースと事業価値の向上にコミットします。</span>
-        </p>
-      </section>
-      <section class="experience">
-        <h2><span data-ja="経歴" data-en="Experience">経歴</span></h2>
-        <article>
-          <h3>株式会社ambr</h3>
-          <p><span data-ja="プロダクトデザイン（2023年9月～現在）" data-en="Product Design (September 2023 – Present)">プロダクトデザイン（2023年9月～現在）</span></p>
-          <ul>
-            <li>
-              <span data-ja="アバター集中支援アプリ「" data-en="Avatar focus-support app &quot;">アバター集中支援アプリ「</span><a href="https://gogh.gg/" target="_blank" rel="noopener">gogh（ゴッホ）</a><span data-ja="」の仕様検討、体験設計、UIデザイン" data-en="&quot;: requirements planning, experience design, and UI design">」の仕様検討、体験設計、UIデザイン</span>
-            </li>
-            <li><span data-ja="Steamゲームの仕様検討・UIデザイン" data-en="Requirements planning and UI design for Steam games">Steamゲームの仕様検討・UIデザイン</span></li>
-            <li><span data-ja="採用活動" data-en="Recruiting activities">採用活動</span></li>
-            <li>
-              <a href="https://note.com/ambr/n/nbccabde15b46" target="_blank" rel="noopener"><span data-ja="goghにおける取り組み" data-en="Work on gogh">goghにおける取り組み</span></a>
-            </li>
-            <li>
-              <a href="#" data-private-open><span data-ja="もっと詳しく" data-en="More details">もっと詳しく</span></a>
-              <ul class="private-only">
+
+<Base
+  title="Akinori Ozawa — Senior Product Designer"
+  description="複雑な事業・組織・プロダクト課題を構造化し、出荷し、事業成果につなげるシニアプロダクトデザイナー。グローバル250万DLのプロダクトグロース、デザイン組織構築、エンタープライズDXの実績。"
+  path="/"
+>
+  <section class="hero">
+    <p class="overline rv">Akinori Ozawa — Senior Product Designer</p>
+    <h1 class="hero-title rv" style="--rv-delay:.08s">
+      Design that ships,<br />
+      scales, and <span class="serif-accent">pays back.</span>
+    </h1>
+    <p class="hero-lead rv" style="--rv-delay:.16s">
+      複雑な事業・組織・プロダクトの課題を構造化し、出荷し、数字で証明する。
+      UX/UIデザインとエンジニアリング8年超の専門性を基盤に、0→1の価値検証からグローバルグロース、
+      デザイン組織の構築までを一貫して率いるプロダクトデザイナーです。
+    </p>
+    <div class="hero-facts rv" style="--rv-delay:.24s">
+      <p class="fact en"><strong>250万+</strong><span>グローバルDL</span></p>
+      <p class="fact en"><strong>8年+</strong><span>デザイン × エンジニアリング</span></p>
+      <p class="fact en"><strong>3→14名</strong><span>デザイン組織構築</span></p>
+    </div>
+  </section>
+
+  <section class="section" id="work">
+    <div class="section-head rv">
+      <h2 class="section-title">Selected Work<sup>{String(works.length).padStart(2, "0")}</sup></h2>
+      <p class="section-note">課題の構造化 → 出荷 → 事業インパクト</p>
+    </div>
+
+    <div class="work-grid" data-work-grid>
+      {
+        works.map((work, i) => (
+          <a
+            class:list={["work-card", "rv", { "is-hidden": i >= VISIBLE }]}
+            href={`/works/${work.slug}/`}
+            style={`--rv-delay:${(i % VISIBLE) * 0.08}s`}
+          >
+            <figure class="work-thumb">
+              <img
+                src={work.data.thumbnail}
+                alt={work.data.title}
+                width="1600"
+                height="900"
+                loading={i < VISIBLE ? "eager" : "lazy"}
+              />
+            </figure>
+            <p class="work-meta">
+              <span>{work.data.year}</span>
+              <span class="dot" />
+              <span>{work.data.tags[0]}</span>
+            </p>
+            <h3 class="work-title">{work.data.title}</h3>
+            <p class="work-summary">{work.data.summary}</p>
+          </a>
+        ))
+      }
+    </div>
+
+    <div class="load-more-wrap rv">
+      <button class="load-more" type="button" data-load-more>
+        <span>Load More</span>
+        <span class="arrow" aria-hidden="true">↓</span>
+      </button>
+    </div>
+  </section>
+
+  <section class="section" id="sidework">
+    <div class="section-head rv">
+      <h2 class="section-title">Side Work</h2>
+      <p class="section-note">登壇・執筆・コミュニティ</p>
+    </div>
+    <div class="sidework-grid">
+      <div class="sidework-col rv">
+        <h3>Speaking</h3>
+        <ul class="sidework-list">
+          {
+            speaking.map((item) =>
+              item.href ? (
                 <li>
-                  <strong><span data-ja="アバター集中支援アプリ「" data-en="Avatar focus-support app &quot;">アバター集中支援アプリ「</span><span data-ja="gogh」のプロダクトオーナーシップ" data-en="gogh&quot; Product Ownership">gogh」のプロダクトオーナーシップ</span></strong>
-                  <ul>
-                    <li><span data-ja="サービス価値の検証から体験設計までを担い、グローバル市場での拡大戦略を意識したプロダクト設計に貢献。" data-en="Handled everything from service-value validation to experience design, contributing product design with global expansion in mind.">サービス価値の検証から体験設計までを担い、グローバル市場での拡大戦略を意識したプロダクト設計に貢献。</span></li>
-                    <li><span data-ja="数名でのプロトタイプ検証から参画し、体験設計およびUIデザインの責任者としてプロダクトの方向性を定義。PMFを達成し、30名規模の主力事業に発展。" data-en="Joined from prototype validation with a small team, defined the product direction as owner of experience and UI design, achieved PMF, and helped it grow into a flagship business with a 30-person team.">数名でのプロトタイプ検証から参画し、体験設計およびUIデザインの責任者としてプロダクトの方向性を定義。PMFを達成し、30名規模の主力事業に発展。</span></li>
-                  </ul>
+                  <a class="sidework-item" href={item.href} target="_blank" rel="noopener">
+                    <time>{item.date}</time>
+                    <span class="t">{item.title}</span>
+                    <span class="ext" aria-hidden="true">↗</span>
+                  </a>
                 </li>
+              ) : (
                 <li>
-                  <strong><span data-ja="マルチプラットフォーム展開における品質管理" data-en="Quality management for multi-platform expansion">マルチプラットフォーム展開における品質管理</span></strong>
-                  <ul>
-                    <li><span data-ja="SteamおよびRobloxプラットフォームにおいて、仕様策定からUI実装までを一貫してリードし、リリース基準の策定に貢献。" data-en="Led requirements definition through UI implementation for Steam and Roblox platforms, contributing to release standards.">SteamおよびRobloxプラットフォームにおいて、仕様策定からUI実装までを一貫してリードし、リリース基準の策定に貢献。</span></li>
-                    <li><span data-ja="RobloxにおけるUI共通基盤の構築を主導し、複数コンテンツ間での開発効率とブランド統一性を向上。" data-en="Led the creation of shared Roblox UI foundations, improving development efficiency and brand consistency across multiple experiences.">RobloxにおけるUI共通基盤の構築を主導し、複数コンテンツ間での開発効率とブランド統一性を向上。</span></li>
-                  </ul>
+                  <span class="sidework-item">
+                    <time>{item.date}</time>
+                    <span class="t">{item.title}</span>
+                  </span>
                 </li>
-                <li>
-                  <strong><span data-ja="大手IPゲームのデザイン" data-en="Design for major IP games">大手IPゲームのデザイン</span></strong>
-                  <ul>
-                    <li><span data-ja="『果てしなきスカーレット』『野生の島のロズ』『進撃の巨人』といった作品のRobloxゲームのUIデザイン・ロゴデザイン等を担当。" data-en="Handled UI design, logo design, and related work for Roblox games based on major titles such as Scarlet, The Wild Robot, and Attack on Titan.">『<a href="https://prtimes.jp/main/html/rd/p/000000069.000043299.html" target="_blank" rel="noopener">果てしなきスカーレット</a>』 『<a href="https://prtimes.jp/main/html/rd/p/000000049.000043299.html" target="_blank" rel="noopener">野生の島のロズ</a>』 『<a href="https://prtimes.jp/main/html/rd/p/000000042.000043299.html" target="_blank" rel="noopener">進撃の巨人</a>』 といった作品のRobloxゲームのUIデザイン・ロゴデザイン等を担当。</span></li>
-                  </ul>
-                </li>
-                <li>
-                  <strong><span data-ja="公式HPの立ち上げ・運用" data-en="Official website launch and operations">公式HPの立ち上げ・運用</span></strong>
-                  <ul>
-                    <li><span data-ja="年間 xxx Viewを有する公式サイトの立ち上げおよび大規模リニューアルを担当。UX視点に基づいた情報設計からビジュアルデザイン、実装までを行い、ユーザビリティ向上とブランド価値の最大化に貢献。" data-en="Led the launch and major renewal of an official website with xxx annual views. Covered information architecture, visual design, and implementation from a UX perspective to improve usability and maximize brand value.">年間 xxx Viewを有する公式サイトの立ち上げおよび大規模リニューアルを担当。UX視点に基づいた情報設計からビジュアルデザイン、実装までを行い、ユーザビリティ向上とブランド価値の最大化に貢献。</span></li>
-                  </ul>
-                </li>
-                <li>
-                  <strong><span data-ja="採用" data-en="Recruiting">採用</span></strong>
-                  <ul>
-                    <li><span data-ja="デザイナー採用の要件定義から面談までを担当し、組織拡大に向けたチームビルディングに貢献。" data-en="Handled designer hiring from role requirements through interviews, contributing to team building for organizational growth.">デザイナー採用の要件定義から面談までを担当し、組織拡大に向けたチームビルディングに貢献。</span></li>
-                  </ul>
-                </li>
-              </ul>
-            </li>
-          </ul>
-        </article>
-        <details class="experience-dropdown">
-          <summary>
-            <span class="experience-dropdown-title"><span data-ja="東京海上日動システムズ - デジタルイノベーション開発部 兼 戦略企画部" data-en="Tokio Marine & Nichido Systems - Digital Innovation Development Dept. / Strategic Planning Dept.">東京海上日動システムズ - デジタルイノベーション開発部 兼 戦略企画部</span></span>
-          </summary>
-          <p><span data-ja="シニアエンジニア / インハウスデザイナー（2021年11月〜2023年8月）" data-en="Senior Engineer / In-house Designer (November 2021 – August 2023)">シニアエンジニア / インハウスデザイナー（2021年11月〜2023年8月）</span></p>
-          <ul>
-            <li>
-              <strong><span data-ja="新規事業創出" data-en="New business creation">新規事業創出</span></strong>: <span data-ja="DX推進部門において、損害保険領域のPoCプロジェクトにおけるプロダクトデザインを担当。抽象度の高いビジネス要件を具体的なUI/UXに落とし込み、プロジェクトの意思決定を加速。" data-en="Handled product design for POC projects in the non-life insurance domain within a DX promotion division. Translated abstract business requirements into concrete UI/UX and accelerated project decision-making.">DX推進部門において、損害保険領域のPoCプロジェクトにおけるプロダクトデザインを担当。抽象度の高いビジネス要件を具体的なUI/UXに落とし込み、プロジェクトの意思決定を加速。</span>
-            </li>
-            <li>
-              <strong><span data-ja="デザインツールの刷新" data-en="Design tool modernization">デザインツールの刷新</span></strong>: <span data-ja="従来の開発プロセスに対しFigmaを導入・定着させ、デザイナーとエンジニアの協業フローをモダン化。コミュニケーションコストを大幅に低減。" data-en="Introduced and established Figma in the existing development process, modernizing designer-engineer collaboration and greatly reducing communication costs.">従来の開発プロセスに対しFigmaを導入・定着させ、デザイナーとエンジニアの協業フローをモダン化。コミュニケーションコストを大幅に低減。</span>
-            </li>
-            <li>
-              <strong><span data-ja="デザイン啓蒙活動" data-en="Design advocacy">デザイン啓蒙活動</span></strong>: <span data-ja="HCD-Netへの法人加入を主導し、社内における人間中心設計（HCD）プロセスの重要性を啓蒙。組織的なデザインリテラシー向上に寄与。" data-en="Led corporate membership in HCD-Net and promoted the importance of human-centered design processes internally, improving organizational design literacy.">HCD-Netへの法人加入を主導し、社内における人間中心設計（HCD）プロセスの重要性を啓蒙。組織的なデザインリテラシー向上に寄与。</span>
-            </li>
-            <li>
-              <strong><span data-ja="デザインシステム運用" data-en="Design system operations">デザインシステム運用</span></strong>: <span data-ja="社内標準となるUIカタログおよびデザインシステムの更新・運用をリードし、大規模組織における開発効率化を推進。" data-en="Led updates and operations for the internal UI catalog and design system, improving development efficiency in a large organization.">社内標準となるUIカタログおよびデザインシステムの更新・運用をリードし、大規模組織における開発効率化を推進。</span>
-            </li>
-          </ul>
-        </details>
-        <details class="experience-dropdown">
-          <summary>
-            <span class="experience-dropdown-title"><span data-ja="株式会社ビルディット" data-en="BuildIt Inc.">株式会社ビルディット</span></span>
-          </summary>
-          <p><span data-ja="プロダクトデザイナー（2019年11月〜2021年10月）" data-en="Product Designer (November 2019 – October 2021)">プロダクトデザイナー（2019年11月〜2021年10月）</span></p>
-          <ul>
-            <li><span data-ja="自社新規事業「Stockr」の0→1フェーズにおいて、コアコンセプトの立案からUI/UXデザインの実装までを一気通貫で牽引し、プロダクトの具現化に貢献。" data-en="Drove the 0-to-1 phase of the in-house new business Stockr from core concept planning through UI/UX design implementation, helping bring the product to life.">自社新規事業「Stockr」の0→1フェーズにおいて、コアコンセプトの立案からUI/UXデザインの実装までを一気通貫で牽引し、プロダクトの具現化に貢献。</span></li>
-          </ul>
-        </details>
-        <details class="experience-dropdown">
-          <summary>
-            <span class="experience-dropdown-title"><span data-ja="面白法人カヤック" data-en="KAYAC Inc.">面白法人カヤック</span></span>
-          </summary>
-          <p><span data-ja="フロントエンドエンジニア（2018年4月〜2019年8月）" data-en="Frontend Engineer (April 2018 – August 2019)">フロントエンドエンジニア（2018年4月〜2019年8月）</span></p>
-          <ul>
-            <li>
-              <span data-ja="大規模ゲームSNS「Lobi」および 国内最大のトーナメントPF「Tonamel」のサービス基盤刷新（Angular→Nuxt）に参画し、利用者拡大・開発の生産性向上を見据えたアーキテクチャ移行を実現。" data-en="Contributed to renewing the service foundations for the large-scale gaming SNS Lobi and Japan's largest tournament platform Tonamel, migrating architecture from Angular to Nuxt to support user growth and development productivity.">大規模ゲームSNS「Lobi」および 国内最大のトーナメントPF「Tonamel」のサービス基盤刷新（Angular→Nuxt）に参画し、利用者拡大・開発の生産性向上を見据えたアーキテクチャ移行を実現。</span>
-            </li>
-          </ul>
-        </details>
-      </section>
-      <section class="speaking">
-        <h2><span data-ja="登壇履歴" data-en="Speaking">登壇履歴</span></h2>
-        <ul>
-          <li>
-            <a href="https://aidesign2ndstage.peatix.com/" target="_blank" rel="noopener"><span data-ja="2025.04 CrossRel「AIとデザインのセカンドステージ」登壇" data-en="2025.04 Spoke at CrossRel, &quot;AI and Design: The Second Stage&quot;">2025.04 CrossRel「AIとデザインのセカンドステージ」登壇</span></a>
-          </li>
-          <li>
-            2023.12 <a href="https://spectrumfest2023.studio.site/en" target="_blank" rel="noopener"><span data-ja="Spectrum Tokyo Festival 2023「3D空間を扱うUI表現とユーザビリティ」" data-en="Spectrum Tokyo Festival 2023, &quot;UI Expression and Usability for 3D Spaces&quot;">Spectrum Tokyo Festival 2023「3D空間を扱うUI表現とユーザビリティ」</span></a>
-          </li>
-          <li>
-            2023.06 <a href="https://speakerdeck.com/akinen/figmatobezeldehazimeruxruipurototaipingu" target="_blank" rel="noopener"><span data-ja="DIST.39 「 FigmaとBeziではじめるXRUIプロトタイピング」" data-en="DIST.39, &quot;XR UI Prototyping with Figma and Bezi&quot;">DIST.39 「 FigmaとBeziではじめるXRUIプロトタイピング」</span></a>
-          </li>
-          <li><a href="https://www.facebook.com/ackiena/posts/pfbid0pM9b89XQcdWzgGNqkLrn8L2yoV4djjRLKfSL7knTofNxjEPwhEAY6HkekkNQqq1sl" target="_blank" rel="noopener"><span data-ja="2022.07 Figma Japan Community Event - Show &amp; Tell 登壇" data-en="2022.07 Spoke at Figma Japan Community Event - Show &amp; Tell">2022.07 Figma Japan Community Event - Show &amp; Tell 登壇</span></a></li>
-          <li><span data-ja="2020 - 2022 八王子IT勉強会「Yuruhachi.it」運営・登壇" data-en="2020 - 2022 Organized and spoke at Hachioji IT meetup &quot;Yuruhachi.it&quot;">2020 - 2022 八王子IT勉強会「Yuruhachi.it」運営・登壇</span></li>
+              )
+            )
+          }
         </ul>
-      </section>
-      <section class="sns">
-        <h2><span data-ja="関連ページ" data-en="Links">関連ページ</span></h2>
-        <ul>
-          <li>
-            <a href="https://note.com/012" target="_blank" rel="noopener">note</a>
-            <ul>
-              <li>
-                <a href="https://note.com/ambr/n/nbccabde15b46" target="_blank" rel="noopener"><span data-ja="200万DLを突破した作業集中プロダクト「gogh」のデザイン思想" data-en="Design philosophy behind gogh, a focus product with over 2 million downloads">200万DLを突破した作業集中プロダクト「gogh」のデザイン思想</span></a>
-              </li>
-            </ul>
-          </li>
-          <li><a href="https://zenn.dev/012" target="_blank" rel="noopener">Zenn</a></li>
-          <li><a href="https://www.linkedin.com/in/akinen" target="_blank" rel="noopener">LinkedIn</a></li>
-        </ul>
-      </section>
-    </main>
-    <dialog class="private-mode-modal" aria-labelledby="private-mode-title" data-private-modal>
-      <h2 id="private-mode-title"><span data-ja="あいことばを入力" data-en="Enter passphrase">あいことばを入力</span></h2>
-      <p class="private-mode-description">
-        <span data-ja="より詳細な経歴を閲覧できるようになります。ご入用の方は、小澤までご連絡ください" data-en="This unlocks a more detailed career history. Please contact Ozawa if you need access.">より詳細な経歴を閲覧できるようになります。ご入用の方は、小澤までご連絡ください</span>
-      </p>
-      <input class="private-mode-input" type="password" autocomplete="off" data-private-input />
-      <div class="private-mode-actions">
-        <button class="private-mode-cancel" type="button" data-private-cancel><span data-ja="キャンセル" data-en="Cancel">キャンセル</span></button>
-        <button class="private-mode-confirm" type="button" data-private-confirm><span data-ja="送信" data-en="Submit">送信</span></button>
       </div>
-    </dialog>
-    <script>
-      const languageButtons = document.querySelectorAll("[data-lang-switch]");
-      const localizedElements = document.querySelectorAll("[data-ja][data-en]");
-      const titles = {
-        ja: "Akinori OZAWA | コンテキストデザイナー",
-        en: "Akinori OZAWA | Context Designer"
-      };
-
-      const setLanguage = (language) => {
-        document.documentElement.lang = language;
-        document.title = titles[language];
-        localizedElements.forEach((element) => {
-          const text = element.getAttribute(`data-${language}`);
-          if (text) {
-            element.innerHTML = text;
+      <div class="sidework-col rv" style="--rv-delay:.1s">
+        <h3>Writing</h3>
+        <ul class="sidework-list">
+          {
+            writing.map((item) => (
+              <li>
+                <a class="sidework-item" href={item.href} target="_blank" rel="noopener">
+                  <time>{item.date}</time>
+                  <span class="t">{item.title}</span>
+                  <span class="ext" aria-hidden="true">↗</span>
+                </a>
+              </li>
+            ))
           }
-        });
-        languageButtons.forEach((button) => {
-          const isActive = button.getAttribute("data-lang-switch") === language;
-          button.classList.toggle("is-active", isActive);
-          button.setAttribute("aria-pressed", String(isActive));
-        });
-        localStorage.setItem("preferred-language", language);
-      };
+        </ul>
+      </div>
+    </div>
+  </section>
 
-      languageButtons.forEach((button) => {
-        button.addEventListener("click", () => {
-          const language = button.getAttribute("data-lang-switch");
-          if (language === "ja" || language === "en") {
-            setLanguage(language);
-          }
+  <footer class="site-foot">
+    <div class="foot-inner rv">
+      <p class="foot-title">
+        Let's design<br />what <span class="serif-accent">matters.</span>
+      </p>
+      <ul class="sns-links">
+        {
+          sns.map((item) => (
+            <li>
+              <a href={item.href} target="_blank" rel="noopener">
+                {item.label}
+                <span aria-hidden="true">↗</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+    <p class="foot-copy">© 2026 Akinori Ozawa — Tokyo, Japan</p>
+  </footer>
+</Base>
+
+<script>
+  const initLoadMore = () => {
+    const button = document.querySelector<HTMLButtonElement>("[data-load-more]");
+    const grid = document.querySelector("[data-work-grid]");
+    if (!button || !grid || button.dataset.bound) return;
+    button.dataset.bound = "true";
+
+    button.addEventListener("click", () => {
+      const hidden = grid.querySelectorAll<HTMLElement>(".work-card.is-hidden");
+      hidden.forEach((card, i) => {
+        card.classList.remove("is-hidden");
+        card.classList.remove("is-inview");
+        card.style.setProperty("--rv-delay", `${i * 0.1}s`);
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => card.classList.add("is-inview"));
         });
       });
+      button.classList.add("is-done");
+    });
+  };
 
-      const savedLanguage = localStorage.getItem("preferred-language");
-      if (savedLanguage === "en") {
-        setLanguage("en");
-      }
-
-      const privateButton = document.querySelector("[data-private-open]");
-      const privateModal = document.querySelector("[data-private-modal]");
-
-      if (privateModal instanceof HTMLDialogElement) {
-        const privateInput = privateModal.querySelector("[data-private-input]");
-        const privateCancel = privateModal.querySelector("[data-private-cancel]");
-        const privateConfirm = privateModal.querySelector("[data-private-confirm]");
-
-        const openPrivateModal = () => {
-          privateModal.showModal();
-          if (privateInput instanceof HTMLInputElement) {
-            privateInput.value = "";
-            privateInput.focus();
-          }
-        };
-
-        const closePrivateModal = () => {
-          privateModal.close();
-          if (privateInput instanceof HTMLInputElement) {
-            privateInput.value = "";
-          }
-        };
-
-        privateButton?.addEventListener("click", (event) => {
-          event.preventDefault();
-          openPrivateModal();
-        });
-        privateCancel?.addEventListener("click", closePrivateModal);
-        privateModal.addEventListener("click", (event) => {
-          if (event.target === privateModal) {
-            closePrivateModal();
-          }
-        });
-        privateConfirm?.addEventListener("click", () => {
-          if (privateInput instanceof HTMLInputElement && privateInput.value === "Saudade") {
-            document.body.classList.add("is-private");
-            closePrivateModal();
-            return;
-          }
-          alert(document.documentElement.lang === "en" ? "The passphrase does not match." : "あいことばが一致しません");
-        });
-      }
-    </script>
-  </body>
-</html>
+  document.addEventListener("astro:page-load", initLoadMore);
+</script>
