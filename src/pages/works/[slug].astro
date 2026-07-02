@@ -1,0 +1,134 @@
+---
+import { getCollection } from "astro:content";
+import Base from "../../layouts/Base.astro";
+
+export async function getStaticPaths() {
+  const works = (await getCollection("works")).sort(
+    (a, b) => a.data.order - b.data.order
+  );
+  return works.map((work, i) => ({
+    params: { slug: work.slug },
+    props: {
+      work,
+      next: works[(i + 1) % works.length]
+    }
+  }));
+}
+
+const { work, next } = Astro.props;
+const { Content } = await work.render();
+const { data } = work;
+
+const info = [
+  { label: "Period", value: data.period },
+  { label: "Team", value: data.team },
+  { label: "Company", value: data.company },
+  { label: "Role", value: data.role }
+];
+---
+
+<Base
+  title={`${data.title} — Akinori Ozawa`}
+  description={data.summary}
+  path={`/works/${work.slug}/`}
+>
+  <article>
+    <header class="case-head">
+      <a class="case-back rv" href="/#work">
+        <span class="arrow" aria-hidden="true">←</span>
+        Back to Work
+      </a>
+      <p class="overline rv" style="--rv-delay:.05s">
+        {data.year} — {data.tags.join(" / ")}
+      </p>
+      <h1 class="case-title rv" style="--rv-delay:.1s">{data.title}</h1>
+      <p class="case-summary rv" style="--rv-delay:.16s">{data.summary}</p>
+
+      <div class="case-info rv" style="--rv-delay:.22s">
+        {
+          info.map((item) => (
+            <dl>
+              <dt>{item.label}</dt>
+              <dd>{item.value}</dd>
+            </dl>
+          ))
+        }
+      </div>
+
+      <figure class="case-hero rv" style="--rv-delay:.28s">
+        <img src={data.thumbnail} alt={data.title} width="1600" height="900" />
+      </figure>
+    </header>
+
+    <section class="case-metrics" aria-label="主要ビジネス指標">
+      {
+        data.metrics.map((metric, i) => (
+          <div class="case-metric rv" style={`--rv-delay:${i * 0.1}s`}>
+            <p class="value" data-count>{metric.value}</p>
+            <p class="label">{metric.label}</p>
+            {metric.note && <p class="note">{metric.note}</p>}
+          </div>
+        ))
+      }
+    </section>
+
+    <div class="prose rv">
+      <Content />
+    </div>
+
+    <nav class="case-next rv" aria-label="次の実績">
+      <p class="overline">Next Case</p>
+      <a class="case-next-link" href={`/works/${next.slug}/`}>
+        <span class="case-next-title">
+          {next.data.title.split("—")[0].trim()}
+          <span class="arrow" aria-hidden="true">→</span>
+        </span>
+      </a>
+    </nav>
+  </article>
+</Base>
+
+<script>
+  // Count-up animation for metric values (numeric prefix only).
+  const initCountUp = () => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const targets = document.querySelectorAll<HTMLElement>("[data-count]:not([data-counted])");
+    if (!targets.length) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const el = entry.target as HTMLElement;
+          observer.unobserve(el);
+          el.dataset.counted = "true";
+
+          const original = el.textContent ?? "";
+          const match = original.match(/^([+\-]?)(\d+(?:\.\d+)?)(.*)$/s);
+          if (!match) return;
+
+          const [, sign, numStr, suffix] = match;
+          const target = parseFloat(numStr);
+          const decimals = numStr.includes(".") ? numStr.split(".")[1].length : 0;
+          const duration = 1100;
+          const start = performance.now();
+
+          const tick = (now: number) => {
+            const p = Math.min((now - start) / duration, 1);
+            const eased = 1 - Math.pow(1 - p, 4);
+            el.textContent = sign + (target * eased).toFixed(decimals) + suffix;
+            if (p < 1) requestAnimationFrame(tick);
+            else el.textContent = original;
+          };
+          requestAnimationFrame(tick);
+        });
+      },
+      { threshold: 0.4 }
+    );
+
+    targets.forEach((el) => observer.observe(el));
+  };
+
+  document.addEventListener("astro:page-load", initCountUp);
+</script>

@@ -1,0 +1,121 @@
+---
+import { ViewTransitions } from "astro:transitions";
+import "../styles/global.css";
+
+interface Props {
+  title: string;
+  description: string;
+  path?: string;
+}
+
+const { title, description, path = "/" } = Astro.props;
+const canonical = new URL(path, Astro.site).href;
+const currentPath = Astro.url.pathname;
+
+const navItems = [
+  { label: "Top", href: "/", idx: "01" },
+  { label: "Experience", href: "/experience/", idx: "02" }
+];
+
+const isCurrent = (href: string) =>
+  href === "/" ? currentPath === "/" : currentPath.startsWith(href);
+---
+
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="author" content="Akinori Ozawa" />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta property="og:site_name" content="Akinori Ozawa" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content="ja_JP" />
+    <meta name="twitter:card" content="summary" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400..700&family=Instrument+Serif:ital@0;1&family=Noto+Sans+JP:wght@400..700&display=swap"
+      rel="stylesheet"
+    />
+    <ViewTransitions />
+  </head>
+  <body>
+    <header class="mobile-bar">
+      <a class="brand" href="/">
+        <span class="brand-name en">Akinori Ozawa</span>
+      </a>
+      <nav class="mobile-nav" aria-label="Primary">
+        {
+          navItems.map((item) => (
+            <a href={item.href} aria-current={isCurrent(item.href) ? "page" : undefined}>
+              {item.label}
+            </a>
+          ))
+        }
+      </nav>
+    </header>
+
+    <div class="shell">
+      <aside class="sidebar">
+        <a class="brand" href="/">
+          <span class="brand-name en">Akinori<br />Ozawa</span>
+          <span class="brand-role">Senior Product Designer</span>
+        </a>
+        <nav class="side-nav" aria-label="Primary">
+          {
+            navItems.map((item) => (
+              <a href={item.href} aria-current={isCurrent(item.href) ? "page" : undefined}>
+                <span class="idx">{item.idx}</span>
+                {item.label}
+              </a>
+            ))
+          }
+        </nav>
+        <p class="sidebar-foot">
+          Tokyo, Japan<br />© 2026 Akinori Ozawa
+        </p>
+      </aside>
+
+      <main class="main">
+        <div class="page">
+          <slot />
+        </div>
+      </main>
+    </div>
+
+    <script>
+      const initReveal = () => {
+        const targets = document.querySelectorAll<HTMLElement>(".rv:not(.is-inview)");
+        if (!targets.length) return;
+
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+          targets.forEach((el) => el.classList.add("is-inview"));
+          return;
+        }
+
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("is-inview");
+                observer.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.12, rootMargin: "0px 0px -8% 0px" }
+        );
+
+        targets.forEach((el) => observer.observe(el));
+      };
+
+      document.addEventListener("astro:page-load", initReveal);
+    </script>
+  </body>
+</html>
