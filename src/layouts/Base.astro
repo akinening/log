@@ -2,6 +2,8 @@
 import { ViewTransitions } from "astro:transitions";
 import "../styles/global.css";
 import akinenMark from "../images/akinen.svg?raw";
+import clickSoundUrl from "../sound/click-tap.mp3";
+import hoverSoundUrl from "../sound/hover.mp3";
 
 interface Props {
   title: string;
@@ -138,6 +140,38 @@ const isCurrent = (href: string) =>
         const delay = firstLoad && !reduced && document.querySelector(".page-veil") ? 600 : 0;
         firstLoad = false;
         delay ? setTimeout(initReveal, delay) : initReveal();
+      });
+    </script>
+
+    <script define:vars={{ clickSoundUrl, hoverSoundUrl }}>
+      // クリック／ホバー時の効果音。View Transitions で document 自体は
+      // 差し替わらないため、委譲リスナーはここで一度だけ登録すればよい。
+      const CLICKABLE_SELECTOR =
+        'a, button, summary, input[type="submit"], input[type="button"], input[type="reset"], [role="button"]';
+
+      const playSound = (url) => {
+        const audio = new Audio(url);
+        audio.play().catch(() => {});
+      };
+
+      document.addEventListener("click", (e) => {
+        if (e.target instanceof Element && e.target.closest(CLICKABLE_SELECTOR)) {
+          playSound(clickSoundUrl);
+        }
+      });
+
+      const hoverMedia = window.matchMedia("(hover: hover) and (pointer: fine)");
+      let hoveredEl = null;
+
+      document.addEventListener("pointerover", (e) => {
+        if (!hoverMedia.matches || e.pointerType !== "mouse") return;
+        const el = e.target instanceof Element ? e.target.closest(CLICKABLE_SELECTOR) : null;
+        if (el && el !== hoveredEl) {
+          hoveredEl = el;
+          playSound(hoverSoundUrl);
+        } else if (!el) {
+          hoveredEl = null;
+        }
       });
     </script>
   </body>
