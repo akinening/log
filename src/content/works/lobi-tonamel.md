@@ -7,7 +7,7 @@ team: "数十名規模（Frontend 3 / Backend 3 ほか）"
 role: "Frontend Engineer"
 order: 10
 year: "2019"
-thumbnail: "/works/lobi-tonamel.svg"
+thumbnail: "/works/lobi-tonamel.webp"
 tags: ["Engineering", "Community", "e-Sports"]
 metrics:
   - value: "16万"
