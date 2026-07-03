@@ -50,10 +50,23 @@ const isCurrent = (href: string) =>
     <ViewTransitions />
   </head>
   <body>
-    <div class="page-veil" aria-hidden="true">
-      <span class="page-veil-mark">
-        <span class="page-veil-logo" set:html={akinenMark} />
-      </span>
+    <div class="page-veil">
+      <div class="page-veil-inner">
+        <span class="page-veil-mark">
+          <span class="page-veil-logo" set:html={akinenMark} />
+        </span>
+        <div class="page-veil-choice">
+          <p class="page-veil-note">クリックに呼応するアンビエントサウンドと共にご覧いただけます</p>
+          <div class="page-veil-buttons">
+            <button type="button" class="page-veil-btn is-on" data-sound-choice="on">
+              <span class="en">Sound On</span>
+            </button>
+            <button type="button" class="page-veil-btn" data-sound-choice="off">
+              <span class="en">Sound Off</span>
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
 
     <header class="mobile-bar">
@@ -90,6 +103,18 @@ const isCurrent = (href: string) =>
         <p class="sidebar-foot">
           Tokyo, Japan<br />© 2026 Akinori Ozawa
         </p>
+        <div class="sound-toggle">
+          <span class="overline">Sound</span>
+          <button
+            type="button"
+            class="sound-switch"
+            data-sound-switch
+            aria-pressed="false"
+            aria-label="アンビエントサウンドの再生切り替え"
+          >
+            <span class="sound-switch-dot" aria-hidden="true"></span>
+          </button>
+        </div>
       </aside>
 
       <main class="main">
@@ -105,6 +130,84 @@ const isCurrent = (href: string) =>
       document.addEventListener("astro:after-swap", () => {
         var veil = document.querySelector(".page-veil");
         if (veil) veil.remove();
+      });
+
+      // ベールのモードを描画前に同期的に決める。
+      // 初回アクセス（サウンド未選択）はプロンプト表示、選択済み・
+      // reduced-motion 環境は従来の自動アニメーションで即退場する。
+      (function () {
+        var veil = document.querySelector(".page-veil");
+        if (!veil) return;
+        var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        var chosen = null;
+        try {
+          chosen = sessionStorage.getItem("akinen-sound");
+        } catch (e) {}
+        if (reduced || chosen) {
+          veil.classList.add("is-auto");
+          veil.setAttribute("aria-hidden", "true");
+          setTimeout(function () {
+            if (veil.parentNode) veil.remove();
+          }, 1600);
+        } else {
+          veil.classList.add("is-prompt");
+        }
+      })();
+    </script>
+
+    <script>
+      import { enableAmbient, saveChoice } from "../scripts/ambient";
+
+      // イントロベールのサウンド選択。ベールは初回フルロード時にしか
+      // 存在しないため、ここで一度だけ配線すればよい。
+      const veil = document.querySelector(".page-veil");
+      if (veil && veil.classList.contains("is-prompt")) {
+        const dismiss = () => {
+          veil.classList.add("is-dismissed");
+          document.dispatchEvent(new CustomEvent("akinen:veil-dismissed"));
+          setTimeout(() => veil.remove(), 1500);
+        };
+
+        veil.querySelectorAll<HTMLButtonElement>("[data-sound-choice]").forEach((btn) => {
+          btn.addEventListener(
+            "click",
+            () => {
+              const on = btn.dataset.soundChoice === "on";
+              saveChoice(on ? "on" : "off");
+              if (on) enableAmbient({ greet: true });
+              dismiss();
+            },
+            { once: true }
+          );
+        });
+      }
+    </script>
+
+    <script>
+      import { enableAmbient, disableAmbient, saveChoice, readChoice } from "../scripts/ambient";
+
+      // サイドバーの Sound トグル。ページ遷移のたびに要素が差し替わる
+      // ため astro:page-load で毎回配線し直す。表示状態は選択済みの
+      // 設定（sessionStorage）を単一の情報源として同期する
+      document.addEventListener("astro:page-load", () => {
+        const btn = document.querySelector<HTMLButtonElement>("[data-sound-switch]");
+        if (!btn) return;
+
+        const sync = () => {
+          btn.setAttribute("aria-pressed", readChoice() === "on" ? "true" : "false");
+        };
+        sync();
+
+        btn.addEventListener("click", () => {
+          const nowOn = btn.getAttribute("aria-pressed") !== "true";
+          btn.setAttribute("aria-pressed", String(nowOn));
+          saveChoice(nowOn ? "on" : "off");
+          if (nowOn) enableAmbient();
+          else disableAmbient();
+        });
+
+        // 初回アクセスでベールから選択した場合に反映する
+        document.addEventListener("akinen:veil-dismissed", sync, { once: true });
       });
     </script>
 
@@ -133,11 +236,26 @@ const isCurrent = (href: string) =>
         targets.forEach((el) => observer.observe(el));
       };
 
-      // 初回アクセス時のみ、イントロベールの開幕に合わせてリビールを遅らせる
+      // 初回アクセス時のみ、イントロベールの開幕に合わせてリビールを遅らせる。
+      // サウンド選択プロンプト表示中はユーザーの選択（ベール退場）を待つ。
       let firstLoad = true;
       document.addEventListener("astro:page-load", () => {
         const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-        const delay = firstLoad && !reduced && document.querySelector(".page-veil") ? 600 : 0;
+        const veil = document.querySelector(".page-veil");
+        if (
+          firstLoad &&
+          veil?.classList.contains("is-prompt") &&
+          !veil.classList.contains("is-dismissed")
+        ) {
+          firstLoad = false;
+          document.addEventListener(
+            "akinen:veil-dismissed",
+            () => setTimeout(initReveal, 400),
+            { once: true }
+          );
+          return;
+        }
+        const delay = firstLoad && !reduced && veil ? 600 : 0;
         firstLoad = false;
         delay ? setTimeout(initReveal, delay) : initReveal();
       });

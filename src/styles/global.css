@@ -223,6 +223,54 @@ button {
   line-height: 1.6;
 }
 
+.sound-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px solid var(--hairline);
+}
+
+.sound-switch {
+  position: relative;
+  width: 34px;
+  height: 18px;
+  border-radius: 999px;
+  background: var(--hairline);
+  flex-shrink: 0;
+  transition: background-color 0.4s var(--ease);
+}
+
+.sound-switch-dot {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--paper);
+  box-shadow: 0 1px 2px rgba(19, 19, 17, 0.18);
+  transition: transform 0.4s var(--ease);
+}
+
+.sound-switch[aria-pressed="true"] {
+  background: var(--ink);
+}
+
+.sound-switch[aria-pressed="true"] .sound-switch-dot {
+  transform: translateX(16px);
+}
+
+.sound-switch:hover {
+  background: var(--muted);
+}
+
+.sound-switch[aria-pressed="true"]:hover {
+  background: var(--accent);
+}
+
 .main {
   margin-left: var(--sidebar-w);
   padding: 0 var(--gutter);
@@ -306,7 +354,10 @@ button {
 }
 
 /* ---- intro veil ----------------------------------------------------- */
-/* 初回アクセス時のみ再生。View Transitions 遷移時は html.vt-nav で無効化 */
+/* フルロード時のみ表示。View Transitions 遷移時は要素ごと除去される。
+   is-prompt: 初回アクセスでサウンド選択を表示（選択までベールが留まる）
+   is-auto:   選択済みセッションは従来の自動アニメーションで即退場
+   is-dismissed: 選択後の退場 */
 
 .page-veil {
   position: fixed;
@@ -316,7 +367,6 @@ button {
   place-items: center;
   background: var(--paper);
   pointer-events: none;
-  animation: veil-out 0.75s var(--ease) 0.62s forwards;
 }
 
 .page-veil::after {
@@ -328,13 +378,118 @@ button {
   height: 1px;
   background: var(--accent);
   opacity: 0;
-  animation: veil-edge 0.75s var(--ease) 0.62s forwards;
+}
+
+.page-veil-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .page-veil-mark {
   display: inline-flex;
   opacity: 0;
+}
+
+.page-veil-choice {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 22px;
+  margin-top: 40px;
+  opacity: 0;
+}
+
+.page-veil-note {
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  text-align: center;
+  padding: 0 var(--gutter);
+}
+
+.page-veil-buttons {
+  display: flex;
+  gap: 14px;
+}
+
+.page-veil-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 12px 30px;
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+  font-family: var(--font-en);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  transition:
+    color 0.4s var(--ease),
+    border-color 0.4s var(--ease),
+    background-color 0.4s var(--ease);
+}
+
+.page-veil-btn:hover {
+  border-color: var(--ink);
+  color: var(--ink);
+}
+
+.page-veil-btn.is-on {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.page-veil-btn.is-on:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+/* 自動退場モード */
+.page-veil.is-auto {
+  animation: veil-out 0.75s var(--ease) 0.62s forwards;
+}
+
+.page-veil.is-auto::after {
+  animation: veil-edge 0.75s var(--ease) 0.62s forwards;
+}
+
+.page-veil.is-auto .page-veil-mark {
   animation: veil-mark 0.62s var(--ease) forwards;
+}
+
+.page-veil.is-auto .page-veil-choice {
+  display: none;
+}
+
+/* サウンド選択プロンプトモード */
+.page-veil.is-prompt {
+  pointer-events: auto;
+}
+
+.page-veil.is-prompt .page-veil-mark {
+  animation: veil-mark-in 0.62s var(--ease) forwards;
+}
+
+.page-veil.is-prompt .page-veil-choice {
+  animation: veil-fade-in 0.6s var(--ease) 0.5s forwards;
+}
+
+/* 選択後の退場 */
+.page-veil.is-dismissed {
+  pointer-events: none;
+  animation: veil-out 0.8s var(--ease) 0.3s forwards;
+}
+
+.page-veil.is-dismissed::after {
+  animation: veil-edge 0.8s var(--ease) 0.3s forwards;
+}
+
+.page-veil.is-dismissed .page-veil-mark,
+.page-veil.is-dismissed .page-veil-choice {
+  animation: veil-fade-out 0.35s var(--ease) forwards;
 }
 
 .page-veil-logo {
@@ -383,6 +538,35 @@ button {
   }
   100% {
     opacity: 0;
+  }
+}
+
+@keyframes veil-mark-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes veil-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes veil-fade-out {
+  to {
+    opacity: 0;
+    transform: translateY(-10px);
   }
 }
 
