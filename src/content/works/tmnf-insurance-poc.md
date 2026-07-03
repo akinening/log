@@ -7,7 +7,7 @@ team: "本部PO / 提携企業 / Designer 2（社内2人目の中途デザイナ
 role: "インハウスデザイナー（新規事業PoCのプロダクトデザイン）"
 order: 7
 year: "2023"
-thumbnail: "/works/tmnf-insurance-poc.svg"
+thumbnail: "/works/tmnf-insurance-poc.webp"
 tags: ["Insurance", "New Business", "Enterprise"]
 metrics:
   - value: "3事業"

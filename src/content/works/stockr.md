@@ -7,7 +7,7 @@ team: "自社プロダクトチーム（Designer 1）"
 role: "Lead Product Designer（リサーチ・体験設計・UI・グロース）"
 order: 9
 year: "2021"
-thumbnail: "/works/stockr.svg"
+thumbnail: "/works/stockr.webp"
 tags: ["0→1", "Consumer", "Research"]
 metrics:
   - value: "24,000"
