@@ -19,6 +19,16 @@ for (let base = 38; base <= 62; base += 12) {
 
 const midiToFreq = (m) => 440 * 2 ** ((m - 69) / 12);
 
+// 等ラウドネス曲線の影響で、同じ音量でも高い音ほど大きく聴こえる。
+// 基準周波数より上のオクターブごとにゲインを落とし、下のオクターブは
+// 少し持ち上げることで、音域全体の体感音量を均していく
+const LOUDNESS_REF_FREQ = 110; // A2 付近を基準に
+const LOUDNESS_DB_PER_OCTAVE = 4.5;
+const loudnessGain = (freq) => {
+  const octaves = Math.log2(freq / LOUDNESS_REF_FREQ);
+  return 10 ** ((-LOUDNESS_DB_PER_OCTAVE * octaves) / 20);
+};
+
 let ctx = null;
 let dryBus = null;
 let sendBus = null;
@@ -144,6 +154,7 @@ function playTone(midi, opts = {}) {
 
   const t = ctx.currentTime;
   const freq = midiToFreq(midi);
+  const targetPeak = peak * loudnessGain(freq);
 
   // わずかにデチューンした 2 本のサイン波でゆらぎを作る
   const oscA = ctx.createOscillator();
@@ -161,7 +172,7 @@ function playTone(midi, opts = {}) {
 
   const env = ctx.createGain();
   env.gain.setValueAtTime(0.0001, t);
-  env.gain.linearRampToValueAtTime(peak, t + attack);
+  env.gain.linearRampToValueAtTime(targetPeak, t + attack);
   env.gain.exponentialRampToValueAtTime(0.0001, t + attack + release);
 
   const panner = ctx.createStereoPanner();
@@ -301,16 +312,6 @@ document.addEventListener("click", () => {
       () => playTone(midi, { peak: 0.028, attack: 1.2, release: 5 }),
       150 + Math.random() * 200
     );
-  }
-});
-
-// タブが隠れている間は止め、戻ったら再開する
-document.addEventListener("visibilitychange", () => {
-  if (!ctx || !enabled) return;
-  if (document.hidden) {
-    ctx.suspend().catch(() => {});
-  } else {
-    ctx.resume().catch(() => {});
   }
 });
 

@@ -353,6 +353,37 @@ button {
   transform: none;
 }
 
+/* ---- click ripple --------------------------------------------------- */
+
+.click-ripple {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 6px;
+  height: 6px;
+  border: 1px solid var(--ink);
+  border-radius: 50%;
+  opacity: 0.45;
+  pointer-events: none;
+  z-index: 200;
+  transform: translate(-50%, -50%);
+  animation: ripple-expand 1.1s var(--ease) forwards;
+}
+
+@keyframes ripple-expand {
+  to {
+    width: 160px;
+    height: 160px;
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .click-ripple {
+    display: none;
+  }
+}
+
 /* ---- intro veil ----------------------------------------------------- */
 /* フルロード時のみ表示。View Transitions 遷移時は要素ごと除去される。
    is-prompt: 初回アクセスでサウンド選択を表示（選択までベールが留まる）

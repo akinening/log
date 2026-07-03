@@ -269,7 +269,7 @@ const isCurrent = (href: string) =>
 
       const playSound = (url) => {
         const audio = new Audio(url);
-        audio.volume = 0.5;
+        audio.volume = 0.2;
         audio.play().catch(() => {});
       };
 
@@ -291,6 +291,22 @@ const isCurrent = (href: string) =>
         } else if (!el) {
           hoveredEl = null;
         }
+      });
+    </script>
+
+    <script is:inline>
+      // クリック位置に波紋を1つ広げる。document への委譲登録のみで
+      // 済むため、他の恒久リスナーと同様ここで一度だけ登録すればよい
+      const rippleReduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+      document.addEventListener("click", (e) => {
+        if (rippleReduced.matches) return;
+        const ripple = document.createElement("span");
+        ripple.className = "click-ripple";
+        ripple.style.left = e.clientX + "px";
+        ripple.style.top = e.clientY + "px";
+        ripple.addEventListener("animationend", () => ripple.remove());
+        document.body.appendChild(ripple);
       });
     </script>
   </body>
