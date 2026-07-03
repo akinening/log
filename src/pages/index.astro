@@ -1,6 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 import Base from "../layouts/Base.astro";
+import PasswordGate from "../components/PasswordGate.astro";
 
 const works = (await getCollection("works")).sort(
   (a, b) => a.data.order - b.data.order
@@ -68,69 +69,63 @@ const sns = [
 ---
 
 <Base
-  title="Akinori Ozawa — Senior Product Designer"
+  title="Akinori Ozawa — Product Designer"
   description="複雑な事業・組織・プロダクト課題を構造化し、出荷し、事業成果につなげるシニアプロダクトデザイナー。グローバル250万DLのプロダクトグロース、デザイン組織構築、エンタープライズDXの実績。"
   path="/"
 >
   <section class="hero">
-    <p class="overline rv">Akinori Ozawa — Senior Product Designer</p>
+    <p class="overline rv">Akinori Ozawa — Product Designer</p>
     <h1 class="hero-title rv" style="--rv-delay:.08s">
       Design that ships,<br />
       scales, and <span class="serif-accent">pays back.</span>
     </h1>
     <p class="hero-lead rv" style="--rv-delay:.16s">
-      複雑な事業・組織・プロダクトの課題を構造化し、出荷し、数字で証明する。
-      UX/UIデザインとエンジニアリング8年超の専門性を基盤に、0→1の価値検証からグローバルグロース、
-      デザイン組織の構築までを一貫して率いるプロダクトデザイナーです。
+      事業価値をデザインの力で最大化する。８年超のtoC/toB双方の知見と実装力を武器に、グロースと事業価値の向上にコミットします。
     </p>
-    <div class="hero-facts rv" style="--rv-delay:.24s">
-      <p class="fact en"><strong>250万+</strong><span>グローバルDL</span></p>
-      <p class="fact en"><strong>8年+</strong><span>デザイン × エンジニアリング</span></p>
-      <p class="fact en"><strong>3→14名</strong><span>デザイン組織構築</span></p>
-    </div>
   </section>
 
   <section class="section" id="work">
     <div class="section-head rv">
       <h2 class="section-title">Selected Work<sup>{String(works.length).padStart(2, "0")}</sup></h2>
-      <p class="section-note">課題の構造化 → 出荷 → 事業インパクト</p>
     </div>
 
-    <div class="work-grid" data-work-grid>
-      {
-        works.map((work, i) => (
-          <a
-            class:list={["work-card", "rv", { "is-hidden": i >= VISIBLE }]}
-            href={`/works/${work.slug}/`}
-            style={`--rv-delay:${(i % VISIBLE) * 0.08}s`}
-          >
-            <figure class="work-thumb">
-              <img
-                src={work.data.thumbnail}
-                alt={work.data.title}
-                width="1600"
-                height="900"
-                loading={i < VISIBLE ? "eager" : "lazy"}
-              />
-            </figure>
-            <p class="work-meta">
-              <span>{work.data.year}</span>
-              <span class="dot" />
-              <span>{work.data.tags[0]}</span>
-            </p>
-            <h3 class="work-title">{work.data.title}</h3>
-            <p class="work-summary">{work.data.summary}</p>
-          </a>
-        ))
-      }
-    </div>
+    <PasswordGate>
+      <div class="work-grid" data-work-grid>
+        {
+          works.map((work, i) => (
+            <a
+              class:list={["work-card", "rv", { "is-hidden": i >= VISIBLE }]}
+              href={`/works/${work.slug}/`}
+              style={`--rv-delay:${(i % VISIBLE) * 0.08}s`}
+            >
+              <figure class="work-thumb">
+                <img
+                  src={work.data.thumbnail}
+                  alt={work.data.title}
+                  width="1600"
+                  height="900"
+                  loading={i < VISIBLE ? "eager" : "lazy"}
+                />
+              </figure>
+              <p class="work-meta">
+                <span>{work.data.year}</span>
+                <span class="dot" />
+                <span>{work.data.tags[0]}</span>
+              </p>
+              <h3 class="work-title">{work.data.title}</h3>
+              <p class="work-summary">{work.data.summary}</p>
+            </a>
+          ))
+        }
+      </div>
 
-    <div class="load-more-wrap rv">
-      <button class="load-more" type="button" data-load-more>
-        <span>Load More</span>
-        <span class="arrow" aria-hidden="true">↓</span>
-      </button>
-    </div>
+      <div class="load-more-wrap rv">
+        <button class="load-more" type="button" data-load-more>
+          <span>Load More</span>
+          <span class="arrow" aria-hidden="true">↓</span>
+        </button>
+      </div>
+    </PasswordGate>
   </section>
 
   <section class="section" id="sidework">
@@ -181,6 +176,32 @@ const sns = [
         </ul>
       </div>
     </div>
+  </section>
+
+  <section class="section" id="kind-words">
+    <div class="section-head rv">
+      <h2 class="section-title">Kind Words</h2>
+      <p class="section-note">推薦文</p>
+    </div>
+    <PasswordGate>
+      <blockquote class="kind-quote rv">
+        <p class="kind-quote-text">
+          たった1人で、goghモバイル版、Steam版のUIUX、goghウェブサイト、goghグッズストア、RobloxゲームのUI、プレスリリースや採用向けグラフィック全てを担当しています
+        </p>
+        <p class="kind-quote-emphasis serif-accent">めちゃくちゃすごい</p>
+        <footer class="kind-quote-foot">
+          <a
+            class="kind-quote-source"
+            href="https://x.com/tbutcoffee/status/2036052668951797931"
+            target="_blank"
+            rel="noopener"
+          >
+            <span>X（@tbutcoffee）の投稿</span>
+            <span class="ext" aria-hidden="true">↗</span>
+          </a>
+        </footer>
+      </blockquote>
+    </PasswordGate>
   </section>
 
   <footer class="site-foot">

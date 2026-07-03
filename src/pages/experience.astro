@@ -167,15 +167,26 @@ import Base from "../layouts/Base.astro";
   </section>
 
   <dialog class="private-mode-modal" aria-labelledby="private-mode-title" data-private-modal>
-    <h2 id="private-mode-title">あいことばを入力</h2>
+    <p class="private-mode-eyebrow">Enter Password</p>
+    <h2 id="private-mode-title" class="private-mode-title">あいことばが必要です</h2>
     <p class="private-mode-description">
       より詳細な経歴を閲覧できるようになります。ご入用の方は、小澤までご連絡ください
     </p>
-    <input class="private-mode-input" type="password" autocomplete="off" data-private-input />
-    <div class="private-mode-actions">
-      <button class="private-mode-cancel" type="button" data-private-cancel>キャンセル</button>
-      <button class="private-mode-confirm" type="button" data-private-confirm>送信</button>
-    </div>
+    <form class="private-mode-form" data-private-form novalidate>
+      <input
+        class="private-mode-input"
+        type="password"
+        autocomplete="off"
+        placeholder="あいことば"
+        aria-label="あいことば"
+        data-private-input
+      />
+      <p class="private-mode-error" data-private-error aria-live="polite">あいことばが正しくありません</p>
+      <div class="private-mode-actions">
+        <button class="private-mode-cancel" type="button" data-private-cancel>キャンセル</button>
+        <button class="private-mode-confirm" type="submit" data-private-confirm>送信</button>
+      </div>
+    </form>
   </dialog>
 </Base>
 
@@ -186,17 +197,20 @@ import Base from "../layouts/Base.astro";
     if (!(privateModal instanceof HTMLDialogElement) || privateModal.dataset.bound) return;
     privateModal.dataset.bound = "true";
 
+    const privateForm = privateModal.querySelector("[data-private-form]");
     const privateInput = privateModal.querySelector("[data-private-input]");
     const privateCancel = privateModal.querySelector("[data-private-cancel]");
-    const privateConfirm = privateModal.querySelector("[data-private-confirm]");
+    const privateError = privateModal.querySelector("[data-private-error]");
 
     const closePrivateModal = () => {
       privateModal.close();
       if (privateInput instanceof HTMLInputElement) privateInput.value = "";
+      privateError?.classList.remove("is-visible");
     };
 
     privateButton?.addEventListener("click", (event) => {
       event.preventDefault();
+      privateError?.classList.remove("is-visible");
       privateModal.showModal();
       if (privateInput instanceof HTMLInputElement) {
         privateInput.value = "";
@@ -209,13 +223,20 @@ import Base from "../layouts/Base.astro";
       if (event.target === privateModal) closePrivateModal();
     });
 
-    privateConfirm?.addEventListener("click", () => {
+    privateForm?.addEventListener("submit", (event) => {
+      event.preventDefault();
       if (privateInput instanceof HTMLInputElement && privateInput.value === "Saudade") {
         document.body.classList.add("is-private");
         closePrivateModal();
         return;
       }
-      alert("あいことばが一致しません");
+      privateError?.classList.add("is-visible");
+      privateModal.classList.remove("is-shake");
+      requestAnimationFrame(() => privateModal.classList.add("is-shake"));
+      if (privateInput instanceof HTMLInputElement) {
+        privateInput.value = "";
+        privateInput.focus();
+      }
     });
   };
 
