@@ -1172,6 +1172,32 @@ a.sidework-item:hover .ext {
   font-weight: 650;
 }
 
+.xp-photos {
+  margin-top: 24px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+@media (max-width: 640px) {
+  .xp-photos {
+    grid-template-columns: 1fr;
+  }
+}
+
+.xp-photo {
+  aspect-ratio: 3 / 2;
+  overflow: hidden;
+  border-radius: 6px;
+  background: var(--paper-dim);
+}
+
+.xp-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 details.xp-entry summary {
   cursor: pointer;
   list-style: none;

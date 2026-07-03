@@ -1,5 +1,8 @@
 ---
 import Base from "../layouts/Base.astro";
+import { Image } from "astro:assets";
+import figmaPhoto from "../images/figma.webp";
+import spectrumPhoto from "../images/spectrum.webp";
 ---
 
 <Base
@@ -146,6 +149,14 @@ import Base from "../layouts/Base.astro";
           </li>
           <li>2020 - 2022 八王子IT勉強会「Yuruhachi.it」運営・登壇</li>
         </ul>
+        <div class="xp-photos">
+          <figure class="xp-photo">
+            <Image src={spectrumPhoto} alt="Spectrum Tokyo Festival 2023 登壇の様子" />
+          </figure>
+          <figure class="xp-photo">
+            <Image src={figmaPhoto} alt="Figma Japan Community Event — Show & Tell 登壇の様子" />
+          </figure>
+        </div>
       </article>
     </div>
   </section>
