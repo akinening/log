@@ -642,12 +642,33 @@ a.sidework-item:hover .ext {
 
 /* ---- kind words ------------------------------------------------------ */
 
+.kind-quote-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+@media (min-width: 901px) {
+  .kind-quote-list {
+    grid-template-columns: repeat(3, 1fr);
+    align-items: stretch;
+  }
+}
+
 .kind-quote {
   position: relative;
+  display: flex;
+  flex-direction: column;
   padding: clamp(40px, 6vw, 64px) clamp(28px, 6vw, 72px);
   background: var(--paper-dim);
   border-radius: 16px;
   overflow: hidden;
+}
+
+@media (min-width: 901px) {
+  .kind-quote {
+    padding: 36px 30px;
+  }
 }
 
 .kind-quote::before {
@@ -663,6 +684,13 @@ a.sidework-item:hover .ext {
   pointer-events: none;
 }
 
+@media (min-width: 901px) {
+  .kind-quote::before {
+    font-size: 76px;
+    left: 24px;
+  }
+}
+
 .kind-quote-text {
   position: relative;
   font-family: var(--font-serif);
@@ -674,6 +702,13 @@ a.sidework-item:hover .ext {
   max-width: 46em;
 }
 
+@media (min-width: 901px) {
+  .kind-quote-text {
+    font-size: 16.5px;
+    line-height: 1.7;
+  }
+}
+
 .kind-quote-emphasis {
   position: relative;
   margin-top: 16px;
@@ -681,11 +716,24 @@ a.sidework-item:hover .ext {
   color: var(--accent);
 }
 
+@media (min-width: 901px) {
+  .kind-quote-emphasis {
+    font-size: 16.5px;
+  }
+}
+
 .kind-quote-foot {
   position: relative;
   margin-top: 32px;
   padding-top: 22px;
   border-top: 1px solid var(--hairline);
+}
+
+@media (min-width: 901px) {
+  .kind-quote-foot {
+    margin-top: auto;
+    padding-top: 18px;
+  }
 }
 
 .kind-quote-source {
@@ -713,6 +761,14 @@ a.sidework-item:hover .ext {
 .kind-quote-source:hover .ext {
   color: var(--accent);
   transform: translate(2px, -2px);
+}
+
+.kind-quote-author {
+  font-family: var(--font-jp);
+  font-size: 12.5px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--muted);
 }
 
 /* ---- footer ---------------------------------------------------------- */
