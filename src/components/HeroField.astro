@@ -1,0 +1,254 @@
+<canvas class="hero-field" data-hero-field aria-hidden="true"></canvas>
+
+<script>
+  const VERT = `
+attribute vec2 a_pos;
+void main() {
+  gl_Position = vec4(a_pos, 0.0, 1.0);
+}
+`;
+
+  const FRAG = `
+precision highp float;
+
+uniform vec2 u_res;
+uniform vec2 u_mouse;
+uniform float u_time;
+uniform float u_dpr;
+uniform float u_strength;
+uniform vec4 u_textBox;
+uniform float u_feather;
+
+float hash(vec2 p) {
+  return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
+}
+
+float noise(vec2 p) {
+  vec2 i = floor(p);
+  vec2 f = fract(p);
+  f = f * f * (3.0 - 2.0 * f);
+  return mix(
+    mix(hash(i), hash(i + vec2(1.0, 0.0)), f.x),
+    mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), f.x),
+    f.y
+  );
+}
+
+void main() {
+  vec2 px = gl_FragCoord.xy;
+  float cell = 26.0 * u_dpr;
+  vec2 gid = floor(px / cell);
+  vec2 center = (gid + 0.5) * cell;
+
+  float md = distance(center, u_mouse);
+  float sigma = 170.0 * u_dpr;
+  float influence = exp(-(md * md) / (sigma * sigma)) * u_strength;
+
+  // 見出し・リード文の矩形の内側ではカーソルの発光・変位を退かせ、
+  // 同系色のアクセントブルーが文字と喧嘩しないようにする
+  float boxDx = max(u_textBox.x - px.x, px.x - u_textBox.z);
+  float boxDy = max(u_textBox.y - px.y, px.y - u_textBox.w);
+  float keep = smoothstep(0.0, u_feather, max(boxDx, boxDy));
+  influence *= keep;
+
+  vec2 dir = (center - u_mouse) / max(md, 1.0);
+  float breath = noise(gid * 0.35 + u_time * 0.18);
+  vec2 wob = vec2(
+    noise(gid * 0.6 + u_time * 0.12),
+    noise(gid * 0.6 + 37.7 - u_time * 0.1)
+  ) - 0.5;
+
+  center += dir * influence * 7.0 * u_dpr + wob * 2.2 * u_dpr;
+
+  float d = distance(px, center);
+  float r = (1.05 + breath * 0.55 + influence * 2.4) * u_dpr;
+  float shape = 1.0 - smoothstep(r - u_dpr, r + u_dpr, d);
+
+  float edge = smoothstep(0.0, 90.0 * u_dpr, px.y)
+             * smoothstep(0.0, 90.0 * u_dpr, u_res.y - px.y)
+             * smoothstep(0.0, 60.0 * u_dpr, px.x)
+             * smoothstep(0.0, 60.0 * u_dpr, u_res.x - px.x);
+
+  float alpha = shape * mix(0.08 + breath * 0.05, 0.55, influence) * edge;
+  alpha *= mix(0.4, 1.0, keep);
+
+  vec3 ink = vec3(0.075, 0.075, 0.067);
+  vec3 accent = vec3(0.153, 0.263, 0.804);
+  vec3 col = mix(ink, accent, smoothstep(0.04, 0.5, influence));
+
+  gl_FragColor = vec4(col * alpha, alpha);
+}
+`;
+
+  const initHeroField = () => {
+    const canvas = document.querySelector<HTMLCanvasElement>("[data-hero-field]");
+    if (!canvas || canvas.dataset.bound === "true") return;
+    canvas.dataset.bound = "true";
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const gl = canvas.getContext("webgl", { alpha: true, premultipliedAlpha: true });
+    if (!gl) return;
+
+    const compile = (type: number, src: string) => {
+      const shader = gl.createShader(type)!;
+      gl.shaderSource(shader, src);
+      gl.compileShader(shader);
+      return shader;
+    };
+
+    const program = gl.createProgram()!;
+    gl.attachShader(program, compile(gl.VERTEX_SHADER, VERT));
+    gl.attachShader(program, compile(gl.FRAGMENT_SHADER, FRAG));
+    gl.linkProgram(program);
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) return;
+    gl.useProgram(program);
+
+    const buf = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+    const aPos = gl.getAttribLocation(program, "a_pos");
+    gl.enableVertexAttribArray(aPos);
+    gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
+
+    const uRes = gl.getUniformLocation(program, "u_res");
+    const uMouse = gl.getUniformLocation(program, "u_mouse");
+    const uTime = gl.getUniformLocation(program, "u_time");
+    const uDpr = gl.getUniformLocation(program, "u_dpr");
+    const uStrength = gl.getUniformLocation(program, "u_strength");
+    const uTextBox = gl.getUniformLocation(program, "u_textBox");
+    const uFeather = gl.getUniformLocation(program, "u_feather");
+
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    let w = 0;
+    let h = 0;
+
+    // 見出し／リード文の矩形（フレームバッファ座標・Y反転済み）。未計測時は
+    // キープアウトを無効化しておく
+    const textBox = { x0: -1e6, y0: -1e6, x1: -1e6, y1: -1e6 };
+    const feather = 64;
+
+    const measureTextBox = () => {
+      const hero = canvas.closest<HTMLElement>(".hero");
+      const title = hero?.querySelector<HTMLElement>(".hero-title");
+      if (!hero || !title) return;
+      const lead = hero.querySelector<HTMLElement>(".hero-lead");
+      const canvasRect = canvas.getBoundingClientRect();
+      const pad = 24;
+      const rects = [title, lead].filter((el): el is HTMLElement => !!el).map((el) => el.getBoundingClientRect());
+      const left = Math.min(...rects.map((r) => r.left)) - canvasRect.left - pad;
+      const right = Math.max(...rects.map((r) => r.right)) - canvasRect.left + pad;
+      const top = Math.min(...rects.map((r) => r.top)) - canvasRect.top - pad;
+      const bottom = Math.max(...rects.map((r) => r.bottom)) - canvasRect.top + pad;
+      textBox.x0 = left * dpr;
+      textBox.x1 = right * dpr;
+      textBox.y0 = (canvasRect.height - bottom) * dpr;
+      textBox.y1 = (canvasRect.height - top) * dpr;
+    };
+
+    const resize = () => {
+      const cw = canvas.clientWidth;
+      const ch = canvas.clientHeight;
+      if (!cw || !ch) return;
+      w = cw;
+      h = ch;
+      canvas.width = Math.round(cw * dpr);
+      canvas.height = Math.round(ch * dpr);
+      gl.viewport(0, 0, canvas.width, canvas.height);
+      measureTextBox();
+    };
+    resize();
+    document.fonts?.ready?.then(measureTextBox);
+
+    const mouse = { x: w * 0.62, y: h * 0.4 };
+    const target = { x: mouse.x, y: mouse.y };
+    let strength = 0;
+    let strengthTarget = 0.7;
+    let lastMove = -1e9;
+
+    const ac = new AbortController();
+
+    window.addEventListener(
+      "pointermove",
+      (e) => {
+        const rect = canvas.getBoundingClientRect();
+        target.x = e.clientX - rect.left;
+        target.y = e.clientY - rect.top;
+        strengthTarget = 1;
+        lastMove = performance.now();
+      },
+      { passive: true, signal: ac.signal }
+    );
+    window.addEventListener("resize", resize, { signal: ac.signal });
+
+    let raf = 0;
+    let running = false;
+    let visible = true;
+    const start = performance.now();
+
+    const render = (now: number) => {
+      raf = requestAnimationFrame(render);
+      if (!w || !h) resize();
+
+      // 一定時間ポインターが動かなければ、緩やかな自律遊泳に切り替える
+      if (now - lastMove > 3500) {
+        const t = now * 0.00022;
+        target.x = w * (0.5 + 0.34 * Math.sin(t + 1.2));
+        target.y = h * (0.44 + 0.3 * Math.sin(t * 1.6 + 0.4));
+        strengthTarget = 0.7;
+      }
+
+      mouse.x += (target.x - mouse.x) * 0.06;
+      mouse.y += (target.y - mouse.y) * 0.06;
+      strength += (strengthTarget - strength) * 0.05;
+
+      gl.uniform2f(uRes, canvas.width, canvas.height);
+      gl.uniform2f(uMouse, mouse.x * dpr, canvas.height - mouse.y * dpr);
+      gl.uniform1f(uTime, (now - start) / 1000);
+      gl.uniform1f(uDpr, dpr);
+      gl.uniform1f(uStrength, strength);
+      gl.uniform4f(uTextBox, textBox.x0, textBox.y0, textBox.x1, textBox.y1);
+      gl.uniform1f(uFeather, feather * dpr);
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
+    };
+
+    const play = () => {
+      if (running || !visible || document.hidden) return;
+      running = true;
+      raf = requestAnimationFrame(render);
+    };
+    const pause = () => {
+      running = false;
+      cancelAnimationFrame(raf);
+    };
+
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        visible = entry.isIntersecting;
+        visible ? play() : pause();
+      },
+      { rootMargin: "80px" }
+    );
+    io.observe(canvas);
+
+    document.addEventListener(
+      "visibilitychange",
+      () => (document.hidden ? pause() : play()),
+      { signal: ac.signal }
+    );
+
+    document.addEventListener(
+      "astro:before-swap",
+      () => {
+        pause();
+        io.disconnect();
+        ac.abort();
+      },
+      { once: true }
+    );
+
+    play();
+  };
+
+  document.addEventListener("astro:page-load", initHeroField);
+</script>

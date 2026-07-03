@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content";
 import Base from "../layouts/Base.astro";
 import PasswordGate from "../components/PasswordGate.astro";
+import HeroField from "../components/HeroField.astro";
 
 const works = (await getCollection("works")).sort(
   (a, b) => a.data.order - b.data.order
@@ -74,6 +75,7 @@ const sns = [
   path="/"
 >
   <section class="hero">
+    <HeroField />
     <p class="overline rv">Akinori Ozawa — Product Designer</p>
     <h1 class="hero-title rv" style="--rv-delay:.08s">
       Design that ships,<br />
@@ -133,37 +135,15 @@ const sns = [
       <h2 class="section-title">Side Work</h2>
       <p class="section-note">登壇・執筆・コミュニティ</p>
     </div>
-    <div class="sidework-grid">
-      <div class="sidework-col rv">
-        <h3>Speaking</h3>
-        <ul class="sidework-list">
-          {
-            speaking.map((item) =>
-              item.href ? (
-                <li>
-                  <a class="sidework-item" href={item.href} target="_blank" rel="noopener">
-                    <time>{item.date}</time>
-                    <span class="t">{item.title}</span>
-                    <span class="ext" aria-hidden="true">↗</span>
-                  </a>
-                </li>
-              ) : (
-                <li>
-                  <span class="sidework-item">
-                    <time>{item.date}</time>
-                    <span class="t">{item.title}</span>
-                  </span>
-                </li>
-              )
-            )
-          }
-        </ul>
+    <div class="sidework-block rv">
+      <div class="sidework-head">
+        <h3 class="sidework-heading">Speaking<sup>{String(speaking.length).padStart(2, "0")}</sup></h3>
+        <p class="sidework-caption">登壇・トーク</p>
       </div>
-      <div class="sidework-col rv" style="--rv-delay:.1s">
-        <h3>Writing</h3>
-        <ul class="sidework-list">
-          {
-            writing.map((item) => (
+      <ul class="sidework-list">
+        {
+          speaking.map((item) =>
+            item.href ? (
               <li>
                 <a class="sidework-item" href={item.href} target="_blank" rel="noopener">
                   <time>{item.date}</time>
@@ -171,10 +151,36 @@ const sns = [
                   <span class="ext" aria-hidden="true">↗</span>
                 </a>
               </li>
-            ))
-          }
-        </ul>
+            ) : (
+              <li>
+                <span class="sidework-item">
+                  <time>{item.date}</time>
+                  <span class="t">{item.title}</span>
+                </span>
+              </li>
+            )
+          )
+        }
+      </ul>
+    </div>
+    <div class="sidework-block rv" style="--rv-delay:.08s">
+      <div class="sidework-head">
+        <h3 class="sidework-heading">Writing<sup>{String(writing.length).padStart(2, "0")}</sup></h3>
+        <p class="sidework-caption">執筆・発信</p>
       </div>
+      <ul class="sidework-list">
+        {
+          writing.map((item) => (
+            <li>
+              <a class="sidework-item" href={item.href} target="_blank" rel="noopener">
+                <time>{item.date}</time>
+                <span class="t">{item.title}</span>
+                <span class="ext" aria-hidden="true">↗</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
     </div>
   </section>
 

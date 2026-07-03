@@ -1,6 +1,7 @@
 ---
 import { ViewTransitions } from "astro:transitions";
 import "../styles/global.css";
+import akinenMark from "../images/akinen.svg?raw";
 
 interface Props {
   title: string;
@@ -47,6 +48,12 @@ const isCurrent = (href: string) =>
     <ViewTransitions />
   </head>
   <body>
+    <div class="page-veil" aria-hidden="true">
+      <span class="page-veil-mark">
+        <span class="page-veil-logo" set:html={akinenMark} />
+      </span>
+    </div>
+
     <header class="mobile-bar">
       <a class="brand" href="/">
         <span class="brand-name en">Akinori Ozawa</span>
@@ -64,8 +71,8 @@ const isCurrent = (href: string) =>
 
     <div class="shell">
       <aside class="sidebar">
-        <a class="brand" href="/">
-          <span class="brand-name en">Akinori<br />Ozawa</span>
+        <a class="brand" href="/" aria-label="Akinori Ozawa — Top">
+          <span class="brand-logo" set:html={akinenMark} />
           <span class="brand-role">Product Designer</span>
         </a>
         <nav class="side-nav" aria-label="Primary">
@@ -89,6 +96,15 @@ const isCurrent = (href: string) =>
         </div>
       </main>
     </div>
+
+    <script is:inline>
+      // View Transitions 経由のページ遷移ではイントロベールを再生しない
+      // （スワップで <html> の属性ごと差し替わるためクラスではなく要素を除去する）
+      document.addEventListener("astro:after-swap", () => {
+        var veil = document.querySelector(".page-veil");
+        if (veil) veil.remove();
+      });
+    </script>
 
     <script>
       const initReveal = () => {
@@ -115,7 +131,14 @@ const isCurrent = (href: string) =>
         targets.forEach((el) => observer.observe(el));
       };
 
-      document.addEventListener("astro:page-load", initReveal);
+      // 初回アクセス時のみ、イントロベールの開幕に合わせてリビールを遅らせる
+      let firstLoad = true;
+      document.addEventListener("astro:page-load", () => {
+        const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        const delay = firstLoad && !reduced && document.querySelector(".page-veil") ? 600 : 0;
+        firstLoad = false;
+        delay ? setTimeout(initReveal, delay) : initReveal();
+      });
     </script>
   </body>
 </html>

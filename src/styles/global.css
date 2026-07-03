@@ -117,6 +117,24 @@ button {
   display: block;
 }
 
+.brand-logo {
+  display: block;
+  width: 34px;
+  margin-bottom: 16px;
+  color: var(--ink);
+}
+
+.brand-logo svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.brand-logo path {
+  fill: currentColor;
+  stroke: currentColor;
+}
+
 .brand-name {
   display: block;
   font-family: var(--font-en);
@@ -287,6 +305,93 @@ button {
   transform: none;
 }
 
+/* ---- intro veil ----------------------------------------------------- */
+/* 初回アクセス時のみ再生。View Transitions 遷移時は html.vt-nav で無効化 */
+
+.page-veil {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  background: var(--paper);
+  pointer-events: none;
+  animation: veil-out 0.75s var(--ease) 0.62s forwards;
+}
+
+.page-veil::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: var(--accent);
+  opacity: 0;
+  animation: veil-edge 0.75s var(--ease) 0.62s forwards;
+}
+
+.page-veil-mark {
+  display: inline-flex;
+  opacity: 0;
+  animation: veil-mark 0.62s var(--ease) forwards;
+}
+
+.page-veil-logo {
+  display: block;
+  width: 44px;
+  color: var(--ink);
+}
+
+.page-veil-logo svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.page-veil-logo path {
+  fill: currentColor;
+  stroke: currentColor;
+}
+
+@keyframes veil-mark {
+  0% {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  40%,
+  75% {
+    opacity: 1;
+    transform: none;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes veil-out {
+  to {
+    transform: translateY(-101%);
+  }
+}
+
+@keyframes veil-edge {
+  0%,
+  85% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-veil {
+    display: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -309,8 +414,22 @@ button {
 /* ---- hero ---------------------------------------------------------- */
 
 .hero {
+  position: relative;
   padding-top: clamp(88px, 16vh, 190px);
   padding-bottom: var(--section-gap);
+}
+
+.hero-field {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.hero > :not(.hero-field) {
+  position: relative;
+  z-index: 1;
 }
 
 .hero .overline {
@@ -567,41 +686,75 @@ button {
 
 /* ---- side work ------------------------------------------------------ */
 
-.sidework-grid {
+.sidework-block {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 56px;
+  grid-template-columns: minmax(200px, 280px) 1fr;
+  gap: 20px 48px;
+  padding: clamp(36px, 5vh, 56px) 0;
+  border-top: 1px solid var(--hairline);
+}
+
+.section-head + .sidework-block {
+  padding-top: 0;
+  border-top: 0;
 }
 
 @media (max-width: 767px) {
-  .sidework-grid {
+  .sidework-block {
     grid-template-columns: 1fr;
+    gap: 20px;
   }
 }
 
-.sidework-col h3 {
+.sidework-heading {
   font-family: var(--font-en);
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
+  font-size: clamp(24px, 2.6vw, 34px);
+  font-weight: 550;
+  letter-spacing: -0.025em;
+  line-height: 1.1;
+}
+
+.sidework-heading sup {
+  font-size: 0.38em;
+  font-weight: 500;
+  color: var(--accent);
+  margin-left: 8px;
+  letter-spacing: 0.04em;
+}
+
+.sidework-caption {
+  margin-top: 10px;
+  font-size: 11.5px;
+  letter-spacing: 0.08em;
   color: var(--muted);
-  margin-bottom: 22px;
+}
+
+@media (max-width: 767px) {
+  .sidework-caption {
+    margin-top: 4px;
+  }
 }
 
 .sidework-list {
   list-style: none;
-  border-top: 1px solid var(--hairline);
 }
 
 .sidework-list li {
   border-bottom: 1px solid var(--hairline);
 }
 
+.sidework-list li:last-child {
+  border-bottom: 0;
+}
+
+.sidework-list li:first-child .sidework-item {
+  padding-top: 6px;
+}
+
 .sidework-item {
   display: flex;
   align-items: baseline;
-  gap: 20px;
+  gap: 24px;
   padding: 18px 4px;
   transition: background 0.4s var(--ease), padding-left 0.4s var(--ease);
 }
@@ -613,6 +766,7 @@ a.sidework-item:hover {
 
 .sidework-item time {
   flex: none;
+  min-width: 56px;
   font-family: var(--font-en);
   font-size: 11px;
   font-weight: 500;
@@ -622,7 +776,7 @@ a.sidework-item:hover {
 }
 
 .sidework-item .t {
-  font-size: 13.5px;
+  font-size: 14px;
   font-weight: 500;
   line-height: 1.7;
 }
