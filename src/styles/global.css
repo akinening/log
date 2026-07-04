@@ -640,6 +640,11 @@ button {
     transition: none;
   }
 
+  .hero-underline {
+    clip-path: none;
+    transition: none;
+  }
+
   *,
   *::before,
   *::after {
@@ -695,6 +700,32 @@ button {
 .hero-title .serif-accent {
   color: var(--accent);
   font-size: 1.02em;
+  position: relative;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.hero-underline {
+  position: absolute;
+  left: -3%;
+  bottom: -0.42em;
+  width: 116%;
+  max-width: none;
+  height: auto;
+  pointer-events: none;
+  user-select: none;
+  clip-path: inset(-30% 100% -30% 0);
+  transition: clip-path 1s var(--ease) calc(var(--rv-delay, 0s) + 0.5s);
+}
+
+@media (min-width: 901px) {
+  .hero-underline {
+    bottom: calc(-0.42em + 3px);
+  }
+}
+
+.hero-title.is-inview .hero-underline {
+  clip-path: inset(-30% 0 -30% 0);
 }
 
 .hero-lead {

@@ -3,6 +3,7 @@ import { getCollection } from "astro:content";
 import Base from "../layouts/Base.astro";
 import PasswordGate from "../components/PasswordGate.astro";
 import HeroField from "../components/HeroField.astro";
+import underline from "../images/underline.png";
 
 const works = (await getCollection("works")).sort(
   (a, b) => a.data.order - b.data.order
@@ -79,7 +80,17 @@ const sns = [
     <p class="overline rv">Akinori Ozawa — Product Designer</p>
     <h1 class="hero-title rv" style="--rv-delay:.08s">
       Design that ships,<br />
-      scales, and <span class="serif-accent">pays back.</span>
+      scales, and <span class="serif-accent"
+        >pays back.<img
+          class="hero-underline"
+          src={underline.src}
+          width={underline.width}
+          height={underline.height}
+          alt=""
+          aria-hidden="true"
+          loading="eager"
+        /></span
+      >
     </h1>
     <p class="hero-lead rv" style="--rv-delay:.16s">
       事業価値をデザインの力で最大化する。８年超のtoC/toB双方の知見と実装力を武器に、グロースと事業価値の向上にコミットします。
