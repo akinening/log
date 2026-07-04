@@ -116,7 +116,7 @@ function buildGraph() {
   outGain.connect(limiter);
 
   const master = ctx.createGain();
-  master.gain.value = 0.8;
+  master.gain.value = 1.0;
   master.connect(outGain);
 
   dryBus = ctx.createGain();

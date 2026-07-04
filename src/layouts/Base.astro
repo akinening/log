@@ -267,15 +267,15 @@ const isCurrent = (href: string) =>
       const CLICKABLE_SELECTOR =
         'a, button, summary, input[type="submit"], input[type="button"], input[type="reset"], [role="button"]';
 
-      const playSound = (url) => {
+      const playSound = (url, volume = 0.2) => {
         const audio = new Audio(url);
-        audio.volume = 0.2;
+        audio.volume = volume;
         audio.play().catch(() => {});
       };
 
       document.addEventListener("click", (e) => {
         if (e.target instanceof Element && e.target.closest(CLICKABLE_SELECTOR)) {
-          playSound(clickSoundUrl);
+          playSound(clickSoundUrl, 0.1);
         }
       });
 
