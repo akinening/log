@@ -269,42 +269,10 @@
 .load-more::before {
   content: "";
   position: absolute;
-  top: -12px;
-  left: 0;
-  width: 100%;
-  height: calc(100% + 12px);
+  inset: 0;
   background: var(--ink);
-  /* 上端だけ波形に切り抜き、下は塗りつぶすマスク（1px重ねて隙間を防ぐ） */
-  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 12'%3E%3Cpath d='M0 6 Q12 0 24 6 T48 6 V12 H0 Z' fill='%23000'/%3E%3C/svg%3E"),
-    linear-gradient(#000, #000);
-  -webkit-mask-size: 48px 12px, 100% calc(100% - 11px);
-  -webkit-mask-position: 0 0, 0 11px;
-  -webkit-mask-repeat: repeat-x, no-repeat;
-  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 12'%3E%3Cpath d='M0 6 Q12 0 24 6 T48 6 V12 H0 Z' fill='%23000'/%3E%3C/svg%3E"),
-    linear-gradient(#000, #000);
-  mask-size: 48px 12px, 100% calc(100% - 11px);
-  mask-position: 0 0, 0 11px;
-  mask-repeat: repeat-x, no-repeat;
   transform: translateY(101%);
-  transition: transform 0.6s var(--ease);
-  animation: load-more-wave 0.9s linear infinite;
-}
-
-@keyframes load-more-wave {
-  from {
-    -webkit-mask-position: 0 0, 0 11px;
-    mask-position: 0 0, 0 11px;
-  }
-  to {
-    -webkit-mask-position: 48px 0, 0 11px;
-    mask-position: 48px 0, 0 11px;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .load-more::before {
-    animation: none;
-  }
+  transition: transform 0.5s var(--ease);
 }
 
 .load-more span {
