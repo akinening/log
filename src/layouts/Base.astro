@@ -70,18 +70,32 @@ const isCurrent = (href: string) =>
     </div>
 
     <header class="mobile-bar">
-      <a class="brand" href="/">
-        <span class="brand-name en">Akinori Ozawa</span>
+      <a class="brand" href="/" aria-label="Akinori Ozawa — Top">
+        <span class="brand-logo" set:html={akinenMark} />
       </a>
-      <nav class="mobile-nav" aria-label="Primary">
-        {
-          navItems.map((item) => (
-            <a href={item.href} aria-current={isCurrent(item.href) ? "page" : undefined}>
-              {item.label}
-            </a>
-          ))
-        }
-      </nav>
+      <div class="mobile-bar-right">
+        <nav class="mobile-nav" aria-label="Primary">
+          {
+            navItems.map((item) => (
+              <a href={item.href} aria-current={isCurrent(item.href) ? "page" : undefined}>
+                {item.label}
+              </a>
+            ))
+          }
+        </nav>
+        <div class="mobile-sound">
+          <span class="mobile-sound-label en" aria-hidden="true">Sound</span>
+          <button
+            type="button"
+            class="sound-switch"
+            data-sound-switch
+            aria-pressed="false"
+            aria-label="アンビエントサウンドの再生切り替え"
+          >
+            <span class="sound-switch-dot" aria-hidden="true"></span>
+          </button>
+        </div>
+      </div>
     </header>
 
     <div class="shell">
@@ -190,20 +204,23 @@ const isCurrent = (href: string) =>
       // ため astro:page-load で毎回配線し直す。表示状態は選択済みの
       // 設定（sessionStorage）を単一の情報源として同期する
       document.addEventListener("astro:page-load", () => {
-        const btn = document.querySelector<HTMLButtonElement>("[data-sound-switch]");
-        if (!btn) return;
+        const btns = document.querySelectorAll<HTMLButtonElement>("[data-sound-switch]");
+        if (!btns.length) return;
 
         const sync = () => {
-          btn.setAttribute("aria-pressed", readChoice() === "on" ? "true" : "false");
+          const pressed = readChoice() === "on" ? "true" : "false";
+          btns.forEach((btn) => btn.setAttribute("aria-pressed", pressed));
         };
         sync();
 
-        btn.addEventListener("click", () => {
-          const nowOn = btn.getAttribute("aria-pressed") !== "true";
-          btn.setAttribute("aria-pressed", String(nowOn));
-          saveChoice(nowOn ? "on" : "off");
-          if (nowOn) enableAmbient();
-          else disableAmbient();
+        btns.forEach((btn) => {
+          btn.addEventListener("click", () => {
+            const nowOn = btn.getAttribute("aria-pressed") !== "true";
+            saveChoice(nowOn ? "on" : "off");
+            if (nowOn) enableAmbient();
+            else disableAmbient();
+            sync();
+          });
         });
 
         // 初回アクセスでベールから選択した場合に反映する
