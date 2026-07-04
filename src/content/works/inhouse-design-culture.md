@@ -7,7 +7,7 @@ team: "インハウスデザイナー 2 / 社内有志コミュニティ"
 role: "インハウスデザイナー（デザイン文化・基盤整備の主導）"
 order: 8
 year: "2023"
-thumbnail: "/works/inhouse-design-culture.svg"
+thumbnail: "/works/inhouse-design-culture.webp"
 tags: ["Org Design", "DesignOps", "Advocacy"]
 metrics:
   - value: "60名+"
