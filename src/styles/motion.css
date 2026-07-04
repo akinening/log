@@ -102,13 +102,18 @@
 
 .page-veil-buttons {
   display: flex;
-  gap: 14px;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  width: min(320px, calc(100vw - 2 * var(--gutter)));
 }
 
 .page-veil-btn {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  padding: 12px 30px;
+  justify-content: center;
+  width: 100%;
+  padding: 16px 30px;
   border: 1px solid var(--hairline);
   border-radius: 999px;
   font-family: var(--font-en);
@@ -137,6 +142,23 @@
 .page-veil-btn.is-on:hover {
   background: var(--accent);
   border-color: var(--accent);
+}
+
+.page-veil-skip {
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--hairline);
+  transition:
+    color 0.3s var(--ease),
+    text-decoration-color 0.3s var(--ease);
+}
+
+.page-veil-skip:hover {
+  color: var(--ink);
+  text-decoration-color: var(--ink);
 }
 
 /* 自動退場モード */
@@ -186,7 +208,7 @@
 
 .page-veil-logo {
   display: block;
-  width: 44px;
+  width: 64px;
   color: var(--ink);
 }
 

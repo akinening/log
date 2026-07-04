@@ -59,13 +59,13 @@ const isCurrent = (href: string) =>
           <span class="page-veil-logo" set:html={akinenMark} />
         </span>
         <div class="page-veil-choice">
-          <p class="page-veil-note">クリックに呼応するアンビエントサウンドと共にご覧いただけます</p>
+          <p class="page-veil-note">音声をONにして耳を澄ませましょう</p>
           <div class="page-veil-buttons">
             <button type="button" class="page-veil-btn is-on" data-sound-choice="on">
               <span class="en">Sound On</span>
             </button>
-            <button type="button" class="page-veil-btn" data-sound-choice="off">
-              <span class="en">Sound Off</span>
+            <button type="button" class="page-veil-skip" data-sound-choice="off">
+              音声を再生しない
             </button>
           </div>
         </div>
@@ -318,6 +318,7 @@ const isCurrent = (href: string) =>
       document.addEventListener("pointerover", (e) => {
         if (!hoverMedia.matches || e.pointerType !== "mouse") return;
         const el = e.target instanceof Element ? e.target.closest(CLICKABLE_SELECTOR) : null;
+        if (el?.closest(".work-card")) return;
         if (el && el !== hoveredEl) {
           hoveredEl = el;
           playHover();

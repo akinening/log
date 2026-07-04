@@ -427,13 +427,9 @@ a.sidework-item:hover .ext {
   display: flex;
   flex-direction: column;
   padding: clamp(40px, 6vw, 64px) clamp(28px, 6vw, 72px);
-  background: #fff;
   border: 1px solid var(--hairline);
-  border-radius: 16px;
+  border-radius: 8px;
   overflow: hidden;
-  box-shadow:
-    0 1px 2px rgba(19, 19, 17, 0.03),
-    0 24px 48px -36px rgba(19, 19, 17, 0.16);
 }
 
 @media (min-width: 901px) {

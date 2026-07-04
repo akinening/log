@@ -250,7 +250,7 @@ class FluidPhoto {
     gl.uniform2f(u.uMouse, this.mouse.x, this.mouse.y);
     gl.uniform2f(u.uVelocity, clamp(this.velo.x, -1, 1), clamp(this.velo.y, -1, 1));
     gl.uniform1f(u.uAspect, this.canvas.width / this.canvas.height);
-    gl.uniform1f(u.uFalloff, 0.008);
+    gl.uniform1f(u.uFalloff, 0.02);
     gl.uniform1f(u.uDissipation, 0.93);
     gl.uniform1f(u.uClick, this.click);
     this.click = 0;
@@ -274,7 +274,7 @@ class FluidPhoto {
     const ia = this.img.naturalWidth / this.img.naturalHeight;
     const cover = ca > ia ? [1, ia / ca] : [ca / ia, 1];
     gl.uniform2f(u.uCover, cover[0], cover[1]);
-    gl.uniform1f(u.uStrength, 0.11);
+    gl.uniform1f(u.uStrength, 0.085);
     gl.drawArrays(gl.TRIANGLES, 0, 3);
   }
 

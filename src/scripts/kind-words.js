@@ -1,7 +1,27 @@
 // Kind Words — スクロールインでキーボード入力のような文字送りで表示する。
 // 文字はJSで分割・非表示化するため、JS無効環境では全文がそのまま見える。
+import tapSoundUrl from "../sound/tap_05.wav";
+
 const PAUSE_AFTER = new Set(["、", "。", "！", "？", "，"]);
 const SPEED = 1.2;
+const TAP_VOLUME = 0.16;
+
+// 短い間隔で連続再生されるため、1つのAudioを使い回さずプールする
+const createTapPlayer = () => {
+  const pool = Array.from({ length: 4 }, () => {
+    const audio = new Audio(tapSoundUrl);
+    audio.preload = "auto";
+    audio.volume = TAP_VOLUME;
+    return audio;
+  });
+  let i = 0;
+  return () => {
+    const audio = pool[i];
+    i = (i + 1) % pool.length;
+    audio.currentTime = 0;
+    audio.play().catch(() => {});
+  };
+};
 
 export const initKindWords = () => {
   const section = document.getElementById("kind-words");
@@ -33,7 +53,12 @@ export const initKindWords = () => {
     return { quote, chars };
   });
 
+  // 一番長いテキストのカードだけ、文字が増えるたびにタップ音を鳴らす
+  const longest = prepared.reduce((a, b) => (b.chars.length > a.chars.length ? b : a));
+  const playTap = createTapPlayer();
+
   const type = ({ quote, chars }) => {
+    const withSound = quote === longest.quote;
     const caret = document.createElement("span");
     caret.className = "kw-caret";
     caret.setAttribute("aria-hidden", "true");
@@ -47,6 +72,7 @@ export const initKindWords = () => {
       const ch = chars[i];
       ch.classList.add("is-on");
       ch.after(caret);
+      if (withSound) playTap();
       i += 1;
       const next = chars[i];
       let delay = 26 + Math.random() * 44;
