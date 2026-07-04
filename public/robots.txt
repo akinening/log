@@ -1,4 +1,60 @@
 User-agent: *
 Allow: /
 
+User-agent: GPTBot
+Disallow: /experience/spectrum.webp
+Disallow: /experience/figma.webp
+
+User-agent: ChatGPT-User
+Disallow: /experience/spectrum.webp
+Disallow: /experience/figma.webp
+
+User-agent: OAI-SearchBot
+Disallow: /experience/spectrum.webp
+Disallow: /experience/figma.webp
+
+User-agent: ClaudeBot
+Disallow: /experience/spectrum.webp
+Disallow: /experience/figma.webp
+
+User-agent: anthropic-ai
+Disallow: /experience/spectrum.webp
+Disallow: /experience/figma.webp
+
+User-agent: Claude-Web
+Disallow: /experience/spectrum.webp
+Disallow: /experience/figma.webp
+
+User-agent: Google-Extended
+Disallow: /experience/spectrum.webp
+Disallow: /experience/figma.webp
+
+User-agent: Applebot-Extended
+Disallow: /experience/spectrum.webp
+Disallow: /experience/figma.webp
+
+User-agent: Meta-ExternalAgent
+Disallow: /experience/spectrum.webp
+Disallow: /experience/figma.webp
+
+User-agent: Bytespider
+Disallow: /experience/spectrum.webp
+Disallow: /experience/figma.webp
+
+User-agent: PerplexityBot
+Disallow: /experience/spectrum.webp
+Disallow: /experience/figma.webp
+
+User-agent: CCBot
+Disallow: /experience/spectrum.webp
+Disallow: /experience/figma.webp
+
+User-agent: Diffbot
+Disallow: /experience/spectrum.webp
+Disallow: /experience/figma.webp
+
+User-agent: ImagesiftBot
+Disallow: /experience/spectrum.webp
+Disallow: /experience/figma.webp
+
 Sitemap: https://akinen.com/sitemap-index.xml

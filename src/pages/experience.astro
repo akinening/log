@@ -1,8 +1,5 @@
 ---
 import Base from "../layouts/Base.astro";
-import { Image } from "astro:assets";
-import figmaPhoto from "../images/figma.webp";
-import spectrumPhoto from "../images/spectrum.webp";
 ---
 
 <Base
@@ -172,10 +169,20 @@ import spectrumPhoto from "../images/spectrum.webp";
         </ul>
         <div class="xp-photos">
           <figure class="xp-photo">
-            <Image src={spectrumPhoto} alt="Spectrum Tokyo Festival 2023 登壇の様子" />
+            <img
+              src="/experience/spectrum.webp"
+              alt="Spectrum Tokyo Festival 2023 登壇の様子"
+              data-protected-photo
+              draggable="false"
+            />
           </figure>
           <figure class="xp-photo">
-            <Image src={figmaPhoto} alt="Figma Japan Community Event — Show & Tell 登壇の様子" />
+            <img
+              src="/experience/figma.webp"
+              alt="Figma Japan Community Event — Show & Tell 登壇の様子"
+              data-protected-photo
+              draggable="false"
+            />
           </figure>
         </div>
       </article>
@@ -287,4 +294,14 @@ import spectrumPhoto from "../images/spectrum.webp";
   };
 
   document.addEventListener("astro:page-load", initPrivateMode);
+
+  const initProtectedPhotos = () => {
+    document.querySelectorAll("[data-protected-photo]").forEach((photo) => {
+      if (photo instanceof HTMLElement && photo.dataset.protectedBound) return;
+      if (photo instanceof HTMLElement) photo.dataset.protectedBound = "true";
+      photo.addEventListener("contextmenu", (event) => event.preventDefault());
+    });
+  };
+
+  document.addEventListener("astro:page-load", initProtectedPhotos);
 </script>
