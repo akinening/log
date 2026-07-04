@@ -2,7 +2,6 @@
 import { getCollection } from "astro:content";
 import Base from "../layouts/Base.astro";
 import PasswordGate from "../components/PasswordGate.astro";
-import HeroField from "../components/HeroField.astro";
 import underline from "../images/underline.png";
 
 const works = (await getCollection("works")).sort(
@@ -76,7 +75,6 @@ const sns = [
   path="/"
 >
   <section class="hero">
-    <HeroField />
     <p class="overline rv">Akinori Ozawa — Product Designer</p>
     <h1 class="hero-title rv" style="--rv-delay:.08s">
       Design that ships,<br />
@@ -268,10 +266,12 @@ const sns = [
   import { initLoadMore } from "../scripts/load-more";
   import { initKindWords } from "../scripts/kind-words";
   import { initFluidPhotos } from "../scripts/fluid-photo";
+  import { initHeroFluid } from "../scripts/hero-fluid";
 
   document.addEventListener("astro:page-load", () => {
     initLoadMore();
     initKindWords();
     initFluidPhotos(".work-thumb");
+    initHeroFluid();
   });
 </script>

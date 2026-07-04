@@ -1,8 +1,9 @@
-// Speaking 写真の流体ディストーション。
+// 写真・スナップショットの流体ディストーション。
 // ポインタの動きを低解像度フローマップ（ピンポンFBO）に描き込み、
-// 毎フレーム減衰させながら画像のUVを歪ませる。何もしなければ
-// フローがゼロへ戻り、画像は元の見た目に復帰する。
-// WebGL が使えない環境・reduced-motion 環境では <img> がそのまま残る。
+// 毎フレーム減衰させながらテクスチャのUVを歪ませる。何もしなければ
+// フローがゼロへ戻り、元の見た目に復帰する。
+// ソースは <img> のほか、事前描画済み <canvas>（hero-fluid.js）も受け付ける。
+// WebGL が使えない環境・reduced-motion 環境では元のDOMがそのまま残る。
 
 const VERT = `
 attribute vec2 aPos;
@@ -41,6 +42,7 @@ void main() {
 `;
 
 // 表示。フローで画像UVをずらし、RGBをわずかに分離して液体感を出す。
+// uSpread は色分離の量（1で従来どおり、0で虹色なしの純粋な歪みのみ）。
 const DRAW_FRAG = `
 precision highp float;
 varying vec2 vUv;
@@ -48,13 +50,14 @@ uniform sampler2D uImage;
 uniform sampler2D uFlow;
 uniform vec2 uCover;
 uniform float uStrength;
+uniform float uSpread;
 void main() {
   vec2 flow = texture2D(uFlow, vUv).rg * 2.0 - 1.0;
   vec2 uv = (vUv - 0.5) * uCover + 0.5;
   vec2 off = flow * uStrength;
-  float r = texture2D(uImage, uv - off * 1.15).r;
+  float r = texture2D(uImage, uv - off * (1.0 + 0.15 * uSpread)).r;
   float g = texture2D(uImage, uv - off).g;
-  float b = texture2D(uImage, uv - off * 0.88).b;
+  float b = texture2D(uImage, uv - off * (1.0 - 0.12 * uSpread)).b;
   gl_FragColor = vec4(r, g, b, 1.0);
 }
 `;
@@ -99,10 +102,19 @@ const rasterize = (img) => {
   return cv;
 };
 
-class FluidPhoto {
-  constructor(figure, img) {
+export class FluidPhoto {
+  constructor(figure, source, opts = {}) {
     this.figure = figure;
-    this.img = img;
+    // falloff: ブラシ半径（UV²・小さいほど狭い） / dissipation: 減衰（1に近いほど残る）
+    // strength: UV変位量 / velocity: ポインタ速度の注入係数 / spread: RGB分離量（0で虹色なし）
+    this.opts = {
+      falloff: 0.02,
+      dissipation: 0.93,
+      strength: 0.085,
+      velocity: 12,
+      spread: 1,
+      ...opts
+    };
 
     const canvas = document.createElement("canvas");
     canvas.className = "fluid-canvas";
@@ -132,12 +144,10 @@ class FluidPhoto {
       "uDissipation",
       "uClick"
     ]);
-    this.drawProg = createProgram(gl, DRAW_FRAG, ["uImage", "uFlow", "uCover", "uStrength"]);
+    this.drawProg = createProgram(gl, DRAW_FRAG, ["uImage", "uFlow", "uCover", "uStrength", "uSpread"]);
 
     this.imgTex = this.createTexture();
-    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, rasterize(img));
-    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+    this.uploadSource(source);
 
     this.fbos = null;
     this.mouse = { x: 0.5, y: 0.5 };
@@ -158,6 +168,29 @@ class FluidPhoto {
       this.last = null;
     });
     new ResizeObserver(() => this.resize()).observe(figure);
+  }
+
+  uploadSource(source) {
+    const gl = this.gl;
+    this.srcW = source.naturalWidth || source.width;
+    this.srcH = source.naturalHeight || source.height;
+    gl.bindTexture(gl.TEXTURE_2D, this.imgTex);
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+    gl.texImage2D(
+      gl.TEXTURE_2D,
+      0,
+      gl.RGBA,
+      gl.RGBA,
+      gl.UNSIGNED_BYTE,
+      source instanceof HTMLImageElement ? rasterize(source) : source
+    );
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+  }
+
+  // ソース差し替え（heroのリサイズ再スナップショットなど）
+  setSource(source) {
+    this.uploadSource(source);
+    this.draw();
   }
 
   createTexture() {
@@ -217,8 +250,8 @@ class FluidPhoto {
     const x = (e.clientX - rect.left) / rect.width;
     const y = 1 - (e.clientY - rect.top) / rect.height;
     if (this.last) {
-      this.velo.x += (x - this.last.x) * 12;
-      this.velo.y += (y - this.last.y) * 12;
+      this.velo.x += (x - this.last.x) * this.opts.velocity;
+      this.velo.y += (y - this.last.y) * this.opts.velocity;
     }
     this.last = { x, y };
     this.mouse = { x, y };
@@ -250,8 +283,8 @@ class FluidPhoto {
     gl.uniform2f(u.uMouse, this.mouse.x, this.mouse.y);
     gl.uniform2f(u.uVelocity, clamp(this.velo.x, -1, 1), clamp(this.velo.y, -1, 1));
     gl.uniform1f(u.uAspect, this.canvas.width / this.canvas.height);
-    gl.uniform1f(u.uFalloff, 0.02);
-    gl.uniform1f(u.uDissipation, 0.93);
+    gl.uniform1f(u.uFalloff, this.opts.falloff);
+    gl.uniform1f(u.uDissipation, this.opts.dissipation);
     gl.uniform1f(u.uClick, this.click);
     this.click = 0;
     gl.drawArrays(gl.TRIANGLES, 0, 3);
@@ -271,10 +304,11 @@ class FluidPhoto {
     gl.uniform1i(u.uImage, 0);
     gl.uniform1i(u.uFlow, 1);
     const ca = this.canvas.width / this.canvas.height;
-    const ia = this.img.naturalWidth / this.img.naturalHeight;
+    const ia = this.srcW / this.srcH;
     const cover = ca > ia ? [1, ia / ca] : [ca / ia, 1];
     gl.uniform2f(u.uCover, cover[0], cover[1]);
-    gl.uniform1f(u.uStrength, 0.085);
+    gl.uniform1f(u.uStrength, this.opts.strength);
+    gl.uniform1f(u.uSpread, this.opts.spread);
     gl.drawArrays(gl.TRIANGLES, 0, 3);
   }
 
