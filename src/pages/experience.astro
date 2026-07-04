@@ -82,7 +82,7 @@ import Base from "../layouts/Base.astro";
               <li>
                 <strong>公式HPの立ち上げ・運用</strong>
                 <ul>
-                  <li>年間 xxx Viewを有する公式サイトの立ち上げおよび大規模リニューアルを担当。UX視点に基づいた情報設計からビジュアルデザイン、実装までを行い、ユーザビリティ向上とブランド価値の最大化に貢献。</li>
+                  <li>公式サイトの立ち上げおよび大規模リニューアルを担当。UX視点に基づいた情報設計からビジュアルデザイン、実装までを行い、ユーザビリティ向上とブランド価値の最大化に貢献。</li>
                 </ul>
               </li>
               <li>
@@ -172,6 +172,10 @@ import Base from "../layouts/Base.astro";
             <img
               src="/experience/spectrum.webp"
               alt="Spectrum Tokyo Festival 2023 登壇の様子"
+              width="1440"
+              height="960"
+              loading="lazy"
+              decoding="async"
               data-protected-photo
               draggable="false"
             />
@@ -180,6 +184,10 @@ import Base from "../layouts/Base.astro";
             <img
               src="/experience/figma.webp"
               alt="Figma Japan Community Event — Show & Tell 登壇の様子"
+              width="910"
+              height="607"
+              loading="lazy"
+              decoding="async"
               data-protected-photo
               draggable="false"
             />
@@ -244,64 +252,22 @@ import Base from "../layouts/Base.astro";
 </Base>
 
 <script>
-  const initPrivateMode = () => {
-    const privateButton = document.querySelector("[data-private-open]");
-    const privateModal = document.querySelector("[data-private-modal]");
-    if (!(privateModal instanceof HTMLDialogElement) || privateModal.dataset.bound) return;
-    privateModal.dataset.bound = "true";
-
-    const privateForm = privateModal.querySelector("[data-private-form]");
-    const privateInput = privateModal.querySelector("[data-private-input]");
-    const privateCancel = privateModal.querySelector("[data-private-cancel]");
-    const privateError = privateModal.querySelector("[data-private-error]");
-
-    const closePrivateModal = () => {
-      privateModal.close();
-      if (privateInput instanceof HTMLInputElement) privateInput.value = "";
-      privateError?.classList.remove("is-visible");
-    };
-
-    privateButton?.addEventListener("click", (event) => {
-      event.preventDefault();
-      privateError?.classList.remove("is-visible");
-      privateModal.showModal();
-      if (privateInput instanceof HTMLInputElement) {
-        privateInput.value = "";
-        privateInput.focus();
-      }
-    });
-
-    privateCancel?.addEventListener("click", closePrivateModal);
-    privateModal.addEventListener("click", (event) => {
-      if (event.target === privateModal) closePrivateModal();
-    });
-
-    privateForm?.addEventListener("submit", (event) => {
-      event.preventDefault();
-      if (privateInput instanceof HTMLInputElement && privateInput.value === "Saudade") {
-        document.body.classList.add("is-private");
-        closePrivateModal();
-        return;
-      }
-      privateError?.classList.add("is-visible");
-      privateModal.classList.remove("is-shake");
-      requestAnimationFrame(() => privateModal.classList.add("is-shake"));
-      if (privateInput instanceof HTMLInputElement) {
-        privateInput.value = "";
-        privateInput.focus();
-      }
-    });
-  };
-
-  document.addEventListener("astro:page-load", initPrivateMode);
+  import { initPrivateMode } from "../scripts/private-mode";
+  import { initAccordions } from "../scripts/accordion";
+  import { initFluidPhotos } from "../scripts/fluid-photo";
 
   const initProtectedPhotos = () => {
-    document.querySelectorAll("[data-protected-photo]").forEach((photo) => {
-      if (photo instanceof HTMLElement && photo.dataset.protectedBound) return;
-      if (photo instanceof HTMLElement) photo.dataset.protectedBound = "true";
+    document.querySelectorAll<HTMLElement>("[data-protected-photo]").forEach((photo) => {
+      if (photo.dataset.protectedBound) return;
+      photo.dataset.protectedBound = "true";
       photo.addEventListener("contextmenu", (event) => event.preventDefault());
     });
   };
 
-  document.addEventListener("astro:page-load", initProtectedPhotos);
+  document.addEventListener("astro:page-load", () => {
+    initPrivateMode();
+    initProtectedPhotos();
+    initAccordions();
+    initFluidPhotos(".xp-photo");
+  });
 </script>

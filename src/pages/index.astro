@@ -93,7 +93,7 @@ const sns = [
       >
     </h1>
     <p class="hero-lead rv" style="--rv-delay:.16s">
-      事業価値をデザインの力で最大化する。８年超のtoC/toB双方の知見と実装力を武器に、グロースと事業価値の向上にコミットします。
+      事業価値をデザインの力で最大化する。8年超のtoC/toB双方の知見と実装力を武器に、グロースと事業価値の向上にコミットします。
     </p>
   </section>
 
@@ -118,6 +118,7 @@ const sns = [
                   width="1600"
                   height="900"
                   loading={i < VISIBLE ? "eager" : "lazy"}
+                  decoding="async"
                 />
               </figure>
               <p class="work-meta">
@@ -202,7 +203,7 @@ const sns = [
     </div>
     <PasswordGate>
       <div class="kind-quote-list">
-        <blockquote class="kind-quote rv">
+        <blockquote class="kind-quote">
           <p class="kind-quote-text">
             たった1人で、goghモバイル版、Steam版のUIUX、goghウェブサイト、goghグッズストア、RobloxゲームのUI、プレスリリースや採用向けグラフィック全てを担当しています
           </p>
@@ -220,7 +221,7 @@ const sns = [
           </footer>
         </blockquote>
 
-        <blockquote class="kind-quote rv" style="--rv-delay:.08s">
+        <blockquote class="kind-quote">
           <p class="kind-quote-text">
             LLMも使って事業仮説を高速に検証し、勝ち筋を作れるデザイナーです。
           </p>
@@ -229,7 +230,7 @@ const sns = [
           </footer>
         </blockquote>
 
-        <blockquote class="kind-quote rv" style="--rv-delay:.16s">
+        <blockquote class="kind-quote">
           <p class="kind-quote-text">
             抽象度の高い経営課題を、ユーザー体験とプロダクト戦略に落とし込み、チームを前進させる力があります。
           </p>
@@ -264,25 +265,13 @@ const sns = [
 </Base>
 
 <script>
-  const initLoadMore = () => {
-    const button = document.querySelector<HTMLButtonElement>("[data-load-more]");
-    const grid = document.querySelector("[data-work-grid]");
-    if (!button || !grid || button.dataset.bound) return;
-    button.dataset.bound = "true";
+  import { initLoadMore } from "../scripts/load-more";
+  import { initKindWords } from "../scripts/kind-words";
+  import { initFluidPhotos } from "../scripts/fluid-photo";
 
-    button.addEventListener("click", () => {
-      const hidden = grid.querySelectorAll<HTMLElement>(".work-card.is-hidden");
-      hidden.forEach((card, i) => {
-        card.classList.remove("is-hidden");
-        card.classList.remove("is-inview");
-        card.style.setProperty("--rv-delay", `${i * 0.1}s`);
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => card.classList.add("is-inview"));
-        });
-      });
-      button.classList.add("is-done");
-    });
-  };
-
-  document.addEventListener("astro:page-load", initLoadMore);
+  document.addEventListener("astro:page-load", () => {
+    initLoadMore();
+    initKindWords();
+    initFluidPhotos(".work-thumb");
+  });
 </script>

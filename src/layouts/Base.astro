@@ -40,7 +40,10 @@ const isCurrent = (href: string) =>
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonical} />
     <meta property="og:locale" content="ja_JP" />
-    <meta name="twitter:card" content="summary" />
+    <meta property="og:image" content={new URL("/og.png", Astro.site).href} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -284,15 +287,28 @@ const isCurrent = (href: string) =>
       const CLICKABLE_SELECTOR =
         'a, button, summary, input[type="submit"], input[type="button"], input[type="reset"], [role="button"]';
 
-      const playSound = (url, volume = 0.2) => {
-        const audio = new Audio(url);
-        audio.volume = volume;
-        audio.play().catch(() => {});
+      // Audio要素は毎回生成せず小さなプールを使い回す（GC・デコード負荷の削減）
+      const makePool = (url, volume) => {
+        const pool = Array.from({ length: 3 }, () => {
+          const audio = new Audio(url);
+          audio.preload = "auto";
+          audio.volume = volume;
+          return audio;
+        });
+        let i = 0;
+        return () => {
+          const audio = pool[i];
+          i = (i + 1) % pool.length;
+          audio.currentTime = 0;
+          audio.play().catch(() => {});
+        };
       };
+      const playClick = makePool(clickSoundUrl, 0.1);
+      const playHover = makePool(hoverSoundUrl, 0.2);
 
       document.addEventListener("click", (e) => {
         if (e.target instanceof Element && e.target.closest(CLICKABLE_SELECTOR)) {
-          playSound(clickSoundUrl, 0.1);
+          playClick();
         }
       });
 
@@ -304,7 +320,7 @@ const isCurrent = (href: string) =>
         const el = e.target instanceof Element ? e.target.closest(CLICKABLE_SELECTOR) : null;
         if (el && el !== hoveredEl) {
           hoveredEl = el;
-          playSound(hoverSoundUrl);
+          playHover();
         } else if (!el) {
           hoveredEl = null;
         }

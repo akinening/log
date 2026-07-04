@@ -56,7 +56,14 @@ const info = [
       </div>
 
       <figure class="case-hero rv" style="--rv-delay:.28s">
-        <img src={data.thumbnail} alt={data.title} width="1600" height="900" />
+        <img
+          src={data.thumbnail}
+          alt={data.title}
+          width="1600"
+          height="900"
+          fetchpriority="high"
+          decoding="async"
+        />
       </figure>
     </header>
 
