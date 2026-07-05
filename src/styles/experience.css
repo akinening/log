@@ -1,8 +1,23 @@
 /* ---- experience page -------------------------------------------------- */
 
 .xp-head {
+  position: relative;
   padding-top: clamp(88px, 15vh, 170px);
   padding-bottom: clamp(48px, 8vh, 80px);
+}
+
+/* 流体ディストーション用キャンバス（hero-fluid.js、.hero と同じ重ね方） */
+.xp-head > .fluid-canvas {
+  z-index: 2;
+}
+
+.xp-head > :not(.fluid-canvas) {
+  position: relative;
+  z-index: 1;
+}
+
+.xp-head.has-fluid > :not(.fluid-canvas) {
+  opacity: 0;
 }
 
 .xp-title {

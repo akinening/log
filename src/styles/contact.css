@@ -1,8 +1,23 @@
 /* ---- contact page ------------------------------------------------------ */
 
 .ct-head {
+  position: relative;
   padding-top: clamp(88px, 15vh, 170px);
   padding-bottom: clamp(40px, 7vh, 64px);
+}
+
+/* 流体ディストーション用キャンバス（hero-fluid.js、.hero と同じ重ね方） */
+.ct-head > .fluid-canvas {
+  z-index: 2;
+}
+
+.ct-head > :not(.fluid-canvas) {
+  position: relative;
+  z-index: 1;
+}
+
+.ct-head.has-fluid > :not(.fluid-canvas) {
+  opacity: 0;
 }
 
 .ct-title {

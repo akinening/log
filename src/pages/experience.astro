@@ -343,6 +343,7 @@ import ContactCta from "../components/ContactCta.astro";
   import { initPrivateMode } from "../scripts/private-mode";
   import { initAccordions } from "../scripts/accordion";
   import { initFluidPhotos } from "../scripts/fluid-photo";
+  import { initHeroFluid } from "../scripts/hero-fluid";
 
   const initProtectedPhotos = () => {
     document.querySelectorAll<HTMLElement>("[data-protected-photo]").forEach((photo) => {
@@ -357,5 +358,6 @@ import ContactCta from "../components/ContactCta.astro";
     initProtectedPhotos();
     initAccordions();
     initFluidPhotos(".xp-photo:not([data-no-fluid])");
+    initHeroFluid(".xp-head");
   });
 </script>

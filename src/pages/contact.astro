@@ -119,8 +119,10 @@ import Base from "../layouts/Base.astro";
 
 <script>
   import { initContactForm } from "../scripts/contact-form";
+  import { initHeroFluid } from "../scripts/hero-fluid";
 
   document.addEventListener("astro:page-load", () => {
     initContactForm();
+    initHeroFluid(".ct-head");
   });
 </script>

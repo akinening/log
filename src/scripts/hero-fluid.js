@@ -1,4 +1,4 @@
-// ヒーロー全体の流体ディストーション。
+// ヒーロー／ページ見出し（Experience・Contactの.xp-head・.ct-headなど）の流体ディストーション。
 // DOM（見出し・リード文・下線画像）をレイアウト実測どおりに 2D キャンバスへ
 // スナップショットし、fluid-photo と同じフローマップシェーダーで
 // カーソルに合わせてぐにゃりと歪ませる。静止すればフローが減衰して元に戻る。
@@ -80,13 +80,15 @@ const snapshot = (hero) => {
   return cv;
 };
 
-// rv リビール（最後に終わるのは下線の clip-path）を待ってから差し替える。
+// rv リビール（下線がある場合は最後に終わる clip-path）を待ってから差し替える。
 // transitionend が拾えないケースに備えてタイムアウトで必ず先へ進む
 const waitForIntro = (hero) =>
   new Promise((resolve) => {
     const underline = hero.querySelector(".hero-underline");
     if (!underline) {
-      resolve();
+      // 下線を持たない見出し（xp-head/ct-headなど）は rv の opacity/transform
+      // （--dur 0.7s + 最大rv-delay）が終わる頃合いで十分
+      setTimeout(resolve, 900);
       return;
     }
     const timer = setTimeout(resolve, 2800);
@@ -100,9 +102,9 @@ const waitForIntro = (hero) =>
     );
   });
 
-export const initHeroFluid = async () => {
+export const initHeroFluid = async (selector = ".hero") => {
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-  const hero = document.querySelector(".hero");
+  const hero = document.querySelector(selector);
   if (!(hero instanceof HTMLElement) || hero.dataset.fluidBound) return;
   hero.dataset.fluidBound = "true";
 
