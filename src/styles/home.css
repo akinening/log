@@ -548,8 +548,8 @@ a.sidework-item:hover .ext {
   transform: translateY(0.12em);
   display: inline-block;
   transition:
-    opacity 0.32s var(--ease),
-    transform 0.32s var(--ease);
+    opacity 0.85s var(--ease),
+    transform 0.85s var(--ease);
 }
 
 .kw-char.is-on {

@@ -1,5 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
+import ContactCta from "../components/ContactCta.astro";
 ---
 
 <Base
@@ -36,9 +37,6 @@ import Base from "../layouts/Base.astro";
           </li>
           <li>Steamゲームの仕様検討・UIデザイン</li>
           <li>LLMを活用したプロトタイピングによるデザインプロセスの高速化</li>
-          <li>
-            <a href="https://note.com/ambr/n/nbccabde15b46" target="_blank" rel="noopener">goghにおける取り組み</a>
-          </li>
           <li>
             <a href="#" data-private-open>もっと詳しく</a>
             <ul class="private-only">
@@ -98,6 +96,25 @@ import Base from "../layouts/Base.astro";
             </ul>
           </li>
         </ul>
+        <a
+          class="xp-photo-link"
+          href="https://note.com/ambr/n/nbccabde15b46"
+          target="_blank"
+          rel="noopener"
+        >
+          <figure class="xp-photo" data-no-fluid>
+            <img
+              src="/works/gogh-note.webp"
+              alt="200万DLを突破した作業集中プロダクト「gogh」のデザイン思想（note記事）"
+              width="1920"
+              height="1080"
+              loading="lazy"
+              decoding="async"
+              draggable="false"
+            />
+            <span class="xp-photo-overlay" aria-hidden="true">記事を読む</span>
+          </figure>
+        </a>
       </article>
 
       <details class="xp-entry">
@@ -293,6 +310,8 @@ import Base from "../layouts/Base.astro";
     </div>
   </section>
 
+  <ContactCta />
+
   <dialog class="private-mode-modal" aria-labelledby="private-mode-title" data-private-modal>
     <p class="private-mode-eyebrow">Enter Password</p>
     <h2 id="private-mode-title" class="private-mode-title">あいことばが必要です</h2>
@@ -334,6 +353,6 @@ import Base from "../layouts/Base.astro";
     initPrivateMode();
     initProtectedPhotos();
     initAccordions();
-    initFluidPhotos(".xp-photo");
+    initFluidPhotos(".xp-photo:not([data-no-fluid])");
   });
 </script>

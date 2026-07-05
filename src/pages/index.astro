@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content";
 import Base from "../layouts/Base.astro";
 import PasswordGate from "../components/PasswordGate.astro";
+import ContactCta from "../components/ContactCta.astro";
 import underline from "../images/underline.png";
 
 const works = (await getCollection("works")).sort(
@@ -239,6 +240,8 @@ const sns = [
       </div>
     </PasswordGate>
   </section>
+
+  <ContactCta />
 
   <footer class="site-foot">
     <div class="foot-inner rv">

@@ -184,3 +184,28 @@
 .ct-success .load-more {
   margin-top: 36px;
 }
+
+/* ---- contact cta（Top / Experience 下部の導線） ------------------------ */
+
+.contact-cta {
+  border-top: 1px solid var(--hairline);
+  padding: clamp(56px, 9vh, 96px) 0;
+}
+
+.contact-cta-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  text-align: center;
+}
+
+.contact-cta-lead {
+  font-size: 14px;
+  line-height: 2;
+  color: var(--ink-soft);
+}
+
+.contact-cta .load-more {
+  margin-top: 12px;
+}

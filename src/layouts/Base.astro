@@ -148,6 +148,17 @@ const isCurrent = (href: string) =>
       document.addEventListener("astro:after-swap", () => {
         var veil = document.querySelector(".page-veil");
         if (veil) veil.remove();
+
+        // Sound トグルの表示状態は描画前にここで同期する。
+        // astro:page-load（描画後）まで待つと OFF → ON のtransitionが
+        // 走ってドットが毎回スライドして見えてしまう
+        var pressed = "false";
+        try {
+          if (sessionStorage.getItem("akinen-sound") === "on") pressed = "true";
+        } catch (e) {}
+        document.querySelectorAll("[data-sound-switch]").forEach(function (btn) {
+          btn.setAttribute("aria-pressed", pressed);
+        });
       });
 
       // ベールのモードを描画前に同期的に決める。

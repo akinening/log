@@ -149,6 +149,47 @@
   }
 }
 
+/* 写真をリンクとして使う場合のラッパー（ambr → note記事など）。
+   Speaking写真（3:2・半カラム）と同じ高さを保ったまま16:9に広げる */
+.xp-photo-link {
+  display: block;
+  margin-top: 24px;
+  width: calc((100% - 20px) / 2 * 32 / 27);
+  max-width: 100%;
+}
+
+.xp-photo-link .xp-photo {
+  aspect-ratio: 16 / 9;
+}
+
+.xp-photo-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  font-size: 13px;
+  font-weight: 550;
+  letter-spacing: 0.12em;
+  color: var(--ink);
+  opacity: 0;
+  transition: opacity 0.4s var(--ease);
+}
+
+.xp-photo-link:hover .xp-photo-overlay,
+.xp-photo-link:focus-visible .xp-photo-overlay {
+  opacity: 1;
+}
+
+@media (max-width: 640px) {
+  .xp-photo-link {
+    width: 100%;
+  }
+}
+
 .xp-photo {
   position: relative;
   aspect-ratio: 3 / 2;

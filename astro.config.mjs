@@ -1,5 +1,6 @@
 import { defineConfig } from "astro/config";
 import sitemap from "@astrojs/sitemap";
+import remarkCjkFriendly from "remark-cjk-friendly";
 
 // 記事本文（markdown）内の画像を遅延読み込みにする小さなrehypeプラグイン
 const lazyImages = () => (tree) => {
@@ -19,6 +20,7 @@ export default defineConfig({
   trailingSlash: "ignore",
   integrations: [sitemap()],
   markdown: {
+    remarkPlugins: [remarkCjkFriendly],
     rehypePlugins: [lazyImages]
   }
 });
