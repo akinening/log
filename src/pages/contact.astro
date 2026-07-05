@@ -1,0 +1,126 @@
+---
+import Base from "../layouts/Base.astro";
+---
+
+<Base
+  title="Contact — Akinori Ozawa"
+  description="お仕事のご相談、登壇・執筆のご依頼など、Akinori Ozawaへのお問い合わせはこちらから。"
+  path="/contact/"
+>
+  <header class="ct-head">
+    <p class="overline rv">Get in Touch</p>
+    <h1 class="ct-title rv" style="--rv-delay:.08s">Contact</h1>
+    <p class="ct-lead rv" style="--rv-delay:.16s">
+      お仕事のご相談、登壇・執筆のご依頼、その他メッセージなど、お気軽にご連絡ください。<br />
+      内容を確認のうえ、数日以内に返信します。
+    </p>
+  </header>
+
+  <section class="ct-body rv" style="--rv-delay:.24s" data-contact>
+    <form class="ct-form" data-contact-form novalidate>
+      <div class="ct-row">
+        <div class="ct-field">
+          <label class="ct-label" for="ct-name">お名前</label>
+          <input
+            class="ct-input"
+            type="text"
+            id="ct-name"
+            name="name"
+            autocomplete="name"
+            aria-describedby="ct-name-error"
+            data-contact-field
+          />
+          <p class="ct-error" id="ct-name-error" aria-live="polite"></p>
+        </div>
+        <div class="ct-field">
+          <label class="ct-label" for="ct-email">返信用メールアドレス</label>
+          <input
+            class="ct-input"
+            type="email"
+            id="ct-email"
+            name="email"
+            autocomplete="email"
+            inputmode="email"
+            aria-describedby="ct-email-error"
+            data-contact-field
+          />
+          <p class="ct-error" id="ct-email-error" aria-live="polite"></p>
+        </div>
+      </div>
+
+      <div class="ct-field">
+        <label class="ct-label" for="ct-subject">タイトル<span class="ct-optional">任意</span></label>
+        <input
+          class="ct-input"
+          type="text"
+          id="ct-subject"
+          name="subject"
+          autocomplete="off"
+          data-contact-field
+        />
+      </div>
+
+      <div class="ct-field">
+        <label class="ct-label" for="ct-message">本文</label>
+        <textarea
+          class="ct-input ct-textarea"
+          id="ct-message"
+          name="message"
+          rows="8"
+          aria-describedby="ct-message-error"
+          data-contact-field
+        ></textarea>
+        <p class="ct-error" id="ct-message-error" aria-live="polite"></p>
+      </div>
+
+      <!-- honeypot: 人間には見えない。ここが埋まっていたら送信しない -->
+      <div class="ct-hp" aria-hidden="true">
+        <label for="ct-company">Company</label>
+        <input
+          type="text"
+          id="ct-company"
+          name="_gotcha"
+          tabindex="-1"
+          autocomplete="off"
+        />
+      </div>
+
+      <div class="ct-actions">
+        <button class="load-more" type="submit" data-contact-submit>
+          <span data-contact-submit-label>Send Message</span>
+          <span class="arrow" aria-hidden="true">→</span>
+        </button>
+        <p class="ct-note">いただいた内容は、返信の目的にのみ使用します。</p>
+      </div>
+
+      <p class="ct-failure" data-contact-failure aria-live="polite">
+        送信に失敗しました。時間をおいて再度お試しいただくか、<a
+          href="https://www.linkedin.com/in/akinen"
+          target="_blank"
+          rel="noopener">LinkedIn</a
+        >よりご連絡ください。
+      </p>
+    </form>
+
+    <div class="ct-success" data-contact-success tabindex="-1" hidden>
+      <p class="overline">Thank You</p>
+      <p class="ct-success-title serif-accent">Message sent.</p>
+      <p class="ct-success-text">
+        お問い合わせありがとうございます。<br />
+        内容を確認のうえ、数日以内にご入力のメールアドレスへ返信します。
+      </p>
+      <a class="load-more" href="/">
+        <span>Back to Top</span>
+        <span class="arrow" aria-hidden="true">←</span>
+      </a>
+    </div>
+  </section>
+</Base>
+
+<script>
+  import { initContactForm } from "../scripts/contact-form";
+
+  document.addEventListener("astro:page-load", () => {
+    initContactForm();
+  });
+</script>
