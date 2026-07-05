@@ -28,18 +28,12 @@
 }
 
 .sound-title {
-  margin: 10px 0 14px;
+  margin: 10px 0 0;
   font-family: var(--font-en);
   font-size: clamp(36px, 4.5vw, 54px);
   font-weight: 600;
   letter-spacing: -0.03em;
   line-height: 1.05;
-}
-
-.sound-lead {
-  font-size: 13.5px;
-  line-height: 2.1;
-  color: var(--ink-soft);
 }
 
 /* サウンド OFF のときだけ現れる中央の案内 */
