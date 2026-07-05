@@ -36,6 +36,12 @@ export const initPrivateMode = () => {
     event.preventDefault();
     if (privateInput instanceof HTMLInputElement && privateInput.value === "Saudade") {
       document.body.classList.add("is-private");
+      // CSS を上書きされてリストが見えても遷移できないよう、
+      // href は解錠時に data-private-href から復元する。
+      document.querySelectorAll("a[data-private-href]").forEach((anchor) => {
+        anchor.setAttribute("href", anchor.getAttribute("data-private-href"));
+        anchor.removeAttribute("data-private-href");
+      });
       closePrivateModal();
       return;
     }
