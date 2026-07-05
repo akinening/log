@@ -6,6 +6,7 @@ period: "2023.09 — 現在"
 team: "立ち上げ期 4名 → 現在 30名規模"
 role: "Product Designer / 体験設計・UIデザイン責任者"
 order: 2
+accent: "#D4014E"
 year: "2023 —"
 thumbnail: "/works/gogh-global.webp"
 tags: ["0→1", "Global", "Consumer"]

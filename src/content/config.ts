@@ -21,7 +21,11 @@ const works = defineCollection({
         })
       )
       .length(3),
-    order: z.number()
+    order: z.number(),
+    accent: z
+      .string()
+      .regex(/^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/)
+      .optional()
   })
 });
 

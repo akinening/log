@@ -32,7 +32,7 @@ const info = [
   description={data.summary}
   path={`/works/${work.slug}/`}
 >
-  <article>
+  <article style={data.accent ? `--accent:${data.accent}` : undefined}>
     <header class="case-head">
       <a class="case-back rv" href="/#work">
         <span class="arrow" aria-hidden="true">←</span>

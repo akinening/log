@@ -88,7 +88,11 @@ const isCurrent = (href: string) =>
           }
         </nav>
         <div class="mobile-sound">
-          <span class="mobile-sound-label en" aria-hidden="true">Sound</span>
+          <a
+            class="mobile-sound-label en"
+            href="/sound/"
+            aria-current={isCurrent("/sound/") ? "page" : undefined}
+          >Sound</a>
           <button
             type="button"
             class="sound-switch"
@@ -121,17 +125,27 @@ const isCurrent = (href: string) =>
         <p class="sidebar-foot">
           Tokyo, Japan<br />© 2026 Akinori Ozawa
         </p>
-        <div class="sound-toggle">
-          <span class="overline">Sound</span>
-          <button
-            type="button"
-            class="sound-switch"
-            data-sound-switch
-            aria-pressed="false"
-            aria-label="アンビエントサウンドの再生切り替え"
+        <div class="sound-area">
+          <a
+            class="sound-page-link"
+            href="/sound/"
+            aria-current={isCurrent("/sound/") ? "page" : undefined}
           >
-            <span class="sound-switch-dot" aria-hidden="true"></span>
-          </button>
+            <span class="idx">04</span>
+            Sound
+          </a>
+          <div class="sound-toggle">
+            <span class="overline">Ambient</span>
+            <button
+              type="button"
+              class="sound-switch"
+              data-sound-switch
+              aria-pressed="false"
+              aria-label="アンビエントサウンドの再生切り替え"
+            >
+              <span class="sound-switch-dot" aria-hidden="true"></span>
+            </button>
+          </div>
         </div>
       </aside>
 

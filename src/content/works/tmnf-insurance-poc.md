@@ -6,6 +6,7 @@ period: "2021.11 — 2023.08"
 team: "本部PO / 提携企業 / Designer 2（社内2人目の中途デザイナー）"
 role: "インハウスデザイナー / デザインリード（新規事業PoCのプロダクトデザイン・部門間折衝）"
 order: 7
+accent: "#0256be"
 year: "2023"
 thumbnail: "/works/tmnf-insurance-poc.webp"
 tags: ["Insurance", "New Business", "Enterprise"]

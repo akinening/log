@@ -6,6 +6,7 @@ period: "2019.11 — 2021.10"
 team: "自社プロダクトチーム（Designer 1）"
 role: "Lead Product Designer（リサーチ・体験設計・UI・グロース）"
 order: 9
+accent: "#00D0E5"
 year: "2021"
 thumbnail: "/works/stockr.webp"
 tags: ["0→1", "Consumer", "Research"]

@@ -6,6 +6,7 @@ period: "2021.11 — 2023.08"
 team: "インハウスデザイナー 2 / 社内有志コミュニティ"
 role: "インハウスデザイナー（デザイン文化・基盤整備の主導）"
 order: 8
+accent: "#0256be"
 year: "2023"
 thumbnail: "/works/inhouse-design-culture.webp"
 tags: ["Org Design", "DesignOps", "Advocacy"]

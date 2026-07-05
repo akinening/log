@@ -6,6 +6,7 @@ period: "2018.04 — 2019.08"
 team: "数十名規模（Frontend 3 / Backend 3 ほか）"
 role: "Frontend Engineer"
 order: 10
+accent: "#f63"
 year: "2019"
 thumbnail: "/works/lobi-tonamel.webp"
 tags: ["Engineering", "Community", "e-Sports"]

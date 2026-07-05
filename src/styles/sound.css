@@ -1,0 +1,127 @@
+/* ---- SOUND ページ（音のインクアート） ------------------------------ */
+
+/* ページ全体を一枚の水面として使うフルビューポートのステージ */
+.sound-stage {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  touch-action: none;
+}
+
+.sound-canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* 作品ステートメント（左下のプレート） */
+.sound-intro {
+  position: absolute;
+  left: calc(var(--sidebar-w) + var(--gutter));
+  right: var(--gutter);
+  bottom: clamp(28px, 6vh, 60px);
+  max-width: 460px;
+  pointer-events: none;
+  transition: opacity 1.4s var(--ease);
+}
+
+.sound-title {
+  margin: 10px 0 14px;
+  font-family: var(--font-en);
+  font-size: clamp(36px, 4.5vw, 54px);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+}
+
+.sound-lead {
+  font-size: 13.5px;
+  line-height: 2.1;
+  color: var(--ink-soft);
+}
+
+/* サウンド OFF のときだけ現れる中央の案内 */
+.sound-hint {
+  position: absolute;
+  left: calc(50% + var(--sidebar-w) / 2);
+  top: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  transition: opacity 0.9s var(--ease), visibility 0.9s var(--ease);
+}
+
+.sound-hint.is-hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.sound-hint-note {
+  margin-bottom: 20px;
+  font-size: 13px;
+  line-height: 2;
+  color: var(--muted);
+}
+
+.sound-hint-btn {
+  padding: 11px 30px;
+  border: 1px solid var(--ink);
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  transition: background-color 0.4s var(--ease), color 0.4s var(--ease);
+}
+
+.sound-hint-btn:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* WebGL 不可・reduced-motion 環境では静かな白いページのまま */
+.sound-stage.is-static .sound-hint {
+  display: none;
+}
+
+/* しばらく操作がないと UI が退場し、水面だけが残る（展示モード）。
+   opacity は sound-ui-idle のときにしか変化しないため、この transition
+   が他ページの見た目に影響することはない */
+.sidebar,
+.mobile-bar {
+  transition: opacity 1.4s var(--ease);
+}
+
+body.sound-ui-idle .sidebar,
+body.sound-ui-idle .mobile-bar {
+  opacity: 0;
+  pointer-events: none;
+}
+
+body.sound-ui-idle .sound-intro {
+  opacity: 0;
+}
+
+body.sound-ui-idle .sound-stage {
+  cursor: none;
+}
+
+@media (max-width: 1023px) {
+  .sound-intro {
+    left: var(--gutter);
+    bottom: 24px;
+    max-width: none;
+  }
+
+  .sound-title {
+    font-size: 34px;
+  }
+
+  .sound-hint {
+    left: 50%;
+    width: max-content;
+    max-width: min(80vw, 360px);
+  }
+}

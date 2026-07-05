@@ -17,6 +17,10 @@ for (let base = 38; base <= 62; base += 12) {
   for (const step of [0, 2, 4, 7, 9]) NOTE_POOL.push(base + step);
 }
 
+// 可視化側（/sound/ のインクアート）が音高を正規化するための音域
+export const NOTE_MIN = NOTE_POOL[0];
+export const NOTE_MAX = NOTE_POOL[NOTE_POOL.length - 1];
+
 const midiToFreq = (m) => 440 * 2 ** ((m - 69) / 12);
 
 // 等ラウドネス曲線の影響で、同じ音量でも高い音ほど大きく聴こえる。
@@ -188,6 +192,13 @@ function playTone(midi, opts = {}) {
   const voice = { env, oscs: [oscA, oscB], fading: false };
   voices.add(voice);
 
+  // 発音を可視化側（/sound/ のインク描画など）へ通知する
+  document.dispatchEvent(
+    new CustomEvent("akinen:tone", {
+      detail: { midi, freq, peak: targetPeak, attack, release, pan }
+    })
+  );
+
   const end = t + attack + release + 0.1;
   oscA.start(t);
   oscB.start(t);
@@ -268,6 +279,7 @@ export function enableAmbient({ greet = false } = {}) {
   ctx.resume().catch(() => {});
   enabled = true;
   rampOutGain(1, 1.2);
+  document.dispatchEvent(new CustomEvent("akinen:ambient-state", { detail: { on: true } }));
 
   if (greet && !wasEnabled) {
     // ON を選んだ瞬間に立ちのぼる、ゆっくりしたアルペジオ
@@ -289,6 +301,7 @@ export function enableAmbient({ greet = false } = {}) {
 // ので、再度 ON にすればそのまま音空間へ戻れる）
 export function disableAmbient() {
   enabled = false;
+  document.dispatchEvent(new CustomEvent("akinen:ambient-state", { detail: { on: false } }));
   if (!ctx) return;
   rampOutGain(0.0001, 0.8);
   setTimeout(() => {
