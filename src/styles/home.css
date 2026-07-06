@@ -764,6 +764,120 @@ span.book-link:hover .book-caption-title {
   color: var(--muted);
 }
 
+/* carousel（JSが .is-carousel を付与したときだけ効く。JS無効時は通常のグリッドのまま） */
+
+.kind-carousel.is-carousel .kind-quote-list {
+  grid-template-columns: 1fr;
+}
+
+.kind-carousel.is-carousel .kind-quote {
+  grid-area: 1 / 1;
+  padding: clamp(40px, 6vw, 64px) clamp(28px, 6vw, 72px);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.45s var(--ease),
+    visibility 0s 0.45s;
+}
+
+.kind-carousel.is-carousel .kind-quote.is-active {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.45s var(--ease);
+}
+
+.kind-carousel.is-carousel .kind-quote::before {
+  font-size: clamp(96px, 16vw, 168px);
+  left: clamp(14px, 3vw, 30px);
+}
+
+.kind-carousel.is-carousel .kind-quote-text,
+.kind-carousel.is-carousel .kind-quote-emphasis {
+  font-size: clamp(19px, 2.2vw, 24px);
+  line-height: 1.75;
+}
+
+.kind-carousel.is-carousel .kind-quote-foot {
+  margin-top: auto;
+  padding-top: 22px;
+}
+
+.kind-quote.kw-enter-next {
+  animation: kw-enter-next 0.6s var(--ease);
+}
+
+.kind-quote.kw-enter-prev {
+  animation: kw-enter-prev 0.6s var(--ease);
+}
+
+@keyframes kw-enter-next {
+  from {
+    opacity: 0;
+    transform: translateX(36px);
+  }
+}
+
+@keyframes kw-enter-prev {
+  from {
+    opacity: 0;
+    transform: translateX(-36px);
+  }
+}
+
+.kind-carousel-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  margin-top: 32px;
+}
+
+.kind-carousel-nav[hidden] {
+  display: none;
+}
+
+.kind-nav-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+  background: transparent;
+  font-family: var(--font-en);
+  font-size: 15px;
+  color: var(--ink);
+  cursor: pointer;
+  transition:
+    background 0.35s var(--ease),
+    border-color 0.35s var(--ease),
+    color 0.35s var(--ease);
+}
+
+.kind-nav-btn:hover,
+.kind-nav-btn:focus-visible {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--paper);
+}
+
+.kind-carousel-count {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  font-family: var(--font-en);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  color: var(--ink);
+}
+
+.kind-carousel-count .kind-count-sep,
+.kind-carousel-count [data-kw-total] {
+  color: var(--muted);
+}
+
 /* typewriter reveal（JSが .kw-typing / .kw-char を付与したときだけ効く） */
 
 .kw-char {

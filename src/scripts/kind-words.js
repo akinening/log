@@ -1,10 +1,13 @@
-// Kind Words — スクロールインでキーボード入力のような文字送りで表示する。
-// 文字はJSで分割・非表示化するため、JS無効環境では全文がそのまま見える。
+// Kind Words — 推薦文を1枚ずつ前面に表示するカルーセル。
+// スライドが切り替わるたびにタイプライター演出とタップ音を再生する。
+// カルーセル化・文字分割はJSで行うため、JS無効環境では全文がグリッドのまま見える。
 import tapSoundUrl from "../sound/tap_05.wav";
 
 const PAUSE_AFTER = new Set(["、", "。", "！", "？", "，"]);
 const SPEED = 1.2;
 const TAP_VOLUME = 0.16;
+// カードのスライドインが落ち着いてからタイプを打ち始めるまでの間
+const ENTER_MS = 360;
 
 // 短い間隔で連続再生されるため、1つのAudioを使い回さずプールする
 const createTapPlayer = () => {
@@ -28,8 +31,9 @@ export const initKindWords = () => {
   if (!section || section.dataset.kwBound) return;
   section.dataset.kwBound = "true";
 
+  const carousel = section.querySelector("[data-kw-carousel]");
   const quotes = Array.from(section.querySelectorAll(".kind-quote"));
-  if (!quotes.length) return;
+  if (!carousel || !quotes.length) return;
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
   const segmenter = "Segmenter" in Intl ? new Intl.Segmenter("ja") : null;
@@ -53,17 +57,34 @@ export const initKindWords = () => {
     return { quote, chars };
   });
 
-  // 一番長いテキストのカードだけ、文字が増えるたびにタップ音を鳴らす
-  const longest = prepared.reduce((a, b) => (b.chars.length > a.chars.length ? b : a));
+  carousel.classList.add("is-carousel");
+  const nav = carousel.querySelector("[data-kw-nav]");
+  nav?.removeAttribute("hidden");
+  const currentEl = carousel.querySelector("[data-kw-current]");
+  const totalEl = carousel.querySelector("[data-kw-total]");
+  if (totalEl) totalEl.textContent = String(prepared.length).padStart(2, "0");
+
   const playTap = createTapPlayer();
 
-  const type = ({ quote, chars }) => {
-    const withSound = quote === longest.quote;
+  // 進行中のタイプを打ち切るためのトークン。値が進んだら古いタイプは停止する。
+  let typeToken = 0;
+
+  const resetQuote = ({ quote, chars }) => {
+    quote.classList.remove("is-typed");
+    quote.querySelectorAll(".kw-caret").forEach((caret) => caret.remove());
+    chars.forEach((ch) => ch.classList.remove("is-on"));
+  };
+
+  const type = ({ quote, chars }, token) => {
     const caret = document.createElement("span");
     caret.className = "kw-caret";
     caret.setAttribute("aria-hidden", "true");
     let i = 0;
     const step = () => {
+      if (token !== typeToken) {
+        caret.remove();
+        return;
+      }
       if (i >= chars.length) {
         quote.classList.add("is-typed");
         setTimeout(() => caret.remove(), 1100);
@@ -72,7 +93,7 @@ export const initKindWords = () => {
       const ch = chars[i];
       ch.classList.add("is-on");
       ch.after(caret);
-      if (withSound) playTap();
+      playTap();
       i += 1;
       const next = chars[i];
       let delay = 26 + Math.random() * 44;
@@ -85,36 +106,92 @@ export const initKindWords = () => {
     step();
   };
 
-  // 複数カードが同時に見えたときは開始を300msずつずらす
-  let lastStart = 0;
+  let index = 0;
+  let started = false;
+
+  const show = (i, dir) => {
+    const token = ++typeToken;
+    const entering = prepared[i];
+    index = i;
+
+    prepared.forEach(({ quote }) => {
+      if (quote !== entering.quote) quote.classList.remove("is-active");
+      quote.classList.remove("kw-enter-prev", "kw-enter-next");
+    });
+    resetQuote(entering);
+    // スライドインのアニメーションを確実に再生し直すためリフローを挟む
+    void entering.quote.offsetWidth;
+    entering.quote.classList.add("is-active", dir < 0 ? "kw-enter-prev" : "kw-enter-next");
+    if (currentEl) currentEl.textContent = String(i + 1).padStart(2, "0");
+
+    setTimeout(() => {
+      if (token === typeToken) type(entering, token);
+    }, ENTER_MS);
+  };
+
+  const go = (dir) => {
+    started = true;
+    const n = prepared.length;
+    show((index + dir + n) % n, dir);
+  };
+
+  carousel.querySelector("[data-kw-prev]")?.addEventListener("click", () => go(-1));
+  carousel.querySelector("[data-kw-next]")?.addEventListener("click", () => go(1));
+
+  carousel.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowLeft") {
+      e.preventDefault();
+      go(-1);
+    } else if (e.key === "ArrowRight") {
+      e.preventDefault();
+      go(1);
+    }
+  });
+
+  // タッチスワイプ（マウスのドラッグ選択には反応させない）
+  let swipeX = null;
+  carousel.addEventListener("pointerdown", (e) => {
+    if (e.pointerType === "mouse") return;
+    swipeX = e.clientX;
+  });
+  carousel.addEventListener("pointerup", (e) => {
+    if (swipeX === null) return;
+    const dx = e.clientX - swipeX;
+    swipeX = null;
+    if (Math.abs(dx) > 48) go(dx < 0 ? 1 : -1);
+  });
+
+  // 1枚目は表示だけしておき、スクロールインでタイプを打ち始める
+  prepared[0].quote.classList.add("is-active");
+
   const io = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
         if (!entry.isIntersecting) return;
-        io.unobserve(entry.target);
-        const item = prepared.find((p) => p.quote === entry.target);
-        if (!item) return;
-        const now = performance.now();
-        const startAt = Math.max(now + 150, lastStart + 300);
-        lastStart = startAt;
-        setTimeout(() => type(item), startAt - now);
+        io.disconnect();
+        if (started) return;
+        started = true;
+        const token = ++typeToken;
+        setTimeout(() => {
+          if (token === typeToken) type(prepared[index], token);
+        }, 150);
       });
     },
-    { threshold: 0.3 }
+    { threshold: 0.25 }
   );
 
   // パスワードゲートで隠れている間はタイプを始めない
   const wrap = section.querySelector("[data-gate-wrap]");
-  const observeAll = () => prepared.forEach((p) => io.observe(p.quote));
+  const startObserving = () => io.observe(carousel);
   if (wrap && !wrap.classList.contains("is-unlocked")) {
     const mo = new MutationObserver(() => {
       if (wrap.classList.contains("is-unlocked")) {
         mo.disconnect();
-        observeAll();
+        startObserving();
       }
     });
     mo.observe(wrap, { attributes: true, attributeFilter: ["class"] });
   } else {
-    observeAll();
+    startObserving();
   }
 };
