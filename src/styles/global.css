@@ -8,7 +8,6 @@
    - case-study: 事例詳細ページ（/works/[slug]）
    - experience: 経歴ページ（アコーディオン・流体写真・privateモーダル）
    - contact: お問い合わせページ（FormSpreeフォーム）
-   - sound: SOUNDページ（音のインクアート・展示モードのUI退場）
    - misc: 404・パスワードゲート
 ------------------------------------------------------------------- */
 
@@ -19,5 +18,4 @@
 @import "./case-study.css";
 @import "./experience.css";
 @import "./contact.css";
-@import "./sound.css";
 @import "./misc.css";

@@ -223,6 +223,25 @@
   }
 }
 
+/* note記事へのリンクを本の表紙表現にした版（gogh記事）。
+   .book-link / .book-* は home.css 側の共通定義を --book-w/--book-h で流用 */
+.xp-book-link {
+  margin-top: 28px;
+}
+
+.xp-book-link .book {
+  margin-top: 0;
+}
+
+.xp-book-link .book-caption-title {
+  max-width: 320px;
+}
+
+.xp-book-link:hover .xp-photo-arrow,
+.xp-book-link:focus-visible .xp-photo-arrow {
+  transform: translateX(4px);
+}
+
 .xp-photo {
   position: relative;
   aspect-ratio: 3 / 2;

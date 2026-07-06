@@ -13,52 +13,98 @@ const VISIBLE = 3;
 
 const speaking = [
   {
-    date: "2025.04",
     title: "CrossRel「AIとデザインのセカンドステージ」登壇",
-    href: "https://aidesign2ndstage.peatix.com/"
+    coverTitle: "AIとデザインの\nセカンドステージ",
+    coverSub: "CrossRel 2025",
+    label: "CrossRel",
+    meta: "2025.04 · Talk",
+    href: "https://aidesign2ndstage.peatix.com/",
+    g1: "#43104c",
+    g2: "#a855d8"
   },
   {
-    date: "2023.12",
     title: "Spectrum Tokyo Festival 2023「3D空間を扱うUI表現とユーザビリティ」",
-    href: "https://spectrumfest2023.studio.site/en"
+    coverTitle: "3D空間を扱うUI表現と\nユーザビリティ",
+    coverSub: "Spectrum Tokyo Festival 2023",
+    label: "Spectrum",
+    meta: "2023.12 · Talk",
+    href: "https://spectrumfest2023.studio.site/en",
+    g1: "#5c1622",
+    g2: "#d45a6e"
   },
   {
-    date: "2023.06",
     title: "DIST.39「FigmaとBeziではじめるXR UIプロトタイピング」",
-    href: "https://speakerdeck.com/akinen/figmatobezeldehazimeruxruipurototaipingu"
+    coverTitle: "FigmaとBeziではじめる\nXR UIプロトタイピング",
+    coverSub: "DIST.39 2023",
+    label: "DIST.39",
+    meta: "2023.06 · Talk",
+    href: "https://speakerdeck.com/akinen/figmatobezeldehazimeruxruipurototaipingu",
+    g1: "#123a5c",
+    g2: "#4f92d8"
   },
   {
-    date: "2022.07",
     title: "Figma Japan Community Event — Show & Tell 登壇",
-    href: "https://www.facebook.com/ackiena/posts/pfbid0pM9b89XQcdWzgGNqkLrn8L2yoV4djjRLKfSL7knTofNxjEPwhEAY6HkekkNQqq1sl"
+    coverTitle: "Figma Japan\nShow & Tell 登壇",
+    coverSub: "Community Event 2022",
+    label: "Figma",
+    meta: "2022.07 · Talk",
+    href: "https://www.facebook.com/ackiena/posts/pfbid0pM9b89XQcdWzgGNqkLrn8L2yoV4djjRLKfSL7knTofNxjEPwhEAY6HkekkNQqq1sl",
+    g1: "#6b3410",
+    g2: "#e0913c"
   },
   {
-    date: "2020–22",
     title: "八王子IT勉強会「Yuruhachi.it」運営・登壇",
-    href: null
+    coverTitle: "八王子IT勉強会\nYuruhachi.it",
+    coverSub: "Community 2020–22",
+    label: "Yuruhachi.it",
+    meta: "2020–22 · Community",
+    href: null,
+    g1: "#2f4a1c",
+    g2: "#84b04a"
   }
 ];
 
 const writing = [
   {
-    date: "2024.11",
     title: "200万DLを突破した作業集中プロダクト「gogh」のデザイン思想",
-    href: "https://note.com/ambr/n/nbccabde15b46"
+    coverTitle: "goghの\nデザイン思想",
+    coverSub: "200万DLの集中アプリ",
+    label: "note",
+    meta: "note · 2024.11",
+    href: "https://note.com/ambr/n/nbccabde15b46",
+    g1: "#1e2246",
+    g2: "#7d63c9"
   },
   {
-    date: "note",
     title: "デザインと事業のあいだ — 執筆アカウント",
-    href: "https://note.com/012"
+    coverTitle: "デザインと\n事業のあいだ",
+    coverSub: "執筆アカウント",
+    label: "note",
+    meta: "note.com/012",
+    href: "https://note.com/012",
+    g1: "#0d5a46",
+    g2: "#3cc39d"
   },
   {
-    date: "Zenn",
     title: "フロントエンドとデザインシステムの技術記事",
-    href: "https://zenn.dev/012"
+    coverTitle: "フロントエンドと\nデザインシステム",
+    coverSub: "技術記事アーカイブ",
+    label: "Zenn",
+    meta: "zenn.dev/012",
+    href: "https://zenn.dev/012",
+    g1: "#123f7d",
+    g2: "#3ea8ff"
   },
   {
-    date: "Deck",
     title: "登壇スライドアーカイブ（Speaker Deck）",
-    href: "https://speakerdeck.com/akinen"
+    coverTitle: "登壇スライドアーカイブ",
+    coverSub: "Talks & Slides",
+    label: "Speaker Deck",
+    meta: "speakerdeck.com/akinen",
+    href: "https://speakerdeck.com/akinen",
+    g1: "#0b3a36",
+    g2: "#159182",
+    wide: true
   }
 ];
 
@@ -151,47 +197,93 @@ const sns = [
         <h3 class="sidework-heading">Speaking<sup>{String(speaking.length).padStart(2, "0")}</sup></h3>
         <p class="sidework-caption">登壇・トーク</p>
       </div>
-      <ul class="sidework-list">
+      <div class="book-shelf book-shelf--wide">
         {
-          speaking.map((item) =>
+          speaking.map((item, i) =>
             item.href ? (
-              <li>
-                <a class="sidework-item" href={item.href} target="_blank" rel="noopener">
-                  <time>{item.date}</time>
-                  <span class="t">{item.title}</span>
-                  <span class="ext" aria-hidden="true">↗</span>
-                </a>
-              </li>
-            ) : (
-              <li>
-                <span class="sidework-item">
-                  <time>{item.date}</time>
-                  <span class="t">{item.title}</span>
+              <a
+                class="book-link book-link--wide rv"
+                href={item.href}
+                target="_blank"
+                rel="noopener"
+                style={`--bg1:${item.g1};--bg2:${item.g2};--rv-delay:${i * 0.06}s`}
+              >
+                <span class="book" aria-hidden="true">
+                  <span class="book-back" />
+                  <span class="book-pages" />
+                  <span class="book-cover">
+                    <span class="book-cover-text">
+                      <span class="book-cover-title">{item.coverTitle}</span>
+                      <span class="book-cover-sub">{item.coverSub}</span>
+                    </span>
+                    <span class="book-cover-label">{item.label}</span>
+                  </span>
                 </span>
-              </li>
+                <span class="book-caption">
+                  <span class="book-caption-title">{item.title}</span>
+                  <span class="book-caption-meta">{item.meta}</span>
+                </span>
+              </a>
+            ) : (
+              <span
+                class="book-link book-link--wide rv"
+                style={`--bg1:${item.g1};--bg2:${item.g2};--rv-delay:${i * 0.06}s`}
+              >
+                <span class="book" aria-hidden="true">
+                  <span class="book-back" />
+                  <span class="book-pages" />
+                  <span class="book-cover">
+                    <span class="book-cover-text">
+                      <span class="book-cover-title">{item.coverTitle}</span>
+                      <span class="book-cover-sub">{item.coverSub}</span>
+                    </span>
+                    <span class="book-cover-label">{item.label}</span>
+                  </span>
+                </span>
+                <span class="book-caption">
+                  <span class="book-caption-title">{item.title}</span>
+                  <span class="book-caption-meta">{item.meta}</span>
+                </span>
+              </span>
             )
           )
         }
-      </ul>
+      </div>
     </div>
     <div class="sidework-block rv" style="--rv-delay:.08s">
       <div class="sidework-head">
         <h3 class="sidework-heading">Writing<sup>{String(writing.length).padStart(2, "0")}</sup></h3>
         <p class="sidework-caption">執筆・発信</p>
       </div>
-      <ul class="sidework-list">
+      <div class="book-shelf">
         {
-          writing.map((item) => (
-            <li>
-              <a class="sidework-item" href={item.href} target="_blank" rel="noopener">
-                <time>{item.date}</time>
-                <span class="t">{item.title}</span>
-                <span class="ext" aria-hidden="true">↗</span>
-              </a>
-            </li>
+          writing.map((item, i) => (
+            <a
+              class:list={["book-link", "rv", { "book-link--wide": item.wide }]}
+              href={item.href}
+              target="_blank"
+              rel="noopener"
+              style={`--bg1:${item.g1};--bg2:${item.g2};--rv-delay:${0.08 + i * 0.06}s`}
+            >
+              <span class="book" aria-hidden="true">
+                <span class="book-back" />
+                <span class="book-pages" />
+                <span class="book-cover">
+                  <span class="book-cover-text">
+                    <span class="book-cover-title">{item.coverTitle}</span>
+                    <span class="book-cover-sub">{item.coverSub}</span>
+                  </span>
+                  <span class="book-cover-label">{item.label}</span>
+                </span>
+              </span>
+              <span class="book-caption">
+                <span class="book-caption-title">{item.title}</span>
+                <span class="book-caption-meta">{item.meta}</span>
+              </span>
+            </a>
           ))
         }
-      </ul>
+      </div>
     </div>
   </section>
 

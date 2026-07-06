@@ -97,25 +97,31 @@ import ContactCta from "../components/ContactCta.astro";
           </li>
         </ul>
         <a
-          class="xp-photo-link"
+          class="book-link xp-book-link"
           href="https://note.com/ambr/n/nbccabde15b46"
           target="_blank"
           rel="noopener"
+          style="--bg1:#1e2246;--bg2:#7d63c9;--book-w:176px;--book-h:256px"
         >
-          <figure class="xp-photo" data-no-fluid>
-            <img
-              src="/works/gogh-note.webp"
-              alt="200万DLを突破した作業集中プロダクト「gogh」のデザイン思想（note記事）"
-              width="1920"
-              height="1080"
-              loading="lazy"
-              decoding="async"
-              draggable="false"
-            />
-          </figure>
-          <span class="xp-photo-caption">
-            note記事を読む
-            <span class="xp-photo-arrow" aria-hidden="true">→</span>
+          <span class="book" aria-hidden="true">
+            <span class="book-back" />
+            <span class="book-pages" />
+            <span class="book-cover">
+              <span class="book-cover-text">
+                <span class="book-cover-title">{"goghの\nデザイン思想"}</span>
+                <span class="book-cover-sub">200万DLの集中アプリ</span>
+              </span>
+              <span class="book-cover-label">NOTE</span>
+            </span>
+          </span>
+          <span class="book-caption">
+            <span class="book-caption-title">
+              200万DLを突破した作業集中プロダクト「gogh」のデザイン思想
+            </span>
+            <span class="book-caption-meta">
+              note記事を読む
+              <span class="xp-photo-arrow" aria-hidden="true">→</span>
+            </span>
           </span>
         </a>
       </article>
@@ -244,7 +250,7 @@ import ContactCta from "../components/ContactCta.astro";
 
       <details class="xp-entry">
         <summary>
-          <h3>リーダーシップ・協働</h3>
+          <h3>協働</h3>
           <span class="chev" aria-hidden="true">＋</span>
         </summary>
         <ul>

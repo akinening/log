@@ -88,11 +88,7 @@ const isCurrent = (href: string) =>
           }
         </nav>
         <div class="mobile-sound">
-          <a
-            class="mobile-sound-label en"
-            href="/sound/"
-            aria-current={isCurrent("/sound/") ? "page" : undefined}
-          >Sound</a>
+          <span class="mobile-sound-label en">Ambient</span>
           <button
             type="button"
             class="sound-switch"
@@ -126,14 +122,6 @@ const isCurrent = (href: string) =>
           Tokyo, Japan<br />© 2026 Akinori Ozawa
         </p>
         <div class="sound-area">
-          <a
-            class="sound-page-link"
-            href="/sound/"
-            aria-current={isCurrent("/sound/") ? "page" : undefined}
-          >
-            <span class="idx">04</span>
-            Sound
-          </a>
           <div class="sound-toggle">
             <span class="overline">Ambient</span>
             <button

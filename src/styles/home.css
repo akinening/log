@@ -351,63 +351,286 @@
   }
 }
 
-.sidework-list {
-  list-style: none;
+/* ---- writing bookshelf ----------------------------------------------- */
+
+.book-shelf {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: start;
+  gap: 44px 36px;
+  padding-top: 8px;
 }
 
-.sidework-list li {
-  border-bottom: 1px solid var(--hairline);
+/* mid widths: the shelf column is too narrow for three 16:9 books */
+@media (min-width: 768px) and (max-width: 1359px) {
+  .book-shelf {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
-.sidework-list li:last-child {
-  border-bottom: 0;
+@media (max-width: 767px) {
+  .book-shelf {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 36px 24px;
+  }
+
+  .book-shelf--wide {
+    grid-template-columns: 1fr;
+  }
+
+  /* wide slide-books read full-width on small screens */
+  .book-link--wide {
+    grid-column: 1 / -1;
+  }
 }
 
-.sidework-list li:first-child .sidework-item {
-  padding-top: 6px;
-}
-
-.sidework-item {
+.book-link {
+  --book-w: 128px;
+  --book-h: 186px;
   display: flex;
-  align-items: baseline;
-  gap: 24px;
-  padding: 18px 4px;
-  transition: background 0.4s var(--ease), padding-left 0.4s var(--ease);
+  flex-direction: column;
+  width: var(--book-w);
 }
 
-a.sidework-item:hover {
-  background: var(--accent-soft);
-  padding-left: 14px;
+/* wide slide-books fill their grid column, keeping the 16:9 ratio */
+.book-link--wide {
+  --book-w: 100%;
+  container-type: inline-size;
 }
 
-.sidework-item time {
-  flex: none;
-  min-width: 56px;
-  font-family: var(--font-en);
-  font-size: 11px;
+.book-link--wide .book {
+  height: auto;
+  aspect-ratio: 16 / 9;
+}
+
+/* an entry without an archive link renders as a closed, static book */
+span.book-link {
+  cursor: default;
+}
+
+span.book-link:hover .book-cover {
+  transform: none;
+  box-shadow: none;
+}
+
+span.book-link:hover .book-pages {
+  transform: none;
+}
+
+span.book-link:hover .book-back {
+  box-shadow: 0 16px 28px -14px rgba(19, 19, 17, 0.45);
+}
+
+span.book-link:hover .book-caption-title {
+  color: inherit;
+}
+
+.book-link:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 6px;
+  border-radius: 4px;
+}
+
+.book {
+  position: relative;
+  display: block;
+  width: var(--book-w);
+  height: var(--book-h);
+  perspective: 1000px;
+}
+
+.book-back {
+  position: absolute;
+  inset: 0;
+  border-radius: 2px 4px 4px 2px;
+  background: linear-gradient(150deg, var(--bg1), var(--bg2));
+  filter: brightness(0.6);
+  box-shadow: 0 16px 28px -14px rgba(19, 19, 17, 0.45);
+  transition: box-shadow 0.55s var(--ease);
+}
+
+.book-pages {
+  position: absolute;
+  top: 2px;
+  bottom: 2px;
+  left: 6px;
+  right: 2px;
+  border-radius: 1px 3px 3px 1px;
+  background:
+    linear-gradient(to left, rgba(19, 19, 17, 0.14), rgba(19, 19, 17, 0) 24%),
+    repeating-linear-gradient(to bottom, #fdfcf7 0 3px, #efede4 3px 4px);
+  transform-origin: 0% 50%;
+  transition: transform 0.55s var(--ease);
+}
+
+.book-cover {
+  position: absolute;
+  inset: 0;
+  border-radius: 2px 4px 4px 2px;
+  background: linear-gradient(150deg, var(--bg1) 12%, var(--bg2));
+  color: #fff;
+  transform-origin: 0% 50%;
+  transition: transform 0.55s var(--ease), box-shadow 0.55s var(--ease);
+}
+
+/* hinge groove along the spine */
+.book-cover::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 8px;
+  width: 3px;
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0));
+}
+
+/* paper gloss */
+.book-cover::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background:
+    linear-gradient(to right, rgba(255, 255, 255, 0.24), rgba(255, 255, 255, 0) 3px),
+    linear-gradient(112deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0) 46%);
+  pointer-events: none;
+}
+
+.book-link:hover .book-cover,
+.book-link:focus-visible .book-cover {
+  transform: rotateY(-30deg);
+  box-shadow: 14px 6px 22px -14px rgba(19, 19, 17, 0.4);
+}
+
+.book-link:hover .book-pages,
+.book-link:focus-visible .book-pages {
+  transform: rotateY(-11deg);
+}
+
+.book-link:hover .book-back,
+.book-link:focus-visible .book-back {
+  box-shadow: 0 22px 38px -14px rgba(19, 19, 17, 0.5);
+}
+
+.book-cover-text {
+  position: absolute;
+  inset: 16px 15px 42px 14px;
+  writing-mode: vertical-rl;
+  font-feature-settings: "palt";
+  overflow: hidden;
+}
+
+.book-cover-title {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.8;
+  letter-spacing: 0.08em;
+  white-space: pre-line;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
+}
+
+.book-cover-sub {
+  display: block;
+  margin-block-start: 12px;
+  font-size: 9.5px;
   font-weight: 500;
   letter-spacing: 0.1em;
-  color: var(--muted);
-  font-variant-numeric: tabular-nums;
+  opacity: 0.75;
 }
 
-.sidework-item .t {
-  font-size: 14px;
+/* the 16:9 slide-deck book reads horizontally, like a title slide.
+   cqi values scale the 236px-wide reference design down with the
+   column; the px caps keep it from growing past that design. */
+.book-link--wide .book-cover-text {
+  writing-mode: horizontal-tb;
+  inset: min(6cqi, 14px) min(7.6cqi, 18px) min(14.4cqi, 34px) min(8.5cqi, 20px);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+}
+
+.book-link--wide .book-cover-text::before {
+  content: "";
+  display: block;
+  width: min(11cqi, 26px);
+  height: 2px;
+  margin-bottom: min(5cqi, 12px);
+  background: rgba(255, 255, 255, 0.75);
+}
+
+.book-link--wide .book-cover-title {
+  font-size: clamp(11px, 6.8cqi, 16px);
+  line-height: 1.5;
+  letter-spacing: 0.08em;
+}
+
+.book-link--wide .book-cover-sub {
+  margin-block-start: min(2.5cqi, 6px);
+  font-family: var(--font-en);
+  font-size: clamp(7.5px, 4cqi, 9.5px);
+  letter-spacing: 0.14em;
+}
+
+.book-cover-label {
+  position: absolute;
+  left: 17px;
+  bottom: 13px;
+  font-family: var(--font-en);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
+.book-link--wide .book-cover-label {
+  left: auto;
+  right: min(6.8cqi, 16px);
+  bottom: min(5.5cqi, 13px);
+  font-size: clamp(7px, 3.8cqi, 9px);
+}
+
+.book-caption {
+  display: block;
+  margin-top: 16px;
+}
+
+.book-caption-title {
+  display: block;
+  font-size: 12.5px;
   font-weight: 500;
   line-height: 1.7;
+  transition: color 0.3s var(--ease);
 }
 
-.sidework-item .ext {
-  margin-left: auto;
-  flex: none;
-  color: var(--muted);
-  font-size: 11px;
-  transition: color 0.3s var(--ease), transform 0.4s var(--ease);
-}
-
-a.sidework-item:hover .ext {
+.book-link:hover .book-caption-title {
   color: var(--accent);
-  transform: translate(2px, -2px);
+}
+
+.book-caption-meta {
+  display: block;
+  margin-top: 4px;
+  font-family: var(--font-en);
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .book-cover,
+  .book-pages,
+  .book-back {
+    transition: none;
+  }
+
+  .book-link:hover .book-cover,
+  .book-link:focus-visible .book-cover,
+  .book-link:hover .book-pages,
+  .book-link:focus-visible .book-pages {
+    transform: none;
+  }
 }
 
 /* ---- kind words ------------------------------------------------------ */

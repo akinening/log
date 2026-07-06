@@ -65,8 +65,7 @@
   gap: 18px;
 }
 
-.side-nav a,
-.sound-page-link {
+.side-nav a {
   position: relative;
   display: inline-flex;
   align-items: baseline;
@@ -81,16 +80,14 @@
   width: fit-content;
 }
 
-.side-nav a .idx,
-.sound-page-link .idx {
+.side-nav a .idx {
   font-size: 10px;
   color: var(--muted);
   opacity: 0.7;
   transition: color 0.35s var(--ease), opacity 0.35s var(--ease);
 }
 
-.side-nav a::after,
-.sound-page-link::after {
+.side-nav a::after {
   content: "";
   position: absolute;
   left: 0;
@@ -104,24 +101,18 @@
 }
 
 .side-nav a:hover,
-.side-nav a[aria-current="page"],
-.sound-page-link:hover,
-.sound-page-link[aria-current="page"] {
+.side-nav a[aria-current="page"] {
   color: var(--ink);
 }
 
 .side-nav a:hover .idx,
-.side-nav a[aria-current="page"] .idx,
-.sound-page-link:hover .idx,
-.sound-page-link[aria-current="page"] .idx {
+.side-nav a[aria-current="page"] .idx {
   color: var(--accent);
   opacity: 1;
 }
 
 .side-nav a:hover::after,
-.side-nav a[aria-current="page"]::after,
-.sound-page-link:hover::after,
-.sound-page-link[aria-current="page"]::after {
+.side-nav a[aria-current="page"]::after {
   transform: scaleX(1);
   transform-origin: left;
 }
@@ -135,7 +126,7 @@
   line-height: 1.6;
 }
 
-/* サイドバー下部: SOUND ページへのリンク + アンビエントのトグル */
+/* サイドバー下部: アンビエントサウンドのトグル */
 .sound-area {
   margin-top: 20px;
   padding-top: 18px;
@@ -147,7 +138,6 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  margin-top: 14px;
 }
 
 .sound-switch {
@@ -255,10 +245,6 @@
     letter-spacing: 0.16em;
     text-transform: uppercase;
     color: var(--muted);
-  }
-
-  .mobile-sound-label[aria-current="page"] {
-    color: var(--ink);
   }
 
   .mobile-nav {
