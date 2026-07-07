@@ -1,5 +1,7 @@
 // Experience の「もっと詳しく」— あいことば入力モーダルと
 // body.is-private による詳細経歴の解錠。
+import { haptic } from "./haptics";
+
 export const initPrivateMode = () => {
   const privateButton = document.querySelector("[data-private-open]");
   const privateModal = document.querySelector("[data-private-modal]");
@@ -43,11 +45,13 @@ export const initPrivateMode = () => {
         anchor.removeAttribute("data-private-href");
       });
       closePrivateModal();
+      haptic("success");
       return;
     }
     privateError?.classList.add("is-visible");
     privateModal.classList.remove("is-shake");
     requestAnimationFrame(() => privateModal.classList.add("is-shake"));
+    haptic("error");
     if (privateInput instanceof HTMLInputElement) {
       privateInput.value = "";
       privateInput.focus();
