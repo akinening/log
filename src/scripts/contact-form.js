@@ -4,6 +4,8 @@
 //   2. honeypot（.ct-hp 内の _gotcha が埋まっていたら送信しない）
 //   3. タイムトラップ（表示から一定時間未満の送信はボットとみなす）
 // ボット判定時は FormSpree へ送らず成功表示だけ返し、判定手がかりを与えない。
+import { haptic } from "./haptics";
+
 const ENDPOINT = ["https://", "formspree.io", "/f/", "xlgyzewo"].join("");
 
 const MIN_FILL_MS = 4000;
@@ -65,6 +67,7 @@ export function initContactForm() {
     form.hidden = true;
     success.hidden = false;
     success.focus({ preventScroll: false });
+    haptic("success");
   };
 
   const setSending = (sending) => {
@@ -82,6 +85,7 @@ export function initContactForm() {
     });
     if (firstInvalid) {
       firstInvalid.focus();
+      haptic("error");
       return;
     }
 
@@ -111,6 +115,7 @@ export function initContactForm() {
     } catch {
       failure.classList.add("is-visible");
       setSending(false);
+      haptic("error");
     }
   });
 }
