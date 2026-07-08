@@ -93,6 +93,7 @@ const isCurrent = (href: string) =>
             type="button"
             class="sound-switch"
             data-sound-switch
+            data-haptic="toggle"
             aria-pressed="false"
             aria-label="アンビエントサウンドの再生切り替え"
           >
@@ -128,6 +129,7 @@ const isCurrent = (href: string) =>
               type="button"
               class="sound-switch"
               data-sound-switch
+              data-haptic="toggle"
               aria-pressed="false"
               aria-label="アンビエントサウンドの再生切り替え"
             >
@@ -293,6 +295,14 @@ const isCurrent = (href: string) =>
         firstLoad = false;
         delay ? setTimeout(initReveal, delay) : initReveal();
       });
+    </script>
+
+    <script>
+      import { initHaptics } from "../scripts/haptics";
+
+      // タップ時のハプティックフィードバック（docs/haptic-guidelines.md）。
+      // document への委譲のみなのでクリック音と同様ここで一度だけ登録する。
+      initHaptics();
     </script>
 
     <script define:vars={{ clickSoundUrl, hoverSoundUrl }}>

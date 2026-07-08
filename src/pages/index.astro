@@ -155,6 +155,7 @@ const sns = [
               class:list={["work-card", "rv", { "is-hidden": i >= VISIBLE }]}
               href={`/works/${work.slug}/`}
               style={`--rv-delay:${(i % VISIBLE) * 0.08}s`}
+              data-haptic="medium"
             >
               <figure class="work-thumb">
                 <img
