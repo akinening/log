@@ -1,6 +1,15 @@
 User-agent: *
 Allow: /
 
+# 画像検索（Google画像検索・Bing画像検索）には画像を載せない。
+# 画像専用クローラーのみを対象にしているため、Googlebot / bingbot による
+# HTMLページのクロール・インデックス・順位には影響しない
+User-agent: Googlebot-Image
+Disallow: /
+
+User-agent: msnbot-media
+Disallow: /
+
 User-agent: GPTBot
 Disallow: /experience/spectrum.webp
 Disallow: /experience/figma.webp

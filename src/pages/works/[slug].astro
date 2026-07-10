@@ -25,6 +25,21 @@ const info = [
   { label: "Company", value: data.company },
   { label: "Role", value: data.role }
 ];
+
+const caseLd = {
+  "@context": "https://schema.org",
+  "@type": "CreativeWork",
+  name: data.title,
+  description: data.summary,
+  url: new URL(`/works/${work.slug}/`, Astro.site).href,
+  image: new URL(data.thumbnail, Astro.site).href,
+  keywords: data.tags.join(", "),
+  author: {
+    "@type": "Person",
+    name: "Akinori Ozawa",
+    url: new URL("/", Astro.site).href
+  }
+};
 ---
 
 <Base
@@ -32,6 +47,7 @@ const info = [
   description={data.summary}
   path={`/works/${work.slug}/`}
 >
+  <script type="application/ld+json" is:inline set:html={JSON.stringify(caseLd)} />
   <article style={data.accent ? `--accent:${data.accent}` : undefined}>
     <header class="case-head">
       <a class="case-back rv" href="/#work">

@@ -15,6 +15,22 @@ const { title, description, path = "/" } = Astro.props;
 const canonical = new URL(path, Astro.site).href;
 const currentPath = Astro.url.pathname;
 
+// 指名検索時のリッチ表示用。ケーススタディ側の CreativeWork は [slug].astro が持つ
+const personLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Akinori Ozawa",
+  jobTitle: "Senior Product Designer",
+  url: new URL("/", Astro.site).href,
+  worksFor: { "@type": "Organization", name: "株式会社ambr" },
+  sameAs: [
+    "https://www.linkedin.com/in/akinen",
+    "https://note.com/012",
+    "https://zenn.dev/012",
+    "https://speakerdeck.com/akinen"
+  ]
+};
+
 const navItems = [
   { label: "Top", href: "/", idx: "01" },
   { label: "Experience", href: "/experience/", idx: "02" },
@@ -34,7 +50,10 @@ const isCurrent = (href: string) =>
     <title>{title}</title>
     <meta name="description" content={description} />
     <meta name="author" content="Akinori Ozawa" />
+    <!-- ページは検索対象のまま、画像だけ画像検索から除外する（robots.txt と二段構え） -->
+    <meta name="robots" content="noimageindex" />
     <link rel="canonical" href={canonical} />
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(personLd)} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta property="og:site_name" content="Akinori Ozawa" />
     <meta property="og:title" content={title} />
