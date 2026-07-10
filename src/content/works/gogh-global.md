@@ -104,4 +104,6 @@ PMF後は、モバイル・Steamの両プラットフォームで、継続と収
 
 ![gogh Webサイト](/works/gogh-web.webp)
 
+![gogh BitSummit出展](/works/gogh-bitsummit.webp)
+
 ![gogh グッズ](/works/gogh_goods.webp)
