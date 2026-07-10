@@ -7,6 +7,7 @@
    - home: トップページ（hero / work grid / side work / kind words / footer）
    - case-study: 事例詳細ページ（/works/[slug]）
    - experience: 経歴ページ（アコーディオン・流体写真・privateモーダル）
+   - perspectives: 図解ページ（企業価値の俯瞰図・ROICツリー）
    - contact: お問い合わせページ（FormSpreeフォーム）
    - misc: 404・パスワードゲート
 ------------------------------------------------------------------- */
@@ -17,5 +18,6 @@
 @import "./home.css";
 @import "./case-study.css";
 @import "./experience.css";
+@import "./perspectives.css";
 @import "./contact.css";
 @import "./misc.css";

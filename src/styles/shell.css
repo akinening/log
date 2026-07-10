@@ -258,11 +258,60 @@
     font-weight: 600;
     letter-spacing: 0.16em;
     text-transform: uppercase;
+    white-space: nowrap;
     color: var(--muted);
   }
 
   .mobile-nav a[aria-current="page"] {
     color: var(--ink);
+  }
+}
+
+/* ナビ4項目は狭い画面に収まらないため段階的に詰める。
+   Top はロゴが兼ねるので非表示、Ambient はスイッチのみ残す */
+@media (max-width: 599px) {
+  .mobile-bar {
+    padding: 0 16px;
+  }
+
+  .mobile-bar-right {
+    gap: 14px;
+  }
+
+  .mobile-nav {
+    gap: 12px;
+  }
+
+  .mobile-nav a {
+    font-size: 10px;
+    letter-spacing: 0.06em;
+  }
+
+  .mobile-nav a[href="/"] {
+    display: none;
+  }
+
+  .mobile-sound-label {
+    display: none;
+  }
+}
+
+@media (max-width: 374px) {
+  .mobile-bar {
+    padding: 0 14px;
+  }
+
+  .mobile-bar-right {
+    gap: 10px;
+  }
+
+  .mobile-nav {
+    gap: 9px;
+  }
+
+  .mobile-nav a {
+    font-size: 9.5px;
+    letter-spacing: 0.02em;
   }
 }
 
