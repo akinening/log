@@ -17,6 +17,8 @@ const drawTextNodes = (ctx, hero, heroRect) => {
     if (!node.data.trim()) continue;
     const el = node.parentElement;
     if (!el) continue;
+    // [data-fluid-exclude] の子孫は歪ませず、DOM のまま残す（職務経歴書ボタン等）
+    if (el.closest("[data-fluid-exclude]")) continue;
     const cs = getComputedStyle(el);
     if (cs.display === "none" || cs.visibility === "hidden") continue;
     ctx.font = `${cs.fontStyle} ${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;
@@ -72,6 +74,7 @@ const snapshot = (hero) => {
 
   // 手描き下線などの画像（テキストの上に重なる想定なので最後に描く）
   hero.querySelectorAll("img").forEach((img) => {
+    if (img.closest("[data-fluid-exclude]")) return;
     if (!img.complete || !img.naturalWidth) return;
     const r = img.getBoundingClientRect();
     ctx.drawImage(img, r.left - heroRect.left, r.top - heroRect.top, r.width, r.height);

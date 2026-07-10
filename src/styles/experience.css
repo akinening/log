@@ -20,6 +20,16 @@
   opacity: 0;
 }
 
+/* 流体スナップショットに含めない要素（職務経歴書ボタンなど）は、
+   DOM のまま可視・操作可能に保ち、キャンバス（z-index:2）より前面に置く */
+.xp-head > [data-fluid-exclude] {
+  z-index: 3;
+}
+
+.xp-head.has-fluid > [data-fluid-exclude] {
+  opacity: 1;
+}
+
 .xp-title {
   font-family: var(--font-en);
   font-size: clamp(40px, 6.4vw, 88px);
