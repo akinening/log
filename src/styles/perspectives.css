@@ -153,6 +153,12 @@
   border-radius: 12px;
   background: var(--paper);
   box-shadow: 0 8px 26px rgba(19, 19, 17, 0.05);
+  /* 各カードの「中心」を1つの円周上の東西南北へ置く。
+     translate(-50%, -50%) でカードを自分のアンカー点に対して
+     中央寄せするので、カードの縦横比が違っても円が崩れない。
+     ホバーの浮き上がりは --lift 経由で合成し、中央寄せを壊さない */
+  --lift: 0px;
+  transform: translate(-50%, -50%) translateY(var(--lift));
   transition:
     transform 0.35s var(--ease),
     border-color 0.35s var(--ease),
@@ -161,7 +167,7 @@
 }
 
 .pv-cycle-node:hover {
-  transform: translateY(-3px);
+  --lift: -3px;
   border-color: var(--muted);
   box-shadow: 0 14px 34px rgba(19, 19, 17, 0.09);
 }
@@ -171,10 +177,10 @@
   border-color: var(--accent);
 }
 
-.pv-cycle-node-1 { left: 35%; top: 0; }
-.pv-cycle-node-2 { right: 0; top: 35.5%; }
-.pv-cycle-node-3 { left: 35%; bottom: 0; }
-.pv-cycle-node-4 { left: 0; top: 35.5%; }
+.pv-cycle-node-1 { left: 50%; top: 15%; }
+.pv-cycle-node-2 { left: 85%; top: 50%; }
+.pv-cycle-node-3 { left: 50%; top: 85%; }
+.pv-cycle-node-4 { left: 15%; top: 50%; }
 
 .pv-node-number {
   font-size: 14px;
