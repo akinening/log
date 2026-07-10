@@ -18,6 +18,10 @@ export default defineConfig({
   site: "https://akinen.com",
   output: "static",
   trailingSlash: "ignore",
+  // View Transitions でのページ遷移時、外部CSSの読み込み待ちで
+  // スタイル未適用のまま表示される（リロードで直る）FOUCを防ぐため、
+  // CSSを各ページのHTMLへインライン化してHTMLと一体で差し替える
+  build: { inlineStylesheets: "always" },
   integrations: [sitemap()],
   markdown: {
     remarkPlugins: [remarkCjkFriendly],
