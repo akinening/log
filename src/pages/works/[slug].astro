@@ -79,6 +79,28 @@ const info = [
       }
     </section>
 
+    {
+      data.tldr && (
+        <section class="case-tldr rv" aria-label="30秒でわかる要点">
+          <p class="overline">TL;DR</p>
+          <dl class="case-tldr-list">
+            <div class="case-tldr-row">
+              <dt>課題</dt>
+              <dd>{data.tldr.problem}</dd>
+            </div>
+            <div class="case-tldr-row">
+              <dt>役割と打ち手</dt>
+              <dd>{data.tldr.approach}</dd>
+            </div>
+            <div class="case-tldr-row">
+              <dt>成果</dt>
+              <dd>{data.tldr.outcome}</dd>
+            </div>
+          </dl>
+        </section>
+      )
+    }
+
     <div class="prose rv">
       <Content />
     </div>

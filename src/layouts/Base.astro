@@ -81,17 +81,6 @@ const isCurrent = (href: string) =>
         <span class="page-veil-mark">
           <span class="page-veil-logo" set:html={akinenMark} />
         </span>
-        <div class="page-veil-choice">
-          <p class="page-veil-note">音声をONにして耳を澄ませましょう</p>
-          <div class="page-veil-buttons">
-            <button type="button" class="page-veil-btn is-on" data-sound-choice="on">
-              <span class="en">Sound On</span>
-            </button>
-            <button type="button" class="page-veil-skip" data-sound-choice="off">
-              音声を再生しない
-            </button>
-          </div>
-        </div>
       </div>
     </div>
 
@@ -129,7 +118,7 @@ const isCurrent = (href: string) =>
       <aside class="sidebar">
         <a class="brand" href="/" aria-label="Akinori Ozawa — Top">
           <span class="brand-logo" set:html={akinenMark} />
-          <span class="brand-role">Product Designer</span>
+          <span class="brand-role">Senior Product Designer</span>
         </a>
         <nav class="side-nav" aria-label="Primary">
           {
@@ -187,55 +176,17 @@ const isCurrent = (href: string) =>
         });
       });
 
-      // ベールのモードを描画前に同期的に決める。
-      // 初回アクセス（サウンド未選択）はプロンプト表示、選択済み・
-      // reduced-motion 環境は従来の自動アニメーションで即退場する。
+      // ベールはコンテンツを妨げないよう、常に短い自動アニメーションで退場する。
+      // サウンドはサイドバー／モバイルバーのトグルからのオプトイン
       (function () {
         var veil = document.querySelector(".page-veil");
         if (!veil) return;
-        var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-        var chosen = null;
-        try {
-          chosen = sessionStorage.getItem("akinen-sound");
-        } catch (e) {}
-        if (reduced || chosen) {
-          veil.classList.add("is-auto");
-          veil.setAttribute("aria-hidden", "true");
-          setTimeout(function () {
-            if (veil.parentNode) veil.remove();
-          }, 1600);
-        } else {
-          veil.classList.add("is-prompt");
-        }
+        veil.classList.add("is-auto");
+        veil.setAttribute("aria-hidden", "true");
+        setTimeout(function () {
+          if (veil.parentNode) veil.remove();
+        }, 1600);
       })();
-    </script>
-
-    <script>
-      import { enableAmbient, saveChoice } from "../scripts/ambient";
-
-      // イントロベールのサウンド選択。ベールは初回フルロード時にしか
-      // 存在しないため、ここで一度だけ配線すればよい。
-      const veil = document.querySelector(".page-veil");
-      if (veil && veil.classList.contains("is-prompt")) {
-        const dismiss = () => {
-          veil.classList.add("is-dismissed");
-          document.dispatchEvent(new CustomEvent("akinen:veil-dismissed"));
-          setTimeout(() => veil.remove(), 1500);
-        };
-
-        veil.querySelectorAll<HTMLButtonElement>("[data-sound-choice]").forEach((btn) => {
-          btn.addEventListener(
-            "click",
-            () => {
-              const on = btn.dataset.soundChoice === "on";
-              saveChoice(on ? "on" : "off");
-              if (on) enableAmbient({ greet: true });
-              dismiss();
-            },
-            { once: true }
-          );
-        });
-      }
     </script>
 
     <script>
@@ -263,9 +214,6 @@ const isCurrent = (href: string) =>
             sync();
           });
         });
-
-        // 初回アクセスでベールから選択した場合に反映する
-        document.addEventListener("akinen:veil-dismissed", sync, { once: true });
       });
     </script>
 
@@ -294,25 +242,11 @@ const isCurrent = (href: string) =>
         targets.forEach((el) => observer.observe(el));
       };
 
-      // 初回アクセス時のみ、イントロベールの開幕に合わせてリビールを遅らせる。
-      // サウンド選択プロンプト表示中はユーザーの選択（ベール退場）を待つ。
+      // 初回アクセス時のみ、イントロベールの開幕に合わせてリビールを遅らせる
       let firstLoad = true;
       document.addEventListener("astro:page-load", () => {
         const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
         const veil = document.querySelector(".page-veil");
-        if (
-          firstLoad &&
-          veil?.classList.contains("is-prompt") &&
-          !veil.classList.contains("is-dismissed")
-        ) {
-          firstLoad = false;
-          document.addEventListener(
-            "akinen:veil-dismissed",
-            () => setTimeout(initReveal, 400),
-            { once: true }
-          );
-          return;
-        }
         const delay = firstLoad && !reduced && veil ? 600 : 0;
         firstLoad = false;
         delay ? setTimeout(initReveal, delay) : initReveal();

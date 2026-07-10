@@ -75,7 +75,11 @@ const driverBranches = [
           "ユーザーインタビューで選ばれる理由を見つけて、値づけに反映する",
           "課金導線をA/Bテストで磨いて、有料への転換率を上げる",
           "解約アンケートを設計して、やめる理由から解約率を下げる"
-        ]
+        ],
+        example: {
+          text: "goghでオンボーディングと課金フローを改善し、離脱率の低減に寄与",
+          href: "/works/gogh-global/"
+        }
       },
       {
         id: "variable",
@@ -87,7 +91,11 @@ const driverBranches = [
           "UIコンポーネントを共通化して、画面あたりの実装コストを下げる",
           "リリース前にデザインQAを通して、修正の差し戻しを減らす",
           "エラー文言とヘルプを設計して、問い合わせの件数を減らす"
-        ]
+        ],
+        example: {
+          text: "goghでVibe Codingによるプロトタイプ検証を定着させ、デザインFIXまでの手戻りを削減",
+          href: "/works/gogh-global/"
+        }
       },
       {
         id: "fixed",
@@ -99,7 +107,11 @@ const driverBranches = [
           "デザインシステムで制作を型化して、少ない人数で回せるようにする",
           "AIにたたき台とバリエーション出しをまかせて、検証の回数を増やす",
           "制作フローをドキュメント化して、引き継ぎと教育を速くする"
-        ]
+        ],
+        example: {
+          text: "東京海上で属人化したポータルを再設計し、新人の立ち上がりを短縮",
+          href: "/works/inhouse-design-culture/"
+        }
       }
     ]
   },
@@ -143,7 +155,11 @@ const driverBranches = [
           "ブランド監査で体験の質を採点して、投資の優先順位をつける",
           "新規事業はプロトタイプで筋を確かめて、撤退を早く判断する",
           "買収後のUI・ブランド統合まで設計して、買収の価値を引き出す"
-        ]
+        ],
+        example: {
+          text: "損保グループで3つの新規事業PoCを、モックアップと現場検証で前進",
+          href: "/works/tmnf-insurance-poc/"
+        }
       }
     ]
   }
@@ -278,7 +294,7 @@ const defaultLeafId = driverBranches[0].leaves[0].id;
       <h2 class="pv-h2" id="pv-tree-title">デザインはROICのどこに効くのか</h2>
       <p class="pv-section-lead">
         ROICを「収益性」と「資本効率性」に分解して、デザインが動かせる指標を探します。
-        カードを選ぶと、デザインが効く打ち手が表示されます。
+        カードを選ぶと、デザインが効く打ち手と、私自身が取り組んだ実例が表示されます。
       </p>
     </div>
 
@@ -338,6 +354,15 @@ const defaultLeafId = driverBranches[0].leaves[0].id;
               </p>
               <h3>{leaf.title}</h3>
               <p class="pv-action-caption">{leaf.caption}</p>
+              {leaf.example && (
+                <a class="pv-action-example" href={leaf.example.href}>
+                  <span class="pv-action-example-label">私の実例</span>
+                  <span class="pv-action-example-text">
+                    {leaf.example.text}
+                    <span class="pv-action-example-arrow" aria-hidden="true">→</span>
+                  </span>
+                </a>
+              )}
             </div>
             <ul>
               {leaf.actions.map((action, index) => (

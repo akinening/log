@@ -28,8 +28,11 @@ WebGL（fluid-photo / hero-fluid）はヘッドレスでも動く。
 
 ## Gotchas
 
-- **音声許可ゲート**が最初に全画面を覆う。`page.getByText("音声を再生しない")` を
-  クリックしてから検証する。
+- **イントロベール**（.page-veil）は常に自動退場する（約1.6秒で要素ごと削除）。
+  クリック操作は不要。退場を待つなら
+  `page.waitForFunction(() => !document.querySelector(".page-veil"))`。
+- `.overline` や `.brand-role` には `text-transform: uppercase` が効くため、
+  `innerText` は大文字で返る。文言アサーションは大文字小文字を無視して比較する。
 - rv リビール完了まで待つ（hero-fluid の有効化は `.hero.has-fluid > canvas.fluid-canvas`
   の出現を `waitForSelector` で待てる。約2〜3秒）。
 - reduced-motion 経路は `page.emulateMedia({ reducedMotion: "reduce" })` で確認

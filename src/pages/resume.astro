@@ -1,0 +1,285 @@
+---
+// 職務経歴書（公開版）。採用担当者がそのまま印刷・PDF保存して社内回覧できるよう、
+// サイトのシェル（サイドバー・サウンド・ベール）を持たない単独ページにしている。
+// 内容は experience.astro の公開情報と同期させること（private ブロックは載せない）。
+---
+
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>職務経歴書 — Akinori Ozawa</title>
+    <meta name="description" content="Akinori Ozawa（シニアプロダクトデザイナー）の職務経歴書。印刷・PDF保存に対応。" />
+    <meta name="robots" content="noindex" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400..700&family=Noto+Sans+JP:wght@400..700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="doc">
+      <div class="doc-toolbar">
+        <a href="/experience/">← Experience に戻る</a>
+        <button type="button" onclick="window.print()">印刷 / PDFとして保存</button>
+      </div>
+
+      <header class="doc-head">
+        <h1>職務経歴書</h1>
+        <p class="doc-name">Akinori Ozawa <span class="doc-role">— Senior Product Designer</span></p>
+        <ul class="doc-contact">
+          <li>Tokyo, Japan</li>
+          <li><a href="https://akinen.com">akinen.com</a></li>
+          <li><a href="https://www.linkedin.com/in/akinen">linkedin.com/in/akinen</a></li>
+          <li><a href="https://note.com/012">note.com/012</a></li>
+        </ul>
+      </header>
+
+      <section>
+        <h2>概要</h2>
+        <p>
+          UX/UIデザインおよびエンジニアリングにおける8年超の専門性を基盤に、デザイン思考で事業を推進するシニアプロダクトデザイナー。
+          立ち上げ期から携わっている自社事業「gogh」は、リリース後1年以内にグローバルで150万DLを達成し、現在は300万DL／売上30万本を突破。
+          toC/toB双方の知見と実装力を武器に、グロースと事業価値の向上にコミットします。
+        </p>
+      </section>
+
+      <section>
+        <h2>職務経歴</h2>
+
+        <article class="doc-entry">
+          <div class="doc-entry-head">
+            <h3>株式会社ambr</h3>
+            <p>プロダクトデザイン（2023年9月〜現在）</p>
+          </div>
+          <ul>
+            <li>アバター集中支援アプリ「gogh」の仕様検討、体験設計、UIデザイン。体験設計・UIデザインの責任者として、数名のプロトタイプ検証からグローバル300万DL・30名規模の主力事業への成長を支える</li>
+            <li>課金・収益化のUX設計：セット購入・課金フロー・シーズンパスの販売体験を設計し、法務・運用と連携して課金仕様を事前検証。オンボーディング・課金フロー改善で離脱率低減に寄与</li>
+            <li>Steamゲームの仕様検討・UIデザイン（お絵かきチャット・DLC・ルームシェア・Watch Party等）</li>
+            <li>LLM・Vibe Codingのディレクション／プロトタイピングによる価値検証の高速化</li>
+          </ul>
+        </article>
+
+        <article class="doc-entry">
+          <div class="doc-entry-head">
+            <h3>東京海上日動システムズ（デジタルイノベーション開発部 兼 戦略企画部）</h3>
+            <p>シニアエンジニア / インハウスデザイナー（2021年11月〜2023年8月）</p>
+          </div>
+          <ul>
+            <li>損害保険領域の新規事業PoC 3件のプロダクトデザインを連続担当。BCP策定支援サービスは登録企業1,000社超</li>
+            <li>Figmaの全社導入を提言・実現し、デザイナーとエンジニアの協業フローをモダン化</li>
+            <li>HCD-Netへの法人加入を主導し、人間中心設計プロセスの社内普及を推進。ノンデザイナー60名超の社内デザインコミュニティを運営</li>
+            <li>社内標準のUIカタログ・デザインシステムの更新・運用をリード</li>
+          </ul>
+        </article>
+
+        <article class="doc-entry">
+          <div class="doc-entry-head">
+            <h3>株式会社ビルディット</h3>
+            <p>プロダクトデザイナー（2019年11月〜2021年10月）</p>
+          </div>
+          <ul>
+            <li>自社新規事業「Stockr」の0→1フェーズを、コアコンセプト立案からUI/UX・グロース施策まで一気通貫で牽引。累計7.5万DL・ストアレビュー4.7、ステップメール平均開封率50%</li>
+          </ul>
+        </article>
+
+        <article class="doc-entry">
+          <div class="doc-entry-head">
+            <h3>面白法人カヤック</h3>
+            <p>フロントエンドエンジニア（2018年4月〜2019年8月）</p>
+          </div>
+          <ul>
+            <li>大規模ゲームSNS「Lobi」および国内最大級のトーナメントPF「Tonamel」の基盤刷新（AngularJS→Nuxt.js）、WebRTCライブ配信機能の開発。3ヶ月のリファクタリング期間を事業側に提案・完遂</li>
+          </ul>
+        </article>
+      </section>
+
+      <section>
+        <h2>スキル</h2>
+        <ul class="doc-skills">
+          <li><strong>体験設計・UIデザイン</strong>：0→1の価値検証からPMF、グロースまで。モバイル / PC（Steam）/ Roblox / XRのマルチプラットフォーム</li>
+          <li><strong>ユーザーリサーチ</strong>：半構造化インタビュー、エスノグラフィ、広告A/Bテストを組み合わせたペルソナ検証</li>
+          <li><strong>収益化・課金のUX</strong>：課金フロー・セット販売・シーズンパス等の販売体験設計。法務・運用と連携した事前検証</li>
+          <li><strong>デザインシステム / DesignOps</strong>：UIカタログ運用、ゲームUI共通基盤の構築、業務のマニュアル化・仕組み化</li>
+          <li><strong>AI活用</strong>：LLMを組み込んだプロトタイピングとVibe Codingによる試作〜検証サイクルの高速化</li>
+          <li><strong>フロントエンド実装</strong>：TypeScript / Vue・Nuxt / Astro。実装知識を仕様策定とエンジニア協業に活かす</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>登壇・発信</h2>
+        <ul>
+          <li>2025.04 CrossRel「AIとデザインのセカンドステージ」登壇</li>
+          <li>2023.12 Spectrum Tokyo Festival 2023「3D空間を扱うUI表現とユーザビリティ」</li>
+          <li>2023.06 DIST.39「FigmaとBeziではじめるXR UIプロトタイピング」</li>
+          <li>2022.07 Figma Japan Community Event — Show &amp; Tell 登壇</li>
+          <li>執筆：note「200万DLを突破した作業集中プロダクト『gogh』のデザイン思想」ほか</li>
+        </ul>
+      </section>
+
+      <footer class="doc-foot">
+        <p>実績の詳細なケーススタディは <a href="https://akinen.com/">akinen.com</a> をご覧ください。より詳細な経歴はお問い合わせに応じて共有します。</p>
+      </footer>
+    </div>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Noto Sans JP", "Hiragino Sans", sans-serif;
+        font-size: 13px;
+        line-height: 1.9;
+        color: #1c1c1a;
+        background: #f4f4f1;
+      }
+
+      .doc {
+        max-width: 760px;
+        margin: 0 auto;
+        padding: 48px 32px 80px;
+        background: #fff;
+        min-height: 100vh;
+      }
+
+      .doc-toolbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 40px;
+        font-size: 12px;
+      }
+
+      .doc-toolbar a {
+        color: #6b6b66;
+      }
+
+      .doc-toolbar button {
+        font: inherit;
+        font-weight: 600;
+        padding: 9px 20px;
+        border: 1px solid #1c1c1a;
+        border-radius: 999px;
+        background: #1c1c1a;
+        color: #fff;
+        cursor: pointer;
+      }
+
+      .doc-head h1 {
+        font-size: 24px;
+        letter-spacing: 0.04em;
+      }
+
+      .doc-name {
+        margin-top: 8px;
+        font-family: "Inter Tight", sans-serif;
+        font-size: 16px;
+        font-weight: 650;
+      }
+
+      .doc-role {
+        font-weight: 400;
+        color: #6b6b66;
+      }
+
+      .doc-contact {
+        margin-top: 6px;
+        list-style: none;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px 16px;
+        font-size: 12px;
+        color: #6b6b66;
+      }
+
+      a {
+        color: inherit;
+      }
+
+      section {
+        margin-top: 36px;
+      }
+
+      h2 {
+        font-size: 13px;
+        letter-spacing: 0.12em;
+        padding-bottom: 8px;
+        border-bottom: 1px solid #1c1c1a;
+      }
+
+      section > p,
+      section > ul {
+        margin-top: 14px;
+      }
+
+      section ul {
+        padding-left: 1.4em;
+      }
+
+      section li + li {
+        margin-top: 4px;
+      }
+
+      .doc-entry {
+        margin-top: 20px;
+      }
+
+      .doc-entry-head h3 {
+        font-size: 14.5px;
+      }
+
+      .doc-entry-head p {
+        font-size: 12px;
+        color: #6b6b66;
+      }
+
+      .doc-entry ul {
+        margin-top: 8px;
+      }
+
+      .doc-foot {
+        margin-top: 44px;
+        padding-top: 16px;
+        border-top: 1px solid #d9d9d4;
+        font-size: 12px;
+        color: #6b6b66;
+      }
+
+      @media print {
+        body {
+          background: #fff;
+          font-size: 11.5px;
+        }
+
+        .doc {
+          max-width: none;
+          padding: 0;
+        }
+
+        .doc-toolbar {
+          display: none;
+        }
+
+        section,
+        .doc-entry {
+          break-inside: avoid;
+        }
+
+        a {
+          text-decoration: none;
+        }
+      }
+
+      @page {
+        size: A4;
+        margin: 18mm 16mm;
+      }
+    </style>
+  </body>
+</html>

@@ -132,6 +132,47 @@
   color: var(--muted);
 }
 
+/* TL;DR — 忙しい閲覧者が本文を読む前に拾う3行サマリ */
+.case-tldr {
+  margin: clamp(48px, 8vh, 80px) auto 0;
+  max-width: 720px;
+  padding: clamp(24px, 3.5vw, 36px) clamp(24px, 3.5vw, 40px);
+  border: 1px solid var(--hairline);
+  border-radius: 14px;
+}
+
+.case-tldr-list {
+  margin-top: 18px;
+  display: grid;
+  gap: 16px;
+}
+
+.case-tldr-row {
+  display: grid;
+  grid-template-columns: 108px 1fr;
+  gap: 16px;
+}
+
+.case-tldr-row dt {
+  font-size: 12px;
+  font-weight: 650;
+  letter-spacing: 0.04em;
+  color: var(--accent);
+  padding-top: 2px;
+}
+
+.case-tldr-row dd {
+  font-size: 13.5px;
+  line-height: 1.9;
+}
+
+@media (max-width: 640px) {
+  .case-tldr-row {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+}
+
 /* prose (markdown body) */
 .prose {
   margin: clamp(64px, 10vh, 110px) auto 0;

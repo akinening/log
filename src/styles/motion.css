@@ -46,10 +46,8 @@
 }
 
 /* ---- intro veil ----------------------------------------------------- */
-/* フルロード時のみ表示。View Transitions 遷移時は要素ごと除去される。
-   is-prompt: 初回アクセスでサウンド選択を表示（選択までベールが留まる）
-   is-auto:   選択済みセッションは従来の自動アニメーションで即退場
-   is-dismissed: 選択後の退場 */
+/* フルロード時のみ表示し、常に is-auto の短い自動アニメーションで退場する。
+   View Transitions 遷移時は要素ごと除去される。 */
 
 .page-veil {
   position: fixed;
@@ -83,84 +81,6 @@
   opacity: 0;
 }
 
-.page-veil-choice {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 22px;
-  margin-top: 40px;
-  opacity: 0;
-}
-
-.page-veil-note {
-  font-size: 12px;
-  letter-spacing: 0.06em;
-  color: var(--muted);
-  text-align: center;
-  padding: 0 var(--gutter);
-}
-
-.page-veil-buttons {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 18px;
-  width: min(320px, calc(100vw - 2 * var(--gutter)));
-}
-
-.page-veil-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  padding: 16px 30px;
-  border: 1px solid var(--hairline);
-  border-radius: 999px;
-  font-family: var(--font-en);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--muted);
-  transition:
-    color 0.4s var(--ease),
-    border-color 0.4s var(--ease),
-    background-color 0.4s var(--ease);
-}
-
-.page-veil-btn:hover {
-  border-color: var(--ink);
-  color: var(--ink);
-}
-
-.page-veil-btn.is-on {
-  border-color: var(--ink);
-  background: var(--ink);
-  color: var(--paper);
-}
-
-.page-veil-btn.is-on:hover {
-  background: var(--accent);
-  border-color: var(--accent);
-}
-
-.page-veil-skip {
-  font-size: 12px;
-  letter-spacing: 0.04em;
-  color: var(--muted);
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  text-decoration-color: var(--hairline);
-  transition:
-    color 0.3s var(--ease),
-    text-decoration-color 0.3s var(--ease);
-}
-
-.page-veil-skip:hover {
-  color: var(--ink);
-  text-decoration-color: var(--ink);
-}
-
 /* 自動退場モード */
 .page-veil.is-auto {
   animation: veil-out 0.75s var(--ease) 0.62s forwards;
@@ -172,38 +92,6 @@
 
 .page-veil.is-auto .page-veil-mark {
   animation: veil-mark 0.62s var(--ease) forwards;
-}
-
-.page-veil.is-auto .page-veil-choice {
-  display: none;
-}
-
-/* サウンド選択プロンプトモード */
-.page-veil.is-prompt {
-  pointer-events: auto;
-}
-
-.page-veil.is-prompt .page-veil-mark {
-  animation: veil-mark-in 0.62s var(--ease) forwards;
-}
-
-.page-veil.is-prompt .page-veil-choice {
-  animation: veil-fade-in 0.6s var(--ease) 0.5s forwards;
-}
-
-/* 選択後の退場 */
-.page-veil.is-dismissed {
-  pointer-events: none;
-  animation: veil-out 0.8s var(--ease) 0.3s forwards;
-}
-
-.page-veil.is-dismissed::after {
-  animation: veil-edge 0.8s var(--ease) 0.3s forwards;
-}
-
-.page-veil.is-dismissed .page-veil-mark,
-.page-veil.is-dismissed .page-veil-choice {
-  animation: veil-fade-out 0.35s var(--ease) forwards;
 }
 
 .page-veil-logo {
@@ -252,35 +140,6 @@
   }
   100% {
     opacity: 0;
-  }
-}
-
-@keyframes veil-mark-in {
-  from {
-    opacity: 0;
-    transform: translateY(16px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-@keyframes veil-fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-@keyframes veil-fade-out {
-  to {
-    opacity: 0;
-    transform: translateY(-10px);
   }
 }
 

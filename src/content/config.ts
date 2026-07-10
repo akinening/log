@@ -12,6 +12,8 @@ const works = defineCollection({
     year: z.string(),
     thumbnail: z.string(),
     tags: z.array(z.string()).default([]),
+    // 成果として語れる数字だけを載せる（担当範囲などは role 欄の仕事）。
+    // 弱い数字で3つに揃えるくらいなら少ない方が強く見える
     metrics: z
       .array(
         z.object({
@@ -20,7 +22,15 @@ const works = defineCollection({
           note: z.string().optional()
         })
       )
-      .length(3),
+      .min(1)
+      .max(3),
+    tldr: z
+      .object({
+        problem: z.string(),
+        approach: z.string(),
+        outcome: z.string()
+      })
+      .optional(),
     order: z.number(),
     accent: z
       .string()
