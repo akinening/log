@@ -375,12 +375,12 @@
   }
 
   .book-shelf--wide {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  /* wide slide-books read full-width on small screens */
+  /* wide slide-books share the two-column shelf on small screens */
   .book-link--wide {
-    grid-column: 1 / -1;
+    grid-column: auto;
   }
 }
 
