@@ -52,6 +52,27 @@ const isCurrent = (href: string) =>
       rel="stylesheet"
     />
     <ViewTransitions />
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-G1G5Q76XK4"></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      // View Transitions によるページ遷移は再読み込みを伴わないため、
+      // 自動送信は無効化し astro:page-load で都度 page_view を送る
+      gtag("config", "G-G1G5Q76XK4", { send_page_view: false });
+
+      document.addEventListener("astro:page-load", () => {
+        gtag("event", "page_view", {
+          page_location: location.href,
+          page_path: location.pathname,
+          page_title: document.title
+        });
+      });
+    </script>
   </head>
   <body>
     <div class="page-veil">
