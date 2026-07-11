@@ -114,6 +114,10 @@ PMF後は、モバイル・Steamの両プラットフォームで、継続と収
 
 ![gogh スタイルガイド](/works/gogh_style.webp)
 
+![gogh 集中スペースとアバターエディタ](/works/gogh-steam.webp)
+
+![gogh AVP版フォーカスタイマー](/works/gogh-avp.webp)
+
 ![gogh Webサイト](/works/gogh-web.webp)
 
 ![gogh BitSummit出展](/works/gogh-bitsummit.webp)
