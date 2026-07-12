@@ -81,6 +81,8 @@ PMF後は、モバイル・Steamの両プラットフォームで、継続と収
 
 - **デザインシステムのドキュメント化**：Claude Code + Figma MCPを用いて、デザインシステムをLLMが判断の根拠として参照できる形にドキュメント化し、デザインハーネス構築の基盤を整えました
 
+![gogh design system wiki](/works/gogh_design-system-wiki.webp)
+
 ![LLMの判断の根拠となるデザインシステムのドキュメント](/works/gogh_design-system-llm.webp)
 
 ## AIによる業務効率化・施策の精度向上
