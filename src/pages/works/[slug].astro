@@ -121,7 +121,7 @@ const caseLd = {
       <Content />
     </div>
 
-    <nav class="case-next rv" aria-label="次の実績">
+    <nav class="case-next rv" aria-label="次の実績" style={`--accent:${next.data.accent ?? "#2743cd"}`}>
       <p class="overline">Next Case</p>
       <a class="case-next-link" href={`/works/${next.slug}/`} data-haptic="medium">
         <span class="case-next-title">
