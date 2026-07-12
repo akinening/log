@@ -28,5 +28,5 @@ There is no test suite or linter configured. CI (`.github/workflows/html.yml`) r
 
 ## Content conventions
 
-- Case study markdown follows a consistent section structure: 課題 (problem) → 構造化/プロセス (approach) → 事業インパクト (business impact) → リーダーシップと学び (leadership/learnings), with inline illustration images between sections.
+- Case study markdown follows a consistent section structure: 課題 (problem) → 構造化/プロセス (approach) → 事業インパクト (business impact) → 学び (leadership/learnings), with inline illustration images between sections.
 - `experience.astro` contains an expandable "もっと詳しく" (more detail) block per role (`data-private-open` / `.private-only`) for extended, more sensitive resume detail — check the corresponding JS behavior before restructuring this markup.
