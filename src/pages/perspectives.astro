@@ -6,6 +6,7 @@ import Base from "../layouts/Base.astro";
 // → 03 ROIC分解（収益性の深掘り）と総論から各論へ進む。動的な切り替えは
 // ROICツリー（03）のドリルダウンだけで、ほかのセクションは全情報を
 // 静的HTMLとして常時表示する。
+// フレームの提示だけで終わらせないため、03の冒頭にステージ別の評価軸を置いている。
 
 // 01: デザイン施策と経営成果を直接つなげず、
 // 活動 → 行動の変化 → プロダクトKPI → 経営指標 の因果で語るための例
@@ -86,6 +87,28 @@ const valueDirections = [
   }
 ];
 
+// 03前段: 評価軸は事業ステージで変わる。ROICツリーはレイター〜成熟企業の
+// レンズであることを先に断り、アーリー〜グロースの指標（VCの評価軸）と
+// 接続してから分解に入る
+const stageLenses = [
+  {
+    stage: "シード〜アーリー",
+    focus: "使われつづける手応え",
+    metrics: ["Activation", "継続率", "利用頻度"]
+  },
+  {
+    stage: "グロース",
+    focus: "成長の資本効率",
+    metrics: ["CAC Payback", "Burn Multiple", "NRR"]
+  },
+  {
+    stage: "レイター〜成熟",
+    focus: "資本の収益性",
+    metrics: ["ROIC", "NOPATマージン", "FCF"],
+    current: true
+  }
+];
+
 // 03: ROICを収益性×資本効率性に分解したドライバーツリー。
 // リーフを選ぶと、デザインがその指標へ効く因果の説明と実例が表示される
 // （ページ内で唯一の動的セクション）
@@ -157,6 +180,7 @@ const driverBranches = [
         title: "事業ポートフォリオ",
         caption: "資本の行き先を選びなおす",
         body: "限られた資本をどの事業へ向けるかは、経営でもっとも大きな意思決定のひとつです。顧客体験の質を投資判断の材料として可視化し、新規事業はプロトタイプで安く検証して撤退の判断を早めることで、デザインは資本配分の精度を高めることに貢献できます。",
+        note: "厳密には、ポートフォリオの入れ替えはマージンと投下資本の両方に効くROIC直下の意思決定です。ここでは「資本の行き先を選ぶ」という性格から、資本効率性の側に置いています。",
         example: {
           text: "損保グループで3つの新規事業PoCを、モックアップと現場検証で前進",
           href: "/works/tmnf-insurance-poc/"
@@ -246,6 +270,19 @@ const defaultLeafId = driverBranches[0].leaves[0].id;
       <h2 class="pv-h2" id="pv-tree-title">デザインとROIC</h2>
     </div>
 
+    <div class="pv-stage-strip">
+      {
+        stageLenses.map((lens) => (
+          <div class={`pv-stage-cell${lens.current ? " is-current" : ""}`}>
+            {lens.current && <span class="pv-stage-badge">この図解の視点</span>}
+            <span class="pv-stage-name">{lens.stage}</span>
+            <strong>{lens.focus}</strong>
+            <p>{lens.metrics.join("・")}</p>
+          </div>
+        ))
+      }
+    </div>
+
     <div class="pv-tree" aria-label="ROICの改善ドライバーツリー">
       <div class="pv-tree-root-wrap">
         <div class="pv-tree-root">
@@ -312,7 +349,10 @@ const defaultLeafId = driverBranches[0].leaves[0].id;
                 </a>
               )}
             </div>
-            <p class="pv-action-body">{leaf.body}</p>
+            <div class="pv-action-main">
+              <p class="pv-action-body">{leaf.body}</p>
+              {leaf.note && <p class="pv-action-note">{leaf.note}</p>}
+            </div>
           </div>
         ))
       }
@@ -320,7 +360,7 @@ const defaultLeafId = driverBranches[0].leaves[0].id;
 
     <p class="pv-tree-note">
       <span class="en">ROIC</span>
-      ＝ NOPATマージン × 投下資本回転率
+      ＝ NOPATマージン × 投下資本回転率。WACC（資本コスト）を上回ってはじめて、事業は価値を生む
     </p>
   </section>
 </Base>
