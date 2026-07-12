@@ -1,63 +1,94 @@
 ---
 import Base from "../layouts/Base.astro";
 
-// 資本コスト経営の俯瞰図。デザイン戦略が「どの指標を・どう動かすか」の
-// 視点で書いた自分の思考メモを、静的HTMLとして全パネル描画しておき、
-// scripts/perspectives.js が is-active の付け替えだけで切り替える。
-const cycleSteps = [
+// 経営とデザインをつなぐ思考メモの図解。主題は「デザインを成果物ではなく
+// 事業インパクトで捉える」の一本で、01 因果の語り方（方法）→ 02 貢献の3方向（地図）
+// → 03 ROIC分解（収益性の深掘り）と総論から各論へ進む。動的な切り替えは
+// ROICツリー（03）のドリルダウンだけで、ほかのセクションは全情報を
+// 静的HTMLとして常時表示する。
+
+// 01: デザイン施策と経営成果を直接つなげず、
+// 活動 → 行動の変化 → プロダクトKPI → 経営指標 の因果で語るための例
+const chainStages = ["デザイン活動", "ユーザー・組織の変化", "プロダクトKPI", "経営指標"];
+
+const causalChains = [
   {
-    id: "invest",
-    number: "01",
-    short: "投資",
-    title: "デザインに投資する",
-    description:
-      "将来の売上と利益につながる体験・ブランド・デザインの基盤へ、規律をもって投資する。",
-    points: [
-      "顧客体験の改善に投資して、継続率を上げる",
-      "ブランドづくりに投資して、選ばれる理由を増やす",
-      "デザインシステムに投資して、開発の生産性を上げる"
-    ]
+    activity: "オンボーディング改善",
+    behavior: "初期価値を早く実感する",
+    kpi: "Activation率",
+    outcome: "売上・CAC回収期間"
   },
   {
-    id: "return",
-    number: "02",
-    short: "収益",
-    title: "収益力を上げる",
-    description: "体験の質を価格と継続につなげて、売上を伸ばし、利益率を上げる。",
-    points: [
-      "体験の価値を高めて、価格への納得感を上げる",
-      "使いやすさを磨いて、解約率を下げる",
-      "デザインの仕組み化で、つくるコストを下げる"
-    ]
+    activity: "UX改善",
+    behavior: "継続利用が増える",
+    kpi: "継続率・利用頻度",
+    outcome: "LTV・収益の安定性"
   },
   {
-    id: "spread",
-    number: "03",
-    short: "価値創造",
-    title: "資本コストを上回る",
-    description:
-      "ROICを上げ、資本コスト（WACC）を下げて、そのあいだの経済的スプレッドを広げる。",
-    points: [
-      "収益性と効率の両面から、ROICを上げる",
-      "ブランドへの信頼を積み重ねて、資本コストを下げる",
-      "スプレッドを保ちつづけて、企業価値を高める"
-    ]
+    activity: "DesignOps",
+    behavior: "再利用と標準化が進む",
+    kpi: "開発リードタイム",
+    outcome: "原価・Time to Market"
   },
   {
-    id: "allocation",
-    number: "04",
-    short: "配分",
-    title: "次の成長へまわす",
-    description:
-      "生み出した利益を、成長への投資・財務の健全性・株主への還元へ、バランスよく配りなおす。",
-    points: [
-      "効果が確かめられた体験づくりへ、再投資する",
-      "新しい挑戦をつづけるための余力を残す",
-      "還元と対話を重ねて、市場からの信頼を上げる"
-    ]
+    activity: "UXリサーチ",
+    behavior: "誤った仮説を早く捨てられる",
+    kpi: "検証速度・成功率",
+    outcome: "投資損失・事業リスク"
+  },
+  {
+    activity: "コミュニティ設計",
+    behavior: "ユーザー間の価値が増える",
+    kpi: "UGC・紹介率",
+    outcome: "獲得効率・Moat"
   }
 ];
 
+// 02: デザインが事業価値へ貢献する3つの方向。ここは要点だけの地図に徹して、
+// 収益性の分解は03へ委ねる（詳細の重複を持たない）
+const valueDirections = [
+  {
+    number: "01",
+    label: "Profitability",
+    title: "収益性",
+    tagline: "売上を伸ばし、コストを下げる",
+    points: [
+      "なめらかなUIと心地よいUXで、CVR・継続率・LTVを上げる",
+      "DesignOpsとプロトタイピングで、手戻りと運用の負荷を減らす",
+      "ブランディングで指名検索を増やし、価格競争から抜ける"
+    ],
+    metrics: ["CVR", "LTV", "継続率", "開発リードタイム"]
+  },
+  {
+    number: "02",
+    label: "Stability",
+    title: "安定性",
+    tagline: "収益と事業運営のリスクを下げる",
+    points: [
+      "ブランドへの愛着と、習慣・ワークフローへの組み込みで、解約する理由を減らす",
+      "UXリサーチで投資の前に誤りを見つけ、PMFの確度を上げる",
+      "例外や失敗まで想定した設計で、運用の破綻と信用毀損を防ぐ"
+    ],
+    metrics: ["NRR / GRR", "解約率", "問い合わせ・障害発生率"],
+    note: "大切なのは囲い込みではなく、離れにくい便益を作ること"
+  },
+  {
+    number: "03",
+    label: "Moat",
+    title: "Moat",
+    tagline: "競合が追随しにくい循環を作る",
+    points: [
+      "コミュニティとUGCで、ユーザー間に価値が生まれる場を作る",
+      "独自の世界観とブランド資産で、価格決定力を持つ",
+      "一次情報と実践知で、何を作るべきかを見抜く精度を上げる"
+    ],
+    metrics: ["LTV / CAC", "紹介率・UGC", "価格決定力"]
+  }
+];
+
+// 03: ROICを収益性×資本効率性に分解したドライバーツリー。
+// リーフを選ぶと、デザインがその指標へ効く因果の説明と実例が表示される
+// （ページ内で唯一の動的セクション）
 const driverBranches = [
   {
     id: "profitability",
@@ -70,12 +101,7 @@ const driverBranches = [
         number: "A1",
         title: "売上とミックス",
         caption: "売上の質を上げる",
-        actions: [
-          "オンボーディングの離脱をファネルで特定して、初週の定着率を上げる",
-          "ユーザーインタビューで選ばれる理由を見つけて、値づけに反映する",
-          "課金導線をA/Bテストで磨いて、有料への転換率を上げる",
-          "解約アンケートを設計して、やめる理由から解約率を下げる"
-        ],
+        body: "売上は、どれだけの人が価値を実感し、対価を払いつづけてくれるかで決まります。デザインは、最初の体験からつまずきを取り除いて定着を助け、価値が正しく伝わる導線と値づけへの納得感をつくることで、転換率と継続率——つまり売上の質に効きます。",
         example: {
           text: "goghでオンボーディングと課金フローを改善し、離脱率の低減に寄与",
           href: "/works/gogh-global/"
@@ -86,12 +112,7 @@ const driverBranches = [
         number: "A2",
         title: "変動費の生産性",
         caption: "粗利率を上げる",
-        actions: [
-          "実装の前にプロトタイプで検証して、つくり直しをなくす",
-          "UIコンポーネントを共通化して、画面あたりの実装コストを下げる",
-          "リリース前にデザインQAを通して、修正の差し戻しを減らす",
-          "エラー文言とヘルプを設計して、問い合わせの件数を減らす"
-        ],
+        body: "売上に比例して増えるコストには、つくり直しや問い合わせ対応など、本来なくせたはずの仕事が多く含まれています。実装の前にプロトタイプで検証して手戻りを防ぎ、迷わないUIとわかりやすい文言で問い合わせ自体を減らすことで、デザインは粗利率の改善に貢献できます。",
         example: {
           text: "goghでVibe Codingによるプロトタイプ検証を定着させ、デザインFIXまでの手戻りを削減",
           href: "/works/gogh-global/"
@@ -102,12 +123,7 @@ const driverBranches = [
         number: "A3",
         title: "固定費の生産性",
         caption: "同じ費用で成果を増やす",
-        actions: [
-          "業務の観察から社内ツールを設計しなおして、作業時間を減らす",
-          "デザインシステムで制作を型化して、少ない人数で回せるようにする",
-          "AIにたたき台とバリエーション出しをまかせて、検証の回数を増やす",
-          "制作フローをドキュメント化して、引き継ぎと教育を速くする"
-        ],
+        body: "人件費や設備といった固定費は、削ることよりも、同じ費用でどれだけ成果を出せるかを高めることが本質だと考えています。業務の観察にもとづいて道具と流れを設計しなおし、制作を型化・ドキュメント化して属人化を解くことで、デザインは一人あたりの生産性に効きます。",
         example: {
           text: "東京海上で属人化したポータルを再設計し、新人の立ち上がりを短縮",
           href: "/works/inhouse-design-culture/"
@@ -126,36 +142,21 @@ const driverBranches = [
         number: "B1",
         title: "運転資本",
         caption: "お金がもどる速さを上げる",
-        actions: [
-          "購入フローをユーザーテストにかけて、カゴ落ちを減らす",
-          "予約販売・受注生産の体験を設計して、抱える在庫を減らす",
-          "請求とリマインドの文面・タイミングを設計して、入金を早める",
-          "年払いプランの見せ方を設計して、先に入るお金を増やす"
-        ]
+        body: "事業は、仕入れてから売上が入金されるまでの、お金が寝ている時間が短いほど、少ない資本で回せます。購入フローの離脱をなくして売上を早く確定させ、予約販売や年払いのような先にお金が入る体験を設計することで、デザインは資金の回転を速めることに関われます。"
       },
       {
         id: "fixed-assets",
         number: "B2",
         title: "固定資産",
         caption: "持ちものの効率を上げる",
-        actions: [
-          "つくる前にプロトタイプで需要を確かめて、むだな設備投資を避ける",
-          "紙と対面の手続きをオンラインの体験に置きかえて、拠点と設備を減らす",
-          "稼働状況をダッシュボードで見えるようにして、遊休資産を見つける",
-          "シェア・レンタルで済む体験を設計して、持たない選択を増やす"
-        ]
+        body: "設備や拠点といった固定資産は、持つこと自体が資本を固定するリスクであり、稼働してはじめて価値になります。つくる前にプロトタイプで需要を確かめて過剰な投資を避け、対面や紙の手続きをオンラインの体験へ置きかえることで、デザインは持たずに済ませる選択を増やせます。"
       },
       {
         id: "portfolio",
         number: "B3",
         title: "事業ポートフォリオ",
         caption: "資本の行き先を選びなおす",
-        actions: [
-          "顧客満足と収益性をひとつのマップにして、注力する事業を選ぶ",
-          "ブランド監査で体験の質を採点して、投資の優先順位をつける",
-          "新規事業はプロトタイプで筋を確かめて、撤退を早く判断する",
-          "買収後のUI・ブランド統合まで設計して、買収の価値を引き出す"
-        ],
+        body: "限られた資本をどの事業へ向けるかは、経営でもっとも大きな意思決定のひとつです。顧客体験の質を投資判断の材料として可視化し、新規事業はプロトタイプで安く検証して撤退の判断を早めることで、デザインは資本配分の精度を高めることに貢献できます。",
         example: {
           text: "損保グループで3つの新規事業PoCを、モックアップと現場検証で前進",
           href: "/works/tmnf-insurance-poc/"
@@ -173,129 +174,76 @@ const defaultLeafId = driverBranches[0].leaves[0].id;
 
 <Base
   title="Perspectives — Akinori Ozawa"
-  description="いま考えていること・考えを深めたいテーマの記録。資本コスト経営を俯瞰し、デザイン戦略が企業価値のどの指標を、どのように動かすのかを図解します。"
+  description="デザインを「成果物」ではなく「事業インパクト」で捉えるための思考メモ。因果のつなぎ方、収益性・安定性・Moatの3方向、ROICへの分解を図解します。"
   path="/perspectives/"
 >
   <header class="pv-head">
     <p class="overline rv">Current Thinking</p>
     <h1 class="pv-title rv" style="--rv-delay:.08s">Perspectives</h1>
     <p class="pv-lead rv" style="--rv-delay:.16s">
-      いま考えていること、これから考えを深めたいテーマの記録です。<br />
-      まずは資本コスト経営を俯瞰して、デザイン戦略が企業価値のどの指標を、どのように動かせるのかを考えています。
+      いま考えていること、これから考えを深めたいテーマの記録です。
     </p>
   </header>
 
-  <section class="pv-section rv" aria-labelledby="pv-cycle-title" data-pv-cycle>
+  <section class="pv-section rv" aria-labelledby="pv-chain-title">
     <div class="pv-section-head">
-      <p class="overline">01 — Value Creation Cycle</p>
-      <h2 class="pv-h2" id="pv-cycle-title">企業価値が上がる循環</h2>
-      <p class="pv-section-lead">
-        投資・収益・価値創造・配分。4つの判断はべつべつの施策ではなく、次の判断へつながるひとつの循環です。
-        デザインはこの循環の全体に関われる、というのがいまの仮説です。
-      </p>
+      <p class="overline">01 — Causal Chain</p>
+      <h2 class="pv-h2" id="pv-chain-title">デザインの効果</h2>
     </div>
 
-    <div class="pv-cycle-layout">
-      <div class="pv-cycle-stage">
-        <div class="pv-cycle-orbit" aria-hidden="true">
-          <svg viewBox="0 0 600 600">
-            <defs>
-              <marker
-                id="pv-arrowhead"
-                markerWidth="10"
-                markerHeight="10"
-                refX="7"
-                refY="5"
-                orient="auto"
-              >
-                <path d="M0,0 L8,5 L0,10" fill="none" stroke="currentColor" stroke-width="1.7"
-                ></path>
-              </marker>
-            </defs>
-            <path d="M355 78 A230 230 0 0 1 522 245" marker-end="url(#pv-arrowhead)"></path>
-            <path d="M522 355 A230 230 0 0 1 355 522" marker-end="url(#pv-arrowhead)"></path>
-            <path d="M245 522 A230 230 0 0 1 78 355" marker-end="url(#pv-arrowhead)"></path>
-            <path d="M78 245 A230 230 0 0 1 245 78" marker-end="url(#pv-arrowhead)"></path>
-          </svg>
-        </div>
-
-        <div class="pv-cycle-center" aria-hidden="true">
-          <span>持続的に</span>
-          <strong>企業価値を上げる</strong>
-          <small class="en">ROIC × 成長期待</small>
-        </div>
-
-        {
-          cycleSteps.map((step, index) => (
-            <button
-              type="button"
-              class={`pv-cycle-node pv-cycle-node-${index + 1}${index === 0 ? " is-active" : ""}`}
-              data-pv-step={index}
-              aria-pressed={index === 0 ? "true" : "false"}
-            >
-              <span class="pv-node-number serif-accent">{step.number}</span>
-              <span class="pv-node-title">{step.title}</span>
-            </button>
-          ))
-        }
-
-        <ol class="pv-mobile-flow" aria-hidden="true">
-          {
-            cycleSteps.map((step) => (
-              <li>
-                <span class="serif-accent">{step.number}</span>
-                <strong>{step.title}</strong>
-              </li>
-            ))
-          }
-          <li class="pv-loopback">↺ ふたたび投資へ</li>
-        </ol>
+    <div class="pv-chain">
+      <div class="pv-chain-header" aria-hidden="true">
+        {chainStages.map((stage) => <span>{stage}</span>)}
       </div>
-
-      <aside class="pv-cycle-detail" aria-live="polite">
+      <ol class="pv-chain-rows">
         {
-          cycleSteps.map((step, index) => (
-            <div
-              class={`pv-detail-panel${index === 0 ? " is-active" : ""}`}
-              data-pv-panel={index}
-            >
-              <div class="pv-detail-topline">
-                <span class="serif-accent">{step.number}</span>
-                <span>{step.short}</span>
-              </div>
-              <h3>{step.title}</h3>
-              <p>{step.description}</p>
-              <ul>{step.points.map((point) => <li>{point}</li>)}</ul>
-            </div>
+          causalChains.map((chain) => (
+            <li class="pv-chain-row">
+              {[chain.activity, chain.behavior, chain.kpi, chain.outcome].map((value, step) => (
+                <div class="pv-chain-cell">
+                  <span>{chainStages[step]}</span>
+                  <strong>{value}</strong>
+                </div>
+              ))}
+            </li>
           ))
         }
-        <div class="pv-step-controls" role="group" aria-label="サイクルの段階を切り替える">
-          {
-            cycleSteps.map((step, index) => (
-              <button
-                type="button"
-                class={index === 0 ? "is-active" : ""}
-                data-pv-step={index}
-                aria-pressed={index === 0 ? "true" : "false"}
-                aria-label={`${step.number} ${step.title}`}
-              >
-                <span class="serif-accent">{step.number}</span>
-              </button>
-            ))
-          }
-        </div>
-      </aside>
+      </ol>
+    </div>
+  </section>
+
+  <section class="pv-section rv" aria-labelledby="pv-dirs-title">
+    <div class="pv-section-head">
+      <p class="overline">02 — Three Directions</p>
+      <h2 class="pv-h2" id="pv-dirs-title">事業価値への貢献</h2>
+    </div>
+
+    <div class="pv-dir-grid">
+      {
+        valueDirections.map((dir) => (
+          <article class="pv-dir-card">
+            <p class="pv-dir-eyebrow">
+              <span class="serif-accent">{dir.number}</span>
+              <span class="en">{dir.label}</span>
+            </p>
+            <h3>{dir.title}</h3>
+            <p class="pv-dir-tagline">{dir.tagline}</p>
+            <ul>{dir.points.map((point) => <li>{point}</li>)}</ul>
+            {dir.note && <p class="pv-dir-note">{dir.note}</p>}
+            <p class="pv-dir-metrics">
+              <span>測る指標</span>
+              {dir.metrics.map((metric) => <em>{metric}</em>)}
+            </p>
+          </article>
+        ))
+      }
     </div>
   </section>
 
   <section class="pv-section rv" aria-labelledby="pv-tree-title" data-pv-tree>
     <div class="pv-section-head">
-      <p class="overline">02 — ROIC Driver Tree</p>
-      <h2 class="pv-h2" id="pv-tree-title">デザインはROICのどこに効くのか</h2>
-      <p class="pv-section-lead">
-        ROICを「収益性」と「資本効率性」に分解して、デザインが動かせる指標を探します。
-        カードを選ぶと、デザインが効く打ち手と、私自身が取り組んだ実例が表示されます。
-      </p>
+      <p class="overline">03 — ROIC Driver Tree</p>
+      <h2 class="pv-h2" id="pv-tree-title">デザインとROIC</h2>
     </div>
 
     <div class="pv-tree" aria-label="ROICの改善ドライバーツリー">
@@ -350,7 +298,7 @@ const defaultLeafId = driverBranches[0].leaves[0].id;
             <div class="pv-action-head">
               <p class="pv-action-eyebrow">
                 <span class="serif-accent">{leaf.number}</span>
-                {leaf.branchLabel} — デザインが効く打ち手
+                {leaf.branchLabel} — デザインはどう効くか
               </p>
               <h3>{leaf.title}</h3>
               <p class="pv-action-caption">{leaf.caption}</p>
@@ -364,14 +312,7 @@ const defaultLeafId = driverBranches[0].leaves[0].id;
                 </a>
               )}
             </div>
-            <ul>
-              {leaf.actions.map((action, index) => (
-                <li>
-                  <span class="serif-accent">{String(index + 1).padStart(2, "0")}</span>
-                  {action}
-                </li>
-              ))}
-            </ul>
+            <p class="pv-action-body">{leaf.body}</p>
           </div>
         ))
       }
