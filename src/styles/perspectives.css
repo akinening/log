@@ -1,7 +1,7 @@
 /* ---- perspectives page ------------------------------------------------ */
-/* 経営×デザインの思考メモの図解。01因果チェーン・02 3方向・03ROICツリーの
-   3セクション。動的なのは03のドリルダウンだけで、ほかは全情報を静的に表示する。
-   図の接続線はヘアラインより一段濃い --pv-line を使う */
+/* 経営×デザインの思考メモの図解。01ドライバーマップ（体系）・02ステージレンズ
+   （読み方）の2セクション。動的なのは01のリーフ選択だけで、ほかは全情報を
+   静的に表示する。図の接続線はヘアラインより一段濃い --pv-line を使う */
 
 .pv-head {
   position: relative;
@@ -73,289 +73,9 @@
   }
 }
 
-/* ---- 01: causal chain --------------------------------------------------- */
-/* 4段階×5例をタブに隠さず、比較できるマトリクスとして常時表示する */
-
-.pv-chain {
-  margin-top: clamp(36px, 6vh, 56px);
-}
-
-.pv-chain-header {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 34px;
-  margin-bottom: 14px;
-}
-
-.pv-chain-header span {
-  position: relative;
-  padding-left: 14px;
-  font-size: 10.5px;
-  font-weight: 650;
-  letter-spacing: 0.14em;
-  color: var(--muted);
-}
-
-.pv-chain-header span::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 50%;
-  width: 8px;
-  height: 1px;
-  background: var(--accent);
-}
-
-.pv-chain-rows {
-  list-style: none;
-  display: grid;
-  gap: 12px;
-}
-
-.pv-chain-row {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 34px;
-}
-
-.pv-chain-cell {
-  position: relative;
-  min-height: 74px;
-  padding: 14px 16px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  border: 1px solid var(--hairline);
-  border-radius: 10px;
-  background: var(--paper);
-  box-shadow: 0 5px 16px rgba(19, 19, 17, 0.03);
-}
-
-.pv-chain-cell:not(:last-child)::after {
-  content: "→";
-  position: absolute;
-  left: 100%;
-  top: 50%;
-  width: 34px;
-  transform: translateY(-50%);
-  text-align: center;
-  font-size: 13px;
-  color: var(--muted);
-}
-
-/* 段階ラベルはモバイルの縦積みでだけ見せる（デスクトップはヘッダー行が担う） */
-.pv-chain-cell > span {
-  display: none;
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  color: var(--muted);
-}
-
-.pv-chain-cell > strong {
-  font-size: 12.5px;
-  font-weight: 650;
-  line-height: 1.7;
-}
-
-/* 終点の経営指標だけ反転させて、因果の到達点を示す */
-.pv-chain-cell:last-child {
-  border-color: var(--ink);
-  background: var(--ink);
-  color: var(--paper);
-}
-
-.pv-chain-cell:last-child > span {
-  color: #aab6f0;
-}
-
-/* ---- 02: three directions ------------------------------------------------ */
-/* タブではなく3枚の静的カード。詳細は03・04の深掘りへ委ねる */
-
-.pv-dir-grid {
-  margin-top: clamp(36px, 6vh, 56px);
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-}
-
-.pv-dir-card {
-  display: flex;
-  flex-direction: column;
-  padding: 26px 28px 24px;
-  border: 1px solid var(--hairline);
-  border-top: 2px solid var(--ink);
-  border-radius: 12px;
-  background: var(--paper-dim);
-}
-
-.pv-dir-eyebrow {
-  display: flex;
-  align-items: baseline;
-  gap: 10px;
-}
-
-.pv-dir-eyebrow .serif-accent {
-  font-size: 14px;
-  color: var(--accent);
-}
-
-.pv-dir-eyebrow .en {
-  font-size: 10.5px;
-  font-weight: 600;
-  letter-spacing: 0.18em;
-  color: var(--muted);
-  text-transform: uppercase;
-}
-
-.pv-dir-card h3 {
-  margin-top: 16px;
-  font-size: clamp(19px, 2.2vw, 23px);
-  font-weight: 650;
-  line-height: 1.5;
-}
-
-.pv-dir-tagline {
-  margin-top: 6px;
-  font-size: 12px;
-  line-height: 1.8;
-  color: var(--muted);
-}
-
-.pv-dir-card ul {
-  margin-top: 20px;
-  list-style: none;
-  display: grid;
-  gap: 10px;
-}
-
-.pv-dir-card ul li {
-  position: relative;
-  padding-left: 18px;
-  font-size: 12.5px;
-  font-weight: 500;
-  line-height: 1.9;
-  color: var(--ink-soft);
-}
-
-.pv-dir-card ul li::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 11px;
-  width: 8px;
-  height: 1px;
-  background: var(--accent);
-}
-
-.pv-dir-note {
-  margin-top: 16px;
-  font-size: 11.5px;
-  line-height: 1.9;
-  color: var(--muted);
-}
-
-.pv-dir-metrics {
-  margin-top: auto;
-  padding: 20px 0 0;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-}
-
-.pv-dir-metrics > span {
-  margin-right: 4px;
-  font-size: 10.5px;
-  font-weight: 650;
-  letter-spacing: 0.14em;
-  color: var(--muted);
-}
-
-.pv-dir-metrics em {
-  font-style: normal;
-  padding: 4px 11px;
-  border: 1px solid var(--hairline);
-  border-radius: 999px;
-  background: var(--paper);
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--ink-soft);
-}
-
-/* ---- 03前段: stage lenses ------------------------------------------------ */
-/* ROICはレイター以降のレンズであることを、分解に入る前に3ステージの
-   評価軸の並びで断っておく。ツリーが扱う視点にはバッジを立てる */
-
-.pv-stage-strip {
-  margin-top: clamp(32px, 5vh, 48px);
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 34px;
-}
-
-.pv-stage-cell {
-  position: relative;
-  padding: 18px 20px 16px;
-  border: 1px solid var(--hairline);
-  border-radius: 10px;
-  background: var(--paper);
-  box-shadow: 0 5px 16px rgba(19, 19, 17, 0.03);
-}
-
-.pv-stage-cell:not(:last-child)::after {
-  content: "→";
-  position: absolute;
-  left: 100%;
-  top: 50%;
-  width: 34px;
-  transform: translateY(-50%);
-  text-align: center;
-  font-size: 13px;
-  color: var(--muted);
-}
-
-.pv-stage-cell.is-current {
-  border-color: var(--accent);
-  background: var(--accent-soft);
-}
-
-.pv-stage-badge {
-  position: absolute;
-  top: -9px;
-  left: 16px;
-  padding: 2px 10px;
-  border-radius: 999px;
-  background: var(--accent);
-  color: var(--paper);
-  font-size: 9.5px;
-  font-weight: 650;
-  letter-spacing: 0.1em;
-}
-
-.pv-stage-name {
-  font-size: 10.5px;
-  font-weight: 650;
-  letter-spacing: 0.14em;
-  color: var(--muted);
-}
-
-.pv-stage-cell strong {
-  display: block;
-  margin-top: 8px;
-  font-size: 13.5px;
-  font-weight: 650;
-  line-height: 1.6;
-}
-
-.pv-stage-cell p {
-  margin-top: 6px;
-  font-size: 11px;
-  letter-spacing: 0.02em;
-  color: var(--ink-soft);
-}
-
-/* ---- 03: roic driver tree ---------------------------------------------- */
+/* ---- 01: value driver map ------------------------------------------------ */
+/* 企業価値を根に、成長・収益性・資本効率・持続性の4枝、その下に原指標を
+   持つ葉を縦に積む。原指標が現れるのはこの葉だけ（ページの重複禁止ルール） */
 
 .pv-tree {
   margin-top: clamp(40px, 6vh, 64px);
@@ -379,8 +99,8 @@
 }
 
 .pv-tree-root {
-  min-width: 220px;
-  padding: 22px 28px;
+  min-width: 260px;
+  padding: 22px 30px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -399,9 +119,9 @@
 
 .pv-tree-root strong {
   margin-top: 6px;
-  font-size: 30px;
-  font-weight: 600;
-  letter-spacing: -0.01em;
+  font-size: 25px;
+  font-weight: 650;
+  letter-spacing: 0.02em;
 }
 
 .pv-tree-root small {
@@ -413,16 +133,16 @@
 .pv-tree-branches {
   position: relative;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 48px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
 }
 
-/* 端は各列の中央（= 25% − gap/4）。縦の下ろし線と正確に接続させる */
+/* 端は両端列の中央（= 12.5% − 3gap/8）。縦の下ろし線と正確に接続させる */
 .pv-tree-branches::before {
   content: "";
   position: absolute;
-  left: calc(25% - 12px);
-  right: calc(25% - 12px);
+  left: calc(12.5% - 9px);
+  right: calc(12.5% - 9px);
   top: 0;
   height: 1px;
   background: var(--pv-line);
@@ -445,9 +165,7 @@
 
 .pv-branch-node {
   position: relative;
-  width: min(100%, 300px);
-  margin: 0 auto;
-  padding: 20px 22px;
+  padding: 18px 16px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -472,7 +190,7 @@
   left: 50%;
   top: 100%;
   width: 1px;
-  height: 28px;
+  height: 24px;
   background: var(--pv-line);
 }
 
@@ -485,40 +203,28 @@
 
 .pv-branch-node strong {
   margin-top: 6px;
-  font-size: 16.5px;
+  font-size: 15px;
   font-weight: 650;
 }
 
 .pv-branch-node small {
   margin-top: 5px;
-  font-size: 11px;
+  font-size: 10.5px;
   letter-spacing: 0.04em;
   color: var(--muted);
 }
 
-.pv-leaf-row {
-  position: relative;
+/* 葉は枝の下に縦積み。カード間は中央の短い縦線でつなぐ */
+.pv-leaf-col {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
   gap: 12px;
-  padding-top: 50px;
-}
-
-/* 端は各列の中央（= 16.667% − gap/3）。リーフの縦線と正確に接続させる */
-.pv-leaf-row::before {
-  content: "";
-  position: absolute;
-  left: calc(16.6667% - 4px);
-  right: calc(16.6667% - 4px);
-  top: 28px;
-  height: 1px;
-  background: var(--pv-line);
+  padding-top: 24px;
 }
 
 .pv-leaf-node {
   position: relative;
-  min-height: 128px;
-  padding: 16px 14px;
+  min-height: 110px;
+  padding: 15px 14px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -534,13 +240,13 @@
     box-shadow 0.35s var(--ease);
 }
 
-.pv-leaf-node::before {
+.pv-leaf-node + .pv-leaf-node::before {
   content: "";
   position: absolute;
   left: 50%;
   bottom: 100%;
   width: 1px;
-  height: 22px;
+  height: 12px;
   background: var(--pv-line);
 }
 
@@ -561,16 +267,18 @@
 }
 
 .pv-leaf-node > strong {
-  margin-top: 14px;
+  margin-top: 12px;
   font-size: 13.5px;
   font-weight: 650;
   line-height: 1.5;
 }
 
+/* 葉が持つ指標。原指標の「住所」はここだけ */
 .pv-leaf-node > small {
   margin-top: auto;
   padding-top: 10px;
   font-size: 10.5px;
+  line-height: 1.6;
   color: var(--muted);
 }
 
@@ -681,97 +389,133 @@
   color: rgba(250, 250, 247, 0.55);
 }
 
-.pv-tree-note {
-  margin-top: 24px;
+/* ---- 02: stage lenses ---------------------------------------------------- */
+/* 01の葉を束ねた複合指標を、ステージ順に読む。ボックスカードではなく、
+   ホームのside workと同じヘアライン区切りのエディトリアルな2カラム行で組み、
+   左に式（EN大見出し）、右に問いと01の葉への参照チップを置く */
+
+.pv-lens-list {
+  margin-top: clamp(36px, 6vh, 56px);
+  list-style: none;
+}
+
+.pv-lens {
+  display: grid;
+  grid-template-columns: minmax(220px, 320px) 1fr;
+  gap: 20px 48px;
+  padding: clamp(32px, 5vh, 48px) 0;
+  border-top: 1px solid var(--hairline);
+}
+
+.pv-lens:last-child {
+  border-bottom: 1px solid var(--hairline);
+}
+
+.pv-lens-eyebrow {
   display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 12px;
-  font-size: 11.5px;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.pv-lens-eyebrow .serif-accent {
+  font-size: 14px;
+  color: var(--accent);
+}
+
+.pv-lens-stage {
+  font-size: 10.5px;
+  font-weight: 650;
+  letter-spacing: 0.14em;
   color: var(--muted);
 }
 
-.pv-tree-note .en {
-  padding: 4px 11px;
-  border-radius: 999px;
-  background: var(--accent-soft);
+/* 式はホームのsidework-headingと同じEN大見出しのトーンに合わせる */
+.pv-lens-formula {
+  margin-top: 16px;
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  font-family: var(--font-en);
+  font-size: clamp(24px, 2.6vw, 34px);
+  font-weight: 550;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+}
+
+.pv-lens-op {
+  font-size: 0.55em;
+  font-weight: 500;
   color: var(--accent);
+}
+
+.pv-lens-formula-ja {
+  margin-top: 10px;
+  font-size: 11.5px;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+
+.pv-lens-question {
+  font-size: 13.5px;
+  font-weight: 650;
+  line-height: 2;
+}
+
+.pv-lens-reading {
+  margin-top: 10px;
+  max-width: 560px;
+  font-size: 12.5px;
+  line-height: 2;
+  color: var(--muted);
+}
+
+/* 01の葉への参照チップ。ここが「新しい指標を出さない」の実装 */
+.pv-lens-nodes {
+  margin-top: 24px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+}
+
+.pv-lens-nodes-label {
+  font-size: 10.5px;
+  font-weight: 650;
+  letter-spacing: 0.14em;
+  color: var(--muted);
+}
+
+.pv-lens-node-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.pv-lens-part {
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+
+.pv-lens-node-group em {
+  font-style: normal;
+  padding: 4px 11px;
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+  background: var(--paper-dim);
   font-size: 11px;
   font-weight: 600;
-  letter-spacing: 0.08em;
+  color: var(--ink-soft);
 }
 
 /* ---- responsive -------------------------------------------------------- */
 
-@media (max-width: 900px) {
-  /* 因果マトリクスは1本ずつの縦積みへ。段階ラベルをセル内へ移す */
-  .pv-chain-header {
-    display: none;
-  }
-
-  .pv-chain-rows {
-    gap: 0;
-  }
-
-  .pv-chain-row {
-    grid-template-columns: 1fr;
-    gap: 26px;
-    padding: 24px 0;
-    border-top: 1px solid var(--hairline);
-  }
-
-  .pv-chain-row:first-child {
-    border-top: 0;
-    padding-top: 0;
-  }
-
-  .pv-chain-cell {
-    min-height: 0;
-  }
-
-  .pv-chain-cell:not(:last-child)::after {
-    content: "↓";
-    left: 24px;
-    top: 100%;
-    width: auto;
-    height: 26px;
-    display: grid;
-    place-items: center;
-    transform: none;
-  }
-
-  .pv-chain-cell > span {
-    display: block;
-  }
-
-  .pv-chain-cell > strong {
-    margin-top: 8px;
-  }
-
-  .pv-dir-grid {
-    grid-template-columns: 1fr;
-  }
-
-  /* ステージ帯も縦積みへ。矢印は因果マトリクスと同じ下向きに */
-  .pv-stage-strip {
-    grid-template-columns: 1fr;
-    gap: 30px;
-  }
-
-  .pv-stage-cell:not(:last-child)::after {
-    content: "↓";
-    left: 24px;
-    top: 100%;
-    width: auto;
-    height: 30px;
-    display: grid;
-    place-items: center;
-    transform: none;
-  }
-
-  /* ツリーは左レールに沿った縦積みへ。接続線は各カードが自分の
-     エルボー（L字）を上のカードの底辺まで描く方式にして、カードの
-     高さが変わっても途切れないようにする */
+/* 4枝ツリーは1100px以下で左レール沿いの縦積みへ。接続線は各カードが自分の
+   エルボー（L字）を上のカードの底辺まで描く方式にして、カードの高さが
+   変わっても途切れないようにする */
+@media (max-width: 1100px) {
   .pv-tree-root-wrap {
     justify-content: flex-start;
     padding-bottom: 0;
@@ -806,7 +550,6 @@
   }
 
   .pv-branch-node {
-    margin-left: 0;
     align-items: flex-start;
     text-align: left;
     width: min(100%, 340px);
@@ -827,20 +570,18 @@
     display: none;
   }
 
-  .pv-leaf-row {
-    grid-template-columns: 1fr;
+  .pv-leaf-col {
     padding: 16px 0 0 30px;
-  }
-
-  .pv-leaf-row::before {
-    display: none;
+    gap: 12px;
   }
 
   .pv-leaf-node {
     min-height: 0;
   }
 
-  .pv-leaf-node::before {
+  .pv-leaf-col .pv-leaf-node::before {
+    content: "";
+    position: absolute;
     left: auto;
     right: 100%;
     width: 15px;
@@ -852,7 +593,7 @@
     border-bottom: 1px solid var(--pv-line);
   }
 
-  .pv-leaf-node:first-child::before {
+  .pv-leaf-col .pv-leaf-node:first-child::before {
     top: -16px;
   }
 
@@ -869,20 +610,18 @@
   .pv-leaf-node > strong {
     margin-top: 10px;
   }
+}
+
+@media (max-width: 900px) {
+  /* レンズの行は、見出しブロックと本文の縦積みへ */
+  .pv-lens {
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
 
   .pv-action-content.is-active {
     grid-template-columns: 1fr;
     gap: 24px;
-  }
-}
-
-@media (max-width: 640px) {
-  .pv-dir-card {
-    padding: 24px 22px 22px;
-  }
-
-  .pv-tree-note {
-    justify-content: flex-start;
   }
 }
 

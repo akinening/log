@@ -2,139 +2,62 @@
 import Base from "../layouts/Base.astro";
 
 // 経営とデザインをつなぐ思考メモの図解。主題は「デザインを成果物ではなく
-// 事業インパクトで捉える」の一本で、01 因果の語り方（方法）→ 02 貢献の3方向（地図）
-// → 03 ROIC分解（収益性の深掘り）と総論から各論へ進む。動的な切り替えは
-// ROICツリー（03）のドリルダウンだけで、ほかのセクションは全情報を
-// 静的HTMLとして常時表示する。
-// フレームの提示だけで終わらせないため、03の冒頭にステージ別の評価軸を置いている。
+// 事業インパクトで捉える」の一本で、2層で構成する:
+//   01 ドライバーマップ（体系）— 企業価値を根とする1本のツリー。指標の置き場所はここだけ
+//   02 レンズ（読み方）— 01の葉を束ねた複合指標を、事業ステージ順に読む
+// 同じ指標が複数セクションに重複して現れないことをページの設計ルールにしている:
+// 原指標は01の葉に1か所ずつ置き、02は01の葉の参照（組み合わせ）だけで書く。
+// 複数の枝に効く打ち手は、いちばん強く効く葉に置いたうえで本文から相互参照する。
+// 動的な切り替えは01マップのリーフ選択だけで、ほかは静的HTMLとして常時表示する。
 
-// 01: デザイン施策と経営成果を直接つなげず、
-// 活動 → 行動の変化 → プロダクトKPI → 経営指標 の因果で語るための例
-const chainStages = ["デザイン活動", "ユーザー・組織の変化", "プロダクトKPI", "経営指標"];
-
-const causalChains = [
-  {
-    activity: "オンボーディング改善",
-    behavior: "初期価値を早く実感する",
-    kpi: "Activation率",
-    outcome: "売上・CAC回収期間"
-  },
-  {
-    activity: "UX改善",
-    behavior: "継続利用が増える",
-    kpi: "継続率・利用頻度",
-    outcome: "LTV・収益の安定性"
-  },
-  {
-    activity: "DesignOps",
-    behavior: "再利用と標準化が進む",
-    kpi: "開発リードタイム",
-    outcome: "原価・Time to Market"
-  },
-  {
-    activity: "UXリサーチ",
-    behavior: "誤った仮説を早く捨てられる",
-    kpi: "検証速度・成功率",
-    outcome: "投資損失・事業リスク"
-  },
-  {
-    activity: "コミュニティ設計",
-    behavior: "ユーザー間の価値が増える",
-    kpi: "UGC・紹介率",
-    outcome: "獲得効率・Moat"
-  }
-];
-
-// 02: デザインが事業価値へ貢献する3つの方向。ここは要点だけの地図に徹して、
-// 収益性の分解は03へ委ねる（詳細の重複を持たない）
-const valueDirections = [
-  {
-    number: "01",
-    label: "Profitability",
-    title: "収益性",
-    tagline: "売上を伸ばし、コストを下げる",
-    points: [
-      "なめらかなUIと心地よいUXで、CVR・継続率・LTVを上げる",
-      "DesignOpsとプロトタイピングで、手戻りと運用の負荷を減らす",
-      "ブランディングで指名検索を増やし、価格競争から抜ける"
-    ],
-    metrics: ["CVR", "LTV", "継続率", "開発リードタイム"]
-  },
-  {
-    number: "02",
-    label: "Stability",
-    title: "安定性",
-    tagline: "収益と事業運営のリスクを下げる",
-    points: [
-      "ブランドへの愛着と、習慣・ワークフローへの組み込みで、解約する理由を減らす",
-      "UXリサーチで投資の前に誤りを見つけ、PMFの確度を上げる",
-      "例外や失敗まで想定した設計で、運用の破綻と信用毀損を防ぐ"
-    ],
-    metrics: ["NRR / GRR", "解約率", "問い合わせ・障害発生率"],
-    note: "大切なのは囲い込みではなく、離れにくい便益を作ること"
-  },
-  {
-    number: "03",
-    label: "Moat",
-    title: "Moat",
-    tagline: "競合が追随しにくい循環を作る",
-    points: [
-      "コミュニティとUGCで、ユーザー間に価値が生まれる場を作る",
-      "独自の世界観とブランド資産で、価格決定力を持つ",
-      "一次情報と実践知で、何を作るべきかを見抜く精度を上げる"
-    ],
-    metrics: ["LTV / CAC", "紹介率・UGC", "価格決定力"]
-  }
-];
-
-// 03前段: 評価軸は事業ステージで変わる。ROICツリーはレイター〜成熟企業の
-// レンズであることを先に断り、アーリー〜グロースの指標（VCの評価軸）と
-// 接続してから分解に入る
-const stageLenses = [
-  {
-    stage: "シード〜アーリー",
-    focus: "使われつづける手応え",
-    metrics: ["Activation", "継続率", "利用頻度"]
-  },
-  {
-    stage: "グロース",
-    focus: "成長の資本効率",
-    metrics: ["CAC Payback", "Burn Multiple", "NRR"]
-  },
-  {
-    stage: "レイター〜成熟",
-    focus: "資本の収益性",
-    metrics: ["ROIC", "NOPATマージン", "FCF"],
-    current: true
-  }
-];
-
-// 03: ROICを収益性×資本効率性に分解したドライバーツリー。
-// リーフを選ぶと、デザインがその指標へ効く因果の説明と実例が表示される
-// （ページ内で唯一の動的セクション）
+// 01: 企業価値を根とするバリュードライバーマップ。原指標はこの葉に1回だけ
+// 現れる（leaf.metrics が指標の「住所」）。リーフを選ぶと、デザインがその葉へ
+// 効く因果の説明と実例が表示される（ページ内で唯一の動的セクション）
 const driverBranches = [
   {
-    id: "profitability",
-    label: "収益性",
-    title: "NOPATマージン",
-    formula: "NOPAT ÷ 売上高",
+    id: "growth",
+    label: "成長",
+    title: "売上を伸ばす",
+    formula: "獲得 → 定着 → 拡大",
     leaves: [
       {
-        id: "revenue",
-        number: "A1",
-        title: "売上とミックス",
-        caption: "売上の質を上げる",
-        body: "売上は、どれだけの人が価値を実感し、対価を払いつづけてくれるかで決まります。デザインは、最初の体験からつまずきを取り除いて定着を助け、価値が正しく伝わる導線と値づけへの納得感をつくることで、転換率と継続率——つまり売上の質に効きます。",
+        id: "acquisition",
+        number: "G1",
+        title: "獲得",
+        metrics: ["CVR", "CAC"],
+        body: "同じ広告費から何人が顧客になるかは、価値と出会ってから使いはじめるまでの体験で決まります。LPで価値の伝わり方を磨き、登録・購入フローの離脱を取り除くことでCVRは上がり、その分だけCACは下がる——獲得効率は、デザインがもっとも直接的に動かせる経営数字のひとつです。S2で育つ紹介や指名は、この効率をさらに押し上げます。"
+      },
+      {
+        id: "retention",
+        number: "G2",
+        title: "定着",
+        metrics: ["Activation率", "継続率"],
+        body: "使いはじめた人が、最初の価値に早くたどり着けるか。そして習慣やワークフローに組み込まれて、使いつづける理由を持てるか。オンボーディングのつまずきを取り除き、離れる理由をひとつずつ減らすことが継続率——あとに続くすべての指標の土台に効きます。",
         example: {
           text: "goghでオンボーディングと課金フローを改善し、離脱率の低減に寄与",
           href: "/works/gogh-global/"
         }
       },
       {
-        id: "variable",
-        number: "A2",
-        title: "変動費の生産性",
-        caption: "粗利率を上げる",
+        id: "expansion",
+        number: "G3",
+        title: "拡大",
+        metrics: ["ARPU", "NRR"],
+        body: "売上は顧客の数だけでなく、ひとりの顧客との関係の深さでも伸びます。価値が正しく伝わる料金設計と納得感のある値づけが顧客単価を支え、使い込むほど価値が深まる体験と上位プランへの自然な道筋が、既存顧客だけで売上が伸びる状態——NRR100%超をつくります。"
+      }
+    ]
+  },
+  {
+    id: "profitability",
+    label: "収益性",
+    title: "利益率を高める",
+    formula: "利益 ÷ 売上高",
+    leaves: [
+      {
+        id: "gross-margin",
+        number: "P1",
+        title: "粗利率",
+        metrics: ["粗利率", "問い合わせ率"],
         body: "売上に比例して増えるコストには、つくり直しや問い合わせ対応など、本来なくせたはずの仕事が多く含まれています。実装の前にプロトタイプで検証して手戻りを防ぎ、迷わないUIとわかりやすい文言で問い合わせ自体を減らすことで、デザインは粗利率の改善に貢献できます。",
         example: {
           text: "goghでVibe Codingによるプロトタイプ検証を定着させ、デザインFIXまでの手戻りを削減",
@@ -142,10 +65,10 @@ const driverBranches = [
         }
       },
       {
-        id: "fixed",
-        number: "A3",
+        id: "fixed-cost",
+        number: "P2",
         title: "固定費の生産性",
-        caption: "同じ費用で成果を増やす",
+        metrics: ["開発リードタイム", "一人あたり生産性"],
         body: "人件費や設備といった固定費は、削ることよりも、同じ費用でどれだけ成果を出せるかを高めることが本質だと考えています。業務の観察にもとづいて道具と流れを設計しなおし、制作を型化・ドキュメント化して属人化を解くことで、デザインは一人あたりの生産性に効きます。",
         example: {
           text: "東京海上で属人化したポータルを再設計し、新人の立ち上がりを短縮",
@@ -155,36 +78,51 @@ const driverBranches = [
     ]
   },
   {
-    id: "efficiency",
-    label: "資本効率性",
-    title: "投下資本回転率",
+    id: "capital",
+    label: "資本効率",
+    title: "少ない資本で回す",
     formula: "売上高 ÷ 投下資本",
     leaves: [
       {
         id: "working-capital",
-        number: "B1",
+        number: "C1",
         title: "運転資本",
-        caption: "お金がもどる速さを上げる",
+        metrics: ["CCC（現金化までの日数）"],
         body: "事業は、仕入れてから売上が入金されるまでの、お金が寝ている時間が短いほど、少ない資本で回せます。購入フローの離脱をなくして売上を早く確定させ、予約販売や年払いのような先にお金が入る体験を設計することで、デザインは資金の回転を速めることに関われます。"
       },
       {
-        id: "fixed-assets",
-        number: "B2",
-        title: "固定資産",
-        caption: "持ちものの効率を上げる",
-        body: "設備や拠点といった固定資産は、持つこと自体が資本を固定するリスクであり、稼働してはじめて価値になります。つくる前にプロトタイプで需要を確かめて過剰な投資を避け、対面や紙の手続きをオンラインの体験へ置きかえることで、デザインは持たずに済ませる選択を増やせます。"
-      },
-      {
-        id: "portfolio",
-        number: "B3",
-        title: "事業ポートフォリオ",
-        caption: "資本の行き先を選びなおす",
-        body: "限られた資本をどの事業へ向けるかは、経営でもっとも大きな意思決定のひとつです。顧客体験の質を投資判断の材料として可視化し、新規事業はプロトタイプで安く検証して撤退の判断を早めることで、デザインは資本配分の精度を高めることに貢献できます。",
-        note: "厳密には、ポートフォリオの入れ替えはマージンと投下資本の両方に効くROIC直下の意思決定です。ここでは「資本の行き先を選ぶ」という性格から、資本効率性の側に置いています。",
+        id: "investment",
+        number: "C2",
+        title: "投資の精度",
+        metrics: ["投資の空振り率", "固定資産回転"],
+        body: "設備やシステム、新規事業への投資は、外れれば資本を寝かせるリスクになります。つくる前にプロトタイプで需要を確かめて過剰な投資を避け、顧客体験の質を投資判断の材料として可視化することで、デザインは限られた資本をどこへ向けるかの精度に貢献できます。",
+        note: "投資配分の意思決定は、厳密にはマージンと投下資本の両方に効くテーマです。ここでは「資本の行き先を選ぶ」という性格から、資本効率の枝に置いています。",
         example: {
           text: "損保グループで3つの新規事業PoCを、モックアップと現場検証で前進",
           href: "/works/tmnf-insurance-poc/"
         }
+      }
+    ]
+  },
+  {
+    id: "sustainability",
+    label: "持続性",
+    title: "収益の質を守る",
+    formula: "リスク↓ × Moat↑",
+    leaves: [
+      {
+        id: "trust",
+        number: "S1",
+        title: "信頼",
+        metrics: ["障害・クレーム率"],
+        body: "収益は、伸ばすことと同じくらい、毀損させないことが大切です。例外や失敗まで想定した設計、誤操作を防ぐインターフェース、誰にとっても使いやすいアクセシビリティが、運用の破綻と信用の毀損——数字に表れにくいのに、いちばん高くつくコストを防ぎます。"
+      },
+      {
+        id: "moat",
+        number: "S2",
+        title: "Moat",
+        metrics: ["指名検索", "紹介率・UGC", "価格決定力"],
+        body: "競合が追随しにくいのは、機能ではなく関係です。独自の世界観とブランド資産、ユーザー同士が価値を生み合うコミュニティやUGCの場が、指名で選ばれ、人に勧められ、値引きに頼らない状態をつくります。効果が出るまで時間はかかりますが、G1の獲得効率とG3の単価へ複利で波及していきます。"
       }
     ]
   }
@@ -193,12 +131,74 @@ const driverBranches = [
 const driverLeaves = driverBranches.flatMap((branch) =>
   branch.leaves.map((leaf) => ({ ...leaf, branchLabel: branch.label }))
 );
-const defaultLeafId = driverBranches[0].leaves[0].id;
+// 初期表示は、実例つきで土台にあたるG2（定着）
+const defaultLeafId = "retention";
+const defaultBranchId = driverBranches.find((branch) =>
+  branch.leaves.some((leaf) => leaf.id === defaultLeafId)
+).id;
+
+// 02: 01の葉を束ねて読む複合指標のレンズ。評価軸が移るステージ順に並べる。
+// ここに新しい原指標は登場させない——nodes はすべて01の葉（または枝）への参照
+const stageLenses = [
+  {
+    number: "L1",
+    stage: "シード〜アーリー",
+    left: "RR",
+    op: "×",
+    right: "ARPU",
+    formulaJa: "継続率 × 顧客単価",
+    question: "使いつづけてもらえるか。その価値に、いくら払ってもらえるか",
+    reading: "売上の最小単位。この掛け算が、あとに続くすべてのレンズの原材料になる",
+    nodes: [{ refs: ["G2 定着", "G3 拡大"] }]
+  },
+  {
+    number: "L2",
+    stage: "アーリー〜グロース",
+    left: "LTV",
+    op: "÷",
+    right: "CAC",
+    formulaJa: "顧客生涯価値 ÷ 顧客獲得コスト",
+    question: "ひとりの顧客が生む生涯価値は、獲得コストの何倍か",
+    reading: "ユニットエコノミクス。3倍が健全性のひとつの目安",
+    nodes: [
+      { part: "LTV（分子）", refs: ["G2 定着", "G3 拡大", "P1 粗利率"] },
+      { part: "CAC（分母）", refs: ["G1 獲得", "S2 Moat"] }
+    ]
+  },
+  {
+    number: "L3",
+    stage: "グロース",
+    left: "NRR",
+    op: "&",
+    right: "Burn Multiple",
+    formulaJa: "売上維持率 と 現金燃焼効率",
+    question: "既存顧客だけで売上は伸びるか。燃やした現金は、成長に変わっているか",
+    reading: "成長の資本効率。NRRが100%を超えるほど、新規獲得に頼らず伸び、Burnの効率も上がる",
+    nodes: [
+      { part: "NRR", refs: ["G2 定着", "G3 拡大"] },
+      { part: "Burn Multiple", refs: ["P2 固定費の生産性", "C2 投資の精度"] }
+    ]
+  },
+  {
+    number: "L4",
+    stage: "レイター〜成熟",
+    left: "ROIC",
+    op: "−",
+    right: "WACC",
+    formulaJa: "投下資本利益率 − 資本コスト",
+    question: "投じた資本は、その調達コストを上回る利益を生んでいるか",
+    reading: "価値創造の最終判定。この差（スプレッド）が正のときだけ、事業は企業価値を生む",
+    nodes: [
+      { part: "ROIC", refs: ["P 収益性", "C 資本効率"] },
+      { part: "WACC", refs: ["S 持続性（予見性を通じて間接に）"] }
+    ]
+  }
+];
 ---
 
 <Base
   title="Perspectives — Akinori Ozawa"
-  description="デザインを「成果物」ではなく「事業インパクト」で捉えるための思考メモ。因果のつなぎ方、収益性・安定性・Moatの3方向、ROICへの分解を図解します。"
+  description="デザインを「成果物」ではなく「事業インパクト」で捉えるための思考メモ。企業価値のドライバーマップと、ステージ別に指標を束ねるレンズを図解します。"
   path="/perspectives/"
 >
   <header class="pv-head">
@@ -209,102 +209,37 @@ const defaultLeafId = driverBranches[0].leaves[0].id;
     </p>
   </header>
 
-  <section class="pv-section rv" aria-labelledby="pv-chain-title">
-    <div class="pv-section-head">
-      <p class="overline">01 — Causal Chain</p>
-      <h2 class="pv-h2" id="pv-chain-title">デザインの効果</h2>
-    </div>
-
-    <div class="pv-chain">
-      <div class="pv-chain-header" aria-hidden="true">
-        {chainStages.map((stage) => <span>{stage}</span>)}
-      </div>
-      <ol class="pv-chain-rows">
-        {
-          causalChains.map((chain) => (
-            <li class="pv-chain-row">
-              {[chain.activity, chain.behavior, chain.kpi, chain.outcome].map((value, step) => (
-                <div class="pv-chain-cell">
-                  <span>{chainStages[step]}</span>
-                  <strong>{value}</strong>
-                </div>
-              ))}
-            </li>
-          ))
-        }
-      </ol>
-    </div>
-  </section>
-
-  <section class="pv-section rv" aria-labelledby="pv-dirs-title">
-    <div class="pv-section-head">
-      <p class="overline">02 — Three Directions</p>
-      <h2 class="pv-h2" id="pv-dirs-title">事業価値への貢献</h2>
-    </div>
-
-    <div class="pv-dir-grid">
-      {
-        valueDirections.map((dir) => (
-          <article class="pv-dir-card">
-            <p class="pv-dir-eyebrow">
-              <span class="serif-accent">{dir.number}</span>
-              <span class="en">{dir.label}</span>
-            </p>
-            <h3>{dir.title}</h3>
-            <p class="pv-dir-tagline">{dir.tagline}</p>
-            <ul>{dir.points.map((point) => <li>{point}</li>)}</ul>
-            {dir.note && <p class="pv-dir-note">{dir.note}</p>}
-            <p class="pv-dir-metrics">
-              <span>測る指標</span>
-              {dir.metrics.map((metric) => <em>{metric}</em>)}
-            </p>
-          </article>
-        ))
-      }
-    </div>
-  </section>
-
   <section class="pv-section rv" aria-labelledby="pv-tree-title" data-pv-tree>
     <div class="pv-section-head">
-      <p class="overline">03 — ROIC Driver Tree</p>
-      <h2 class="pv-h2" id="pv-tree-title">デザインとROIC</h2>
+      <p class="overline">01 — Value Driver Map</p>
+      <h2 class="pv-h2" id="pv-tree-title">企業価値のドライバーマップ</h2>
+      <p class="pv-section-lead">
+        デザインが効く事業指標を、企業価値を根とする1本のツリーに整理しました。葉を選ぶと、デザインがどう効くかと私の実例が表示されます。
+      </p>
     </div>
 
-    <div class="pv-stage-strip">
-      {
-        stageLenses.map((lens) => (
-          <div class={`pv-stage-cell${lens.current ? " is-current" : ""}`}>
-            {lens.current && <span class="pv-stage-badge">この図解の視点</span>}
-            <span class="pv-stage-name">{lens.stage}</span>
-            <strong>{lens.focus}</strong>
-            <p>{lens.metrics.join("・")}</p>
-          </div>
-        ))
-      }
-    </div>
-
-    <div class="pv-tree" aria-label="ROICの改善ドライバーツリー">
+    <div class="pv-tree" aria-label="企業価値のドライバーマップ">
       <div class="pv-tree-root-wrap">
         <div class="pv-tree-root">
           <span>最終指標</span>
-          <strong class="en">ROIC</strong>
-          <small>NOPAT ÷ 投下資本</small>
+          <strong>企業価値</strong>
+          <small>将来フリーキャッシュフローの現在価値</small>
         </div>
       </div>
 
       <div class="pv-tree-branches">
         {
-          driverBranches.map((branch, bIndex) => (
+          driverBranches.map((branch) => (
             <div
-              class={`pv-tree-branch${bIndex === 0 ? " is-active" : ""}`}
+              class={`pv-tree-branch${branch.id === defaultBranchId ? " is-active" : ""}`}
               data-pv-branch={branch.id}
             >
               <div class="pv-branch-node">
                 <span>{branch.label}</span>
                 <strong>{branch.title}</strong>
-                <small class="en">{branch.formula}</small>
+                <small>{branch.formula}</small>
               </div>
-              <div class="pv-leaf-row">
+              <div class="pv-leaf-col">
                 {branch.leaves.map((leaf) => (
                   <button
                     type="button"
@@ -315,7 +250,7 @@ const defaultLeafId = driverBranches[0].leaves[0].id;
                   >
                     <span class="serif-accent">{leaf.number}</span>
                     <strong>{leaf.title}</strong>
-                    <small>{leaf.caption}</small>
+                    <small>{leaf.metrics.join("・")}</small>
                   </button>
                 ))}
               </div>
@@ -338,7 +273,7 @@ const defaultLeafId = driverBranches[0].leaves[0].id;
                 {leaf.branchLabel} — デザインはどう効くか
               </p>
               <h3>{leaf.title}</h3>
-              <p class="pv-action-caption">{leaf.caption}</p>
+              <p class="pv-action-caption">{leaf.metrics.join("・")}</p>
               {leaf.example && (
                 <a class="pv-action-example" href={leaf.example.href}>
                   <span class="pv-action-example-label">私の実例</span>
@@ -358,10 +293,52 @@ const defaultLeafId = driverBranches[0].leaves[0].id;
       }
     </div>
 
-    <p class="pv-tree-note">
-      <span class="en">ROIC</span>
-      ＝ NOPATマージン × 投下資本回転率。WACC（資本コスト）を上回ってはじめて、事業は価値を生む
-    </p>
+  </section>
+
+  <section class="pv-section rv" aria-labelledby="pv-lens-title">
+    <div class="pv-section-head">
+      <p class="overline">02 — Stage Lenses</p>
+      <h2 class="pv-h2" id="pv-lens-title">指標を束ねるレンズ</h2>
+      <p class="pv-section-lead">
+        どのレンズが重視されるかは、事業ステージとともに移っていきます。
+      </p>
+    </div>
+
+    <ol class="pv-lens-list">
+      {
+        stageLenses.map((lens) => (
+          <li class="pv-lens">
+            <div class="pv-lens-id">
+              <p class="pv-lens-eyebrow">
+                <span class="serif-accent">{lens.number}</span>
+                <span class="pv-lens-stage">{lens.stage}</span>
+              </p>
+              <h3 class="pv-lens-formula">
+                {lens.left}
+                <span class="pv-lens-op">{lens.op}</span>
+                {lens.right}
+              </h3>
+              <p class="pv-lens-formula-ja">{lens.formulaJa}</p>
+            </div>
+            <div class="pv-lens-main">
+              <p class="pv-lens-question">「{lens.question}」</p>
+              <p class="pv-lens-reading">{lens.reading}</p>
+              <p class="pv-lens-nodes">
+                <span class="pv-lens-nodes-label">01の葉でいうと</span>
+                {
+                  lens.nodes.map((group) => (
+                    <span class="pv-lens-node-group">
+                      {group.part && <span class="pv-lens-part">{group.part}</span>}
+                      {group.refs.map((ref) => <em>{ref}</em>)}
+                    </span>
+                  ))
+                }
+              </p>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
   </section>
 </Base>
 
