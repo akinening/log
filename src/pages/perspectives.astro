@@ -3,14 +3,14 @@ import Base from "../layouts/Base.astro";
 
 // 経営とデザインをつなぐ思考メモの図解。主題は「デザインを成果物ではなく
 // 事業インパクトで捉える」の一本で、2層で構成する:
-//   01 ドライバーマップ（体系）— 企業価値を根とする1本のツリー。指標の置き場所はここだけ
+//   01 ドライバーマップ（体系）— 事業価値を根とする1本のツリー。指標の置き場所はここだけ
 //   02 レンズ（読み方）— 01の葉を束ねた複合指標を、事業ステージ順に読む
 // 同じ指標が複数セクションに重複して現れないことをページの設計ルールにしている:
 // 原指標は01の葉に1か所ずつ置き、02は01の葉の参照（組み合わせ）だけで書く。
 // 複数の枝に効く打ち手は、いちばん強く効く葉に置いたうえで本文から相互参照する。
 // 動的な切り替えは01マップのリーフ選択だけで、ほかは静的HTMLとして常時表示する。
 
-// 01: 企業価値を根とするバリュードライバーマップ。原指標はこの葉に1回だけ
+// 01: 事業価値を根とするバリュードライバーマップ。原指標はこの葉に1回だけ
 // 現れる（leaf.metrics が指標の「住所」）。リーフを選ぶと、デザインがその葉へ
 // 効く因果の説明と実例が表示される（ページ内で唯一の動的セクション）
 const driverBranches = [
@@ -187,7 +187,7 @@ const stageLenses = [
     right: "WACC",
     formulaJa: "投下資本利益率 − 資本コスト",
     question: "投じた資本は、その調達コストを上回る利益を生んでいるか",
-    reading: "価値創造の最終判定。この差（スプレッド）が正のときだけ、事業は企業価値を生む",
+    reading: "価値創造の最終判定。この差（スプレッド）が正のときだけ、事業は事業価値を生む",
     nodes: [
       { part: "ROIC", refs: ["P 収益性", "C 資本効率"] },
       { part: "WACC", refs: ["S 持続性（予見性を通じて間接に）"] }
@@ -198,7 +198,7 @@ const stageLenses = [
 
 <Base
   title="Perspectives — Akinori Ozawa"
-  description="デザインを「成果物」ではなく「事業インパクト」で捉えるための思考メモ。企業価値のドライバーマップと、ステージ別に指標を束ねるレンズを図解します。"
+  description="デザインを「成果物」ではなく「事業インパクト」で捉えるための思考メモ。事業価値のドライバーマップと、ステージ別に指標を束ねるレンズを図解します。"
   path="/perspectives/"
 >
   <header class="pv-head">
@@ -212,17 +212,14 @@ const stageLenses = [
   <section class="pv-section rv" aria-labelledby="pv-tree-title" data-pv-tree>
     <div class="pv-section-head">
       <p class="overline">01 — Value Driver Map</p>
-      <h2 class="pv-h2" id="pv-tree-title">企業価値のドライバーマップ</h2>
-      <p class="pv-section-lead">
-        デザインが効く事業指標を、企業価値を根とする1本のツリーに整理しました。葉を選ぶと、デザインがどう効くかと私の実例が表示されます。
-      </p>
+      <h2 class="pv-h2" id="pv-tree-title">デザインによる事業価値の向上</h2>
     </div>
 
-    <div class="pv-tree" aria-label="企業価値のドライバーマップ">
+    <div class="pv-tree" aria-label="事業価値のドライバーマップ">
       <div class="pv-tree-root-wrap">
         <div class="pv-tree-root">
           <span>最終指標</span>
-          <strong>企業価値</strong>
+          <strong>事業価値</strong>
           <small>将来フリーキャッシュフローの現在価値</small>
         </div>
       </div>
@@ -298,7 +295,7 @@ const stageLenses = [
   <section class="pv-section rv" aria-labelledby="pv-lens-title">
     <div class="pv-section-head">
       <p class="overline">02 — Stage Lenses</p>
-      <h2 class="pv-h2" id="pv-lens-title">指標を束ねるレンズ</h2>
+      <h2 class="pv-h2" id="pv-lens-title">ステージ別の指標</h2>
       <p class="pv-section-lead">
         どのレンズが重視されるかは、事業ステージとともに移っていきます。
       </p>
