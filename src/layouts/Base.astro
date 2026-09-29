@@ -38,6 +38,11 @@ const navItems = [
   { label: "Contact", href: "/contact/", idx: "04" }
 ];
 
+// WebMCP（src/scripts/webmcp.js）の Chrome Origin Trial トークン。
+// https://developer.chrome.com/origintrials で akinen.com を登録して得た値を入れる。
+// 空のままなら meta は出力しない（フラグを有効にしたブラウザでは OT なしでも動く）
+const webmcpOriginTrialToken = "";
+
 const isCurrent = (href: string) =>
   href === "/" ? currentPath === "/" : currentPath.startsWith(href);
 ---
@@ -54,6 +59,7 @@ const isCurrent = (href: string) =>
     <meta name="robots" content="noimageindex" />
     <link rel="canonical" href={canonical} />
     <script type="application/ld+json" is:inline set:html={JSON.stringify(personLd)} />
+    {webmcpOriginTrialToken && <meta http-equiv="origin-trial" content={webmcpOriginTrialToken} />}
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta property="og:site_name" content="Akinori Ozawa" />
     <meta property="og:title" content={title} />
@@ -278,6 +284,14 @@ const isCurrent = (href: string) =>
       // タップ時のハプティックフィードバック（docs/haptic-guidelines.md）。
       // document への委譲のみなのでクリック音と同様ここで一度だけ登録する。
       initHaptics();
+    </script>
+
+    <script>
+      import { initWebMCP } from "../scripts/webmcp";
+
+      // AIエージェント向けのツール公開。サイト共通ツールは初回だけ登録し、
+      // ページ固有のツール（Contact の下書き）は遷移のたびに付け替える
+      document.addEventListener("astro:page-load", initWebMCP);
     </script>
 
     <script define:vars={{ clickSoundUrl, hoverSoundUrl }}>
